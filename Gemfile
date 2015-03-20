@@ -18,6 +18,10 @@ gem "grape", "~> 0.6.0"
 # OAuth 2 Authorization Server
 gem "doorkeeper", "~> 0.7.3"
 
+gem 'cancancan', '~> 1.10'
+
+gem 'grape-cancan'
+
 # OAuth 2 Guard on Resource Server (API)
 gem "rack-oauth2", "~> 1.0.5"
 

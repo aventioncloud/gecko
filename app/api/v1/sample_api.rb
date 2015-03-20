@@ -1,6 +1,7 @@
 module V1
   class SampleAPI < Base
     namespace "sample"
+    authorize_routes!
 
     get "hello" do
       { :hello => "world" }
