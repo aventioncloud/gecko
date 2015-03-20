@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  key: MyString
+  controller: MyString
+  link: MyString
+  type: 
+  templateOptions: MyString
+  expressionProperties: MyString
+  templateurl: MyString
+  template: MyString
+  data: MyString
+  validation: MyString
+  watcher: MyString
+  runExpressions: MyString
+
+two:
+  key: MyString
+  controller: MyString
+  link: MyString
+  type: 
+  templateOptions: MyString
+  expressionProperties: MyString
+  templateurl: MyString
+  template: MyString
+  data: MyString
+  validation: MyString
+  watcher: MyString
+  runExpressions: MyString

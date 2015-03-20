@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  application_id: 1
+  module: MyString
+  extend_type_id: 1
+  class: MyString
+  field: MyString
+  label: MyString
+  description: MyString
+  defaultvalue: MyString
+  options: MyString
+  sortorder: 1
+
+two:
+  application_id: 1
+  module: MyString
+  extend_type_id: 1
+  class: MyString
+  field: MyString
+  label: MyString
+  description: MyString
+  defaultvalue: MyString
+  options: MyString
+  sortorder: 1
