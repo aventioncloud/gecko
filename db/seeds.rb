@@ -5,3 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+roles = PlatformRoles.create([{ name: 'Administrador' }, { name: 'Consultor' }, { name: 'Cliente' }])
+menu = PlatformMenu.create([{ name: 'Dashboard', url: '', href: '', short: 1, menudad: nil, icon: ''}])
+PlatformMenuRoles.create(menu_id: menu.first, role_id: roles.first, principalid: 'read')

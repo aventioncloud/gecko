@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  url: MyString
+  href: MyString
+  short: 1
+  menudad: 1
+  icon: MyString
+
+two:
+  name: MyString
+  url: MyString
+  href: MyString
+  short: 1
+  menudad: 1
+  icon: MyString

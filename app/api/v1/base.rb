@@ -5,5 +5,7 @@ module V1
     mount SampleAPI
     mount SecretAPI
     mount ExtendAPI
+    
+    add_swagger_documentation
   end
 end

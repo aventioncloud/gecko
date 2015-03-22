@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150320200723) do
+ActiveRecord::Schema.define(version: 20150322182841) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,31 @@ ActiveRecord::Schema.define(version: 20150320200723) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "platform_menu_roles", force: true do |t|
+    t.integer  "menu_id"
+    t.integer  "role_id"
+    t.string   "principalid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "platform_menus", force: true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.string   "href"
+    t.integer  "short"
+    t.integer  "menudad"
+    t.string   "icon"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "platform_roles", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -100,6 +125,7 @@ ActiveRecord::Schema.define(version: 20150320200723) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "roles"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
