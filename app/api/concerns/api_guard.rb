@@ -21,6 +21,21 @@ module APIGuard
 
   # Helper Methods for Grape Endpoint
   module HelperMethods
+    
+    def fetch_users
+      users =  $redis.get("users")
+      if users.nil?
+        users = User.all.to_json
+        $redis.set("users", users)
+        #$redis.expire("categories",3.hour.to_i)
+      end
+      @users = JSON.load users
+    end
+    def find_byid(id)
+      @users =  fetch_users()
+      @user = @users.find { |h| h['id'] == id }
+    end
+    
     # Invokes the doorkeeper guard.
     #
     # If token string is blank, then it raises MissingTokenError.
@@ -62,7 +77,7 @@ module APIGuard
           raise RevokedError
 
         when Oauth2::AccessTokenValidationService::VALID
-          @current_user = User.find(access_token.resource_owner_id)
+          @current_user = find_byid(access_token.resource_owner_id)
 
         end
       end

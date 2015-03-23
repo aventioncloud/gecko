@@ -4,12 +4,11 @@ module V1
     
       get '/' do
         guard!
-        #useracess = current_user
         #binding.pry
         
         ary = Array.new
         
-        PlatformMenuRoles.where(role_id: current_user.roles).find_each do |menuroles|
+        PlatformMenuRoles.where(role_id: current_user["roles"]).find_each do |menuroles|
           ary << PlatformMenu.find(menuroles.menu_id)
         end
         

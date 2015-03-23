@@ -38,6 +38,10 @@ GEM
     byebug (4.0.3)
       columnize (= 0.9.0)
     cancancan (1.10.1)
+    climate_control (0.0.3)
+      activesupport (>= 3.0)
+    cocaine (0.5.7)
+      climate_control (>= 0.0.3, < 1.0)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -103,6 +107,11 @@ GEM
     multi_json (1.11.0)
     multi_xml (0.5.5)
     orm_adapter (0.5.0)
+    paperclip (4.2.1)
+      activemodel (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      cocaine (~> 0.5.3)
+      mime-types
     pg (0.18.1)
     polyglot (0.3.5)
     pry (0.10.1)
@@ -467,6 +476,7 @@ DEPENDENCIES
   grape-swagger
   jbuilder (~> 1.2)
   jquery-rails
+  paperclip
   pg
   pry-byebug
   rack-oauth2 (~> 1.0.5)
