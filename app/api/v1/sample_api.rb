@@ -2,9 +2,13 @@ module V1
   class SampleAPI < Base
     namespace "sample"
     authorize_routes!
+    
+    helpers UserHelper
 
     get "hello" do
-      { :hello => "world" }
+      @users = fetch_users()
+      @users
+      #{ :hello => "world" }
     end
 
     get "secret" do

@@ -3,6 +3,10 @@ module V1
     namespace "extend"
     
       get '/' do
+        guard!
+        useracess = current_user
+        binding.pry
+        
         ExtendSetting.all()
       end
   end
