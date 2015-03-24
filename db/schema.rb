@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150324131042) do
+ActiveRecord::Schema.define(version: 20150324184106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,124 @@ ActiveRecord::Schema.define(version: 20150324131042) do
     t.datetime "updated_at"
   end
 
+  create_table "gogopark_addresses", force: true do |t|
+    t.integer  "users_id"
+    t.integer  "platform_group_id"
+    t.string   "address"
+    t.integer  "numberhome"
+    t.string   "complement"
+    t.string   "neighborhood"
+    t.string   "postcode"
+    t.integer  "cidade_id"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_addresses", ["cidade_id"], name: "index_gogopark_addresses_on_cidade_id", using: :btree
+  add_index "gogopark_addresses", ["platform_group_id"], name: "index_gogopark_addresses_on_platform_group_id", using: :btree
+  add_index "gogopark_addresses", ["users_id"], name: "index_gogopark_addresses_on_users_id", using: :btree
+
+  create_table "gogopark_discounts", force: true do |t|
+    t.integer  "platform_group_id"
+    t.integer  "users_id"
+    t.float    "price"
+    t.string   "typediscount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_discounts", ["platform_group_id"], name: "index_gogopark_discounts_on_platform_group_id", using: :btree
+  add_index "gogopark_discounts", ["users_id"], name: "index_gogopark_discounts_on_users_id", using: :btree
+
+  create_table "gogopark_invoices", force: true do |t|
+    t.integer  "users_id"
+    t.integer  "gogopark_spaceschedule_id"
+    t.float    "price"
+    t.datetime "dateref"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_invoices", ["gogopark_spaceschedule_id"], name: "index_gogopark_invoices_on_gogopark_spaceschedule_id", using: :btree
+  add_index "gogopark_invoices", ["users_id"], name: "index_gogopark_invoices_on_users_id", using: :btree
+
+  create_table "gogopark_progresses", force: true do |t|
+    t.integer  "users_id"
+    t.datetime "checkin"
+    t.datetime "checkout"
+    t.integer  "gogopark_spaceschedule_id"
+    t.float    "price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_progresses", ["gogopark_spaceschedule_id"], name: "index_gogopark_progresses_on_gogopark_spaceschedule_id", using: :btree
+  add_index "gogopark_progresses", ["users_id"], name: "index_gogopark_progresses_on_users_id", using: :btree
+
+  create_table "gogopark_spacefeatures", force: true do |t|
+    t.string   "contactphone"
+    t.boolean  "scheduleprivacy"
+    t.integer  "maxheight"
+    t.boolean  "eletricrecharge"
+    t.integer  "gogopark_space_id"
+    t.string   "others"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_spacefeatures", ["gogopark_space_id"], name: "index_gogopark_spacefeatures_on_gogopark_space_id", using: :btree
+
+  create_table "gogopark_spaceimages", force: true do |t|
+    t.string   "filename"
+    t.string   "description"
+    t.integer  "gogopark_space_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_spaceimages", ["gogopark_space_id"], name: "index_gogopark_spaceimages_on_gogopark_space_id", using: :btree
+
+  create_table "gogopark_spaces", force: true do |t|
+    t.integer  "gogopark_address_id"
+    t.string   "term"
+    t.string   "type"
+    t.string   "size"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_spaces", ["gogopark_address_id"], name: "index_gogopark_spaces_on_gogopark_address_id", using: :btree
+
+  create_table "gogopark_spaceschedules", force: true do |t|
+    t.datetime "dateref"
+    t.integer  "dayofweek"
+    t.time     "end"
+    t.time     "start"
+    t.float    "price"
+    t.integer  "gogopark_space_id"
+    t.integer  "discountid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_spaceschedules", ["gogopark_space_id"], name: "index_gogopark_spaceschedules_on_gogopark_space_id", using: :btree
+
+  create_table "gogopark_spaceverifications", force: true do |t|
+    t.boolean  "spaceverications"
+    t.boolean  "spaceverified"
+    t.integer  "users_id"
+    t.string   "description"
+    t.integer  "gogopark_space_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_spaceverifications", ["gogopark_space_id"], name: "index_gogopark_spaceverifications_on_gogopark_space_id", using: :btree
+  add_index "gogopark_spaceverifications", ["users_id"], name: "index_gogopark_spaceverifications_on_users_id", using: :btree
+
   create_table "oauth_access_grants", force: true do |t|
     t.integer  "resource_owner_id",              null: false
     t.integer  "application_id",                 null: false
@@ -106,6 +224,16 @@ ActiveRecord::Schema.define(version: 20150324131042) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "platform_groups", force: true do |t|
+    t.string   "name"
+    t.integer  "groupdad"
+    t.integer  "users_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "platform_groups", ["users_id"], name: "index_platform_groups_on_users_id", using: :btree
+
   create_table "platform_menu_roles", force: true do |t|
     t.integer  "menu_id"
     t.integer  "role_id"
@@ -130,6 +258,17 @@ ActiveRecord::Schema.define(version: 20150324131042) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "platform_teams", force: true do |t|
+    t.integer  "platform_group_id"
+    t.integer  "users_id"
+    t.boolean  "default"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "platform_teams", ["platform_group_id"], name: "index_platform_teams_on_platform_group_id", using: :btree
+  add_index "platform_teams", ["users_id"], name: "index_platform_teams_on_users_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

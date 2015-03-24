@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  users_id: 
+  platform_group_id: 
+  address: MyString
+  numberhome: 1
+  complement: MyString
+  neighborhood: MyString
+  postcode: MyString
+  cidade_id: 
+  latitude: 9.99
+  longitude: 9.99
+
+two:
+  users_id: 
+  platform_group_id: 
+  address: MyString
+  numberhome: 1
+  complement: MyString
+  neighborhood: MyString
+  postcode: MyString
+  cidade_id: 
+  latitude: 9.99
+  longitude: 9.99

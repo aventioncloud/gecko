@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  platform_group_id: 
+  users_id: 
+  default: false
+
+two:
+  platform_group_id: 
+  users_id: 
+  default: false

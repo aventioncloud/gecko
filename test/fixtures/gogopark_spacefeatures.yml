@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  contactphone: MyString
+  scheduleprivacy: false
+  maxheight: 1
+  eletricrecharge: false
+  gogopark_space_id: 
+  others: MyString
+
+two:
+  contactphone: MyString
+  scheduleprivacy: false
+  maxheight: 1
+  eletricrecharge: false
+  gogopark_space_id: 
+  others: MyString

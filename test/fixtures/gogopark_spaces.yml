@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  gogopark_address_id: 
+  term: MyString
+  type: 
+  size: MyString
+  description: MyString
+
+two:
+  gogopark_address_id: 
+  term: MyString
+  type: 
+  size: MyString
+  description: MyString

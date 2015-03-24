@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  filename: MyString
+  description: MyString
+  gogopark_space_id: 
+
+two:
+  filename: MyString
+  description: MyString
+  gogopark_space_id: 

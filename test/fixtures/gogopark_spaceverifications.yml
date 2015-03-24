@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  spaceverications: false
+  spaceverified: false
+  users_id: 
+  description: MyString
+  gogopark_space_id: 
+
+two:
+  spaceverications: false
+  spaceverified: false
+  users_id: 
+  description: MyString
+  gogopark_space_id: 

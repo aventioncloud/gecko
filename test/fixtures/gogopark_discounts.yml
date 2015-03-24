@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  platform_group_id: 
+  users_id: 
+  price: 1.5
+  typediscount: MyString
+
+two:
+  platform_group_id: 
+  users_id: 
+  price: 1.5
+  typediscount: MyString
