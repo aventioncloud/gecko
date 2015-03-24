@@ -4,7 +4,7 @@ module V1
     authorize_routes!
 
     get "hello" do
-      guard!
+      #guard!
       fetch_users
     end
 

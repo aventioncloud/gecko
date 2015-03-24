@@ -11,10 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150322182841) do
+ActiveRecord::Schema.define(version: 20150324131042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cidades", force: true do |t|
+    t.string   "nome"
+    t.integer  "estado_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cidades", ["estado_id"], name: "index_cidades_on_estado_id", using: :btree
+
+  create_table "estados", force: true do |t|
+    t.string   "sigla"
+    t.string   "nome"
+    t.integer  "capital_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "estados", ["capital_id"], name: "index_estados_on_capital_id", using: :btree
 
   create_table "extend_settings", force: true do |t|
     t.integer  "application_id"
