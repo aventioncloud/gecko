@@ -5,6 +5,7 @@ class GogoparkProgress < ActiveRecord::Base
   validates_associated :users
   validates_associated :gogopark_spaceschedule
   
-  
+  validates :price, presence: true, numericality: true
+  validates :checkin, presence: true
   
 end

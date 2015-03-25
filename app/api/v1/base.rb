@@ -6,6 +6,7 @@ module V1
     mount SecretAPI
     mount ExtendAPI
     mount MenuAPI
+    mount GroupAPI
     
     add_swagger_documentation
   end
