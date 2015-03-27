@@ -1,8 +1,7 @@
 class CreateGogoparkAddresses < ActiveRecord::Migration
   def change
     create_table :gogopark_addresses do |t|
-      t.references :users, index: true
-      t.references :platform_group, index: true
+      t.string :size
       t.string :address
       t.integer :numberhome
       t.string :complement
@@ -11,6 +10,8 @@ class CreateGogoparkAddresses < ActiveRecord::Migration
       t.references :cidade, index: true
       t.decimal :latitude
       t.decimal :longitude
+      
+      t.references :gogopark_space, index: true
 
       t.timestamps
     end

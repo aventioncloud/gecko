@@ -7,6 +7,11 @@ module V1
     mount ExtendAPI
     mount MenuAPI
     mount GroupAPI
+    mount TeamAPI
+    mount SpaceAPI
+    mount AddressAPI
+    mount ImageAddressAPI
+    mount FeaturesAPI
     
     add_swagger_documentation
   end

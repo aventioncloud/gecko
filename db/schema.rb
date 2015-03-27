@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150324184106) do
+ActiveRecord::Schema.define(version: 20150326012326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,8 +68,7 @@ ActiveRecord::Schema.define(version: 20150324184106) do
   end
 
   create_table "gogopark_addresses", force: true do |t|
-    t.integer  "users_id"
-    t.integer  "platform_group_id"
+    t.string   "size"
     t.string   "address"
     t.integer  "numberhome"
     t.string   "complement"
@@ -78,13 +77,14 @@ ActiveRecord::Schema.define(version: 20150324184106) do
     t.integer  "cidade_id"
     t.decimal  "latitude"
     t.decimal  "longitude"
+    t.integer  "gogopark_space_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "amount"
   end
 
   add_index "gogopark_addresses", ["cidade_id"], name: "index_gogopark_addresses_on_cidade_id", using: :btree
-  add_index "gogopark_addresses", ["platform_group_id"], name: "index_gogopark_addresses_on_platform_group_id", using: :btree
-  add_index "gogopark_addresses", ["users_id"], name: "index_gogopark_addresses_on_users_id", using: :btree
+  add_index "gogopark_addresses", ["gogopark_space_id"], name: "index_gogopark_addresses_on_gogopark_space_id", using: :btree
 
   create_table "gogopark_discounts", force: true do |t|
     t.integer  "platform_group_id"
@@ -128,35 +128,37 @@ ActiveRecord::Schema.define(version: 20150324184106) do
     t.boolean  "scheduleprivacy"
     t.integer  "maxheight"
     t.boolean  "eletricrecharge"
-    t.integer  "gogopark_space_id"
+    t.integer  "gogopark_address_id"
     t.string   "others"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "gogopark_spacefeatures", ["gogopark_space_id"], name: "index_gogopark_spacefeatures_on_gogopark_space_id", using: :btree
+  add_index "gogopark_spacefeatures", ["gogopark_address_id"], name: "index_gogopark_spacefeatures_on_gogopark_address_id", using: :btree
 
   create_table "gogopark_spaceimages", force: true do |t|
     t.string   "filename"
     t.string   "description"
-    t.integer  "gogopark_space_id"
+    t.integer  "gogopark_address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "gogopark_spaceimages", ["gogopark_space_id"], name: "index_gogopark_spaceimages_on_gogopark_space_id", using: :btree
+  add_index "gogopark_spaceimages", ["gogopark_address_id"], name: "index_gogopark_spaceimages_on_gogopark_address_id", using: :btree
 
   create_table "gogopark_spaces", force: true do |t|
-    t.integer  "gogopark_address_id"
     t.string   "term"
     t.string   "type"
-    t.string   "size"
     t.string   "description"
+    t.integer  "amount"
+    t.integer  "platform_group_id"
+    t.integer  "users_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "gogopark_spaces", ["gogopark_address_id"], name: "index_gogopark_spaces_on_gogopark_address_id", using: :btree
+  add_index "gogopark_spaces", ["platform_group_id"], name: "index_gogopark_spaces_on_platform_group_id", using: :btree
+  add_index "gogopark_spaces", ["users_id"], name: "index_gogopark_spaces_on_users_id", using: :btree
 
   create_table "gogopark_spaceschedules", force: true do |t|
     t.datetime "dateref"
@@ -164,13 +166,14 @@ ActiveRecord::Schema.define(version: 20150324184106) do
     t.time     "end"
     t.time     "start"
     t.float    "price"
-    t.integer  "gogopark_space_id"
-    t.integer  "discountid"
+    t.integer  "gogopark_address_id"
+    t.integer  "gogopark_discounts_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "gogopark_spaceschedules", ["gogopark_space_id"], name: "index_gogopark_spaceschedules_on_gogopark_space_id", using: :btree
+  add_index "gogopark_spaceschedules", ["gogopark_address_id"], name: "index_gogopark_spaceschedules_on_gogopark_address_id", using: :btree
+  add_index "gogopark_spaceschedules", ["gogopark_discounts_id"], name: "index_gogopark_spaceschedules_on_gogopark_discounts_id", using: :btree
 
   create_table "gogopark_spaceverifications", force: true do |t|
     t.boolean  "spaceverications"

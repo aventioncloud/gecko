@@ -1,30 +1,30 @@
 development:
   host: 172.17.42.1
-  port: 49157
+  port: 49158
   adapter: postgresql
   encoding: unicode
   database: db
   pool: 5
   username: root
-  password: uxrBBRPNwFGh1ZgJ
+  password: pNbYvk95Heu6ptDD
 
 test:
   host: 172.17.42.1
-  port: 49157
+  port: 49158
   adapter: postgresql
   encoding: unicode
   database: db
   pool: 5
   username: root
-  password: uxrBBRPNwFGh1ZgJ
+  password: pNbYvk95Heu6ptDD
 
 production:
   host: 172.17.42.1
-  port: 49157
+  port: 49158
   adapter: postgresql
   encoding: unicode
   database: db
   pool: 5
   username: root
-  password: uxrBBRPNwFGh1ZgJ
+  password: pNbYvk95Heu6ptDD
 

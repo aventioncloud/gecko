@@ -5,7 +5,7 @@ class CreateGogoparkSpacefeatures < ActiveRecord::Migration
       t.boolean :scheduleprivacy
       t.integer :maxheight
       t.boolean :eletricrecharge
-      t.references :gogopark_space, index: true
+      t.references :gogopark_address, index: true
       t.string :others
 
       t.timestamps

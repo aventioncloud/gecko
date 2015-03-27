@@ -6,8 +6,8 @@ class CreateGogoparkSpaceschedules < ActiveRecord::Migration
       t.time :end
       t.time :start
       t.float :price
-      t.references :gogopark_space, index: true
-      t.integer :discountid
+      t.references :gogopark_address, index: true
+      t.references :gogopark_discounts, index: true
 
       t.timestamps
     end

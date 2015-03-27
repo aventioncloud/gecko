@@ -3,7 +3,7 @@ class CreateGogoparkSpaceimages < ActiveRecord::Migration
     create_table :gogopark_spaceimages do |t|
       t.string :filename
       t.string :description
-      t.references :gogopark_space, index: true
+      t.references :gogopark_address, index: true
 
       t.timestamps
     end

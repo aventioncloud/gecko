@@ -34,7 +34,11 @@ module V1
           u.name = params[:name]
           u.groupdad = params[:groupdad]
         end
-        group.save
+        if group.save
+            group
+        else
+            group.errors.full_messages
+        end
       end
       
       desc "Update a group."
