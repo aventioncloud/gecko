@@ -1,16 +1,16 @@
 module V1
-  class ImageaddressAPI < Base
-    namespace "imageaddress"
+  class ProgressAPI < Base
+    namespace "progress"
     
-      desc "Return all Image Address."
+      desc "Return all Progress."
       params do
-        requires :address, type: Integer
+        requires :schedule, type: Integer
       end
       get '/' do
         guard!
         #binding.pry
         
-        GogoparkSpaceimages.where(gogopark_address_id: params[:address])
+        GogoparkProgress.where(gogopark_spaceschedule_id: schedule)
       end
       
       desc "Return one Image Address."
@@ -27,15 +27,14 @@ module V1
       desc "Create a Image Address."
       params do
         requires :address, type: Integer, desc: "Address Id."
-        requires :image, :type => Rack::Multipart::UploadedFile, :desc => "Image file."
+        requires :filename, type: String, desc: "Filename Id."
         optional :description, type: String, desc: "Description."
       end
       post do
         guard!
-        new_file = ActionDispatch::Http::UploadedFile.new(params[:image])
         space = GogoparkSpaceimages.new do |u|
           u.gogopark_address_id = params[:address]
-          u.image = new_file
+          u.filename = params[:filename]
           u.description = params[:description]
         end
         if space.save

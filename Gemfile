@@ -74,3 +74,10 @@ gem 'redis-rack-cache'
 
 #upload
 gem 'paperclip'
+gem "paperclip-dropbox", ">= 1.1.7"
+
+
+#Geo API
+gem 'geokit'
+gem 'geokit-rails'
+gem 'google-geocode'

@@ -10,32 +10,38 @@ module V1
         guard!
         #binding.pry
         
-        GogoparkSpaceimages.where(address_id: address)
+        GogoparkSpacefeatures.where(gogopark_address_id: params[:address])
       end
       
-      desc "Return one Image Address."
+      desc "Return one Features."
       params do
         requires :id, type: Integer
       end
       route_param :id do
       get do
           guard!
-          GogoparkSpaceimages.find(params[:id])
+          GogoparkSpacefeatures.find(params[:id])
         end
       end
       
-      desc "Create a Image Address."
+      desc "Create a Features Address."
       params do
         requires :address, type: Integer, desc: "Address Id."
-        requires :filename, type: String, desc: "Filename Id."
-        optional :description, type: String, desc: "Description."
+        requires :contactphone, type: String, desc: "Contactphone."
+        requires :scheduleprivacy, type: Boolean, default: true, desc: "Scheduleprivacy."
+        requires :maxheight, type: Integer, desc: "Max Height(m)."
+        requires :eletricrecharge, type: Boolean, desc: "Eletricrecharge."
+        requires :others, type: String, desc: "Others."
       end
       post do
         guard!
-        space = GogoparkSpaceimages.new do |u|
+        space = GogoparkSpacefeatures.new do |u|
           u.gogopark_address_id = params[:address]
-          u.filename = params[:filename]
-          u.description = params[:description]
+          u.contactphone = params[:contactphone]
+          u.scheduleprivacy = params[:scheduleprivacy]
+          u.maxheight = params[:maxheight]
+          u.eletricrecharge = params[:eletricrecharge]
+          u.others = params[:others]
         end
         if space.save
             space
@@ -44,29 +50,35 @@ module V1
         end
       end
       
-      desc "Update a Image Address."
+      desc "Update a Features Address."
       params do
         requires :id, type: String, desc: "Team ID."
         requires :address, type: Integer, desc: "Address Id."
-        requires :filename, type: String, desc: "Filename Id."
-        optional :description, type: String, desc: "Description."
+        requires :contactphone, type: String, desc: "Contactphone."
+        requires :scheduleprivacy, type: Boolean, desc: "Scheduleprivacy."
+        requires :maxheight, type: Integer, desc: "Max Height."
+        requires :eletricrecharge, type: Boolean, desc: "Eletricrecharge."
+        requires :others, type: String, desc: "Others."
       end
       put ':id' do
         guard!
-        GogoparkSpaceimages.find(params[:id]).update({
+        GogoparkSpacefeatures.find(params[:id]).update({
           gogopark_address_id: params[:address],
-          filename: params[:filename],
-          description: params[:description]
+          contactphone: params[:contactphone],
+          scheduleprivacy: params[:scheduleprivacy],
+          maxheight: params[:maxheight],
+          eletricrecharge: params[:eletricrecharge],
+          others: params[:others]
         })
       end
       
-      desc "Delete a Image Address."
+      desc "Delete a Features Address."
       params do
         requires :address, type: Integer, desc: "Address ID."
       end
       delete do
         guard!
-        GogoparkSpaceimages.destroy_all(:gogopark_address_id => address)
+        GogoparkSpacefeatures.destroy_all(:gogopark_address_id => address)
       end
   end
 end

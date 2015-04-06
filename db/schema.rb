@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150326012326) do
+ActiveRecord::Schema.define(version: 20150406171911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20150326012326) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "amount"
+    t.boolean  "active"
   end
 
   add_index "gogopark_addresses", ["cidade_id"], name: "index_gogopark_addresses_on_cidade_id", using: :btree
@@ -110,6 +111,20 @@ ActiveRecord::Schema.define(version: 20150326012326) do
   add_index "gogopark_invoices", ["gogopark_spaceschedule_id"], name: "index_gogopark_invoices_on_gogopark_spaceschedule_id", using: :btree
   add_index "gogopark_invoices", ["users_id"], name: "index_gogopark_invoices_on_users_id", using: :btree
 
+  create_table "gogopark_payments", force: true do |t|
+    t.integer  "gogopark_progress_id"
+    t.integer  "gogopark_invoice_id"
+    t.string   "typepayment"
+    t.datetime "paidoff"
+    t.datetime "conferred"
+    t.integer  "usersconferred"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopark_payments", ["gogopark_invoice_id"], name: "index_gogopark_payments_on_gogopark_invoice_id", using: :btree
+  add_index "gogopark_payments", ["gogopark_progress_id"], name: "index_gogopark_payments_on_gogopark_progress_id", using: :btree
+
   create_table "gogopark_progresses", force: true do |t|
     t.integer  "users_id"
     t.datetime "checkin"
@@ -118,6 +133,8 @@ ActiveRecord::Schema.define(version: 20150326012326) do
     t.float    "price"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "provided_start"
+    t.datetime "provided_end"
   end
 
   add_index "gogopark_progresses", ["gogopark_spaceschedule_id"], name: "index_gogopark_progresses_on_gogopark_spaceschedule_id", using: :btree
@@ -142,6 +159,11 @@ ActiveRecord::Schema.define(version: 20150326012326) do
     t.integer  "gogopark_address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "image_remote_url"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "gogopark_spaceimages", ["gogopark_address_id"], name: "index_gogopark_spaceimages_on_gogopark_address_id", using: :btree
@@ -180,12 +202,12 @@ ActiveRecord::Schema.define(version: 20150326012326) do
     t.boolean  "spaceverified"
     t.integer  "users_id"
     t.string   "description"
-    t.integer  "gogopark_space_id"
+    t.integer  "gogopark_address_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "gogopark_spaceverifications", ["gogopark_space_id"], name: "index_gogopark_spaceverifications_on_gogopark_space_id", using: :btree
+  add_index "gogopark_spaceverifications", ["gogopark_address_id"], name: "index_gogopark_spaceverifications_on_gogopark_address_id", using: :btree
   add_index "gogopark_spaceverifications", ["users_id"], name: "index_gogopark_spaceverifications_on_users_id", using: :btree
 
   create_table "oauth_access_grants", force: true do |t|

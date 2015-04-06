@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  gogopark_progress_id: 
+  gogopark_invoice_id: 
+  typepayment: MyString
+  paidoff: 2015-04-06 17:11:28
+  conferred: 2015-04-06 17:11:28
+  usersconferred: 1
+
+two:
+  gogopark_progress_id: 
+  gogopark_invoice_id: 
+  typepayment: MyString
+  paidoff: 2015-04-06 17:11:28
+  conferred: 2015-04-06 17:11:28
+  usersconferred: 1

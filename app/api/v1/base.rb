@@ -10,8 +10,11 @@ module V1
     mount TeamAPI
     mount SpaceAPI
     mount AddressAPI
-    mount ImageAddressAPI
+    mount ImageaddressAPI
     mount FeaturesAPI
+    mount SchedulesAPI
+    mount VerificationAPI
+    mount SearchAPI
     
     add_swagger_documentation
   end

@@ -5,7 +5,7 @@ class CreateGogoparkSpaceverifications < ActiveRecord::Migration
       t.boolean :spaceverified
       t.references :users, index: true
       t.string :description
-      t.references :gogopark_space, index: true
+      t.references :gogopark_address, index: true
 
       t.timestamps
     end
