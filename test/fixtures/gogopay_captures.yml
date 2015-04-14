@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  gogopay_authorizations_id: 
+  gogopay_transactions_id: 
+  amount: 9.99
+
+two:
+  gogopay_authorizations_id: 
+  gogopay_transactions_id: 
+  amount: 9.99

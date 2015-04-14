@@ -1,0 +1,28 @@
+# config/memcached.yml
+defaults:
+  client: Dalli::Client
+  ttl: 1800
+  readonly: false
+  urlencode: false
+  c_threshold: 10000
+  compression: true
+  namespace: gogopark-cache
+  benchmarking: false
+  disabled: false
+  debug: false
+ 
+development:
+  servers: gogopark-cache.oldpz5.cfg.use1.cache.amazonaws.com:11211
+  # Developers who have memcached installed on their local system should comment the following line
+  # disabled: true
+ 
+test: 
+  disabled: true
+ 
+staging:
+  servers:
+    - gogopark-cache.oldpz5.cfg.use1.cache.amazonaws.com:11211
+ 
+production:
+  servers:
+    - gogopark-cache.oldpz5.cfg.use1.cache.amazonaws.com:11211

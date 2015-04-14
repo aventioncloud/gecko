@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  users_id: 
+  name: MyString
+  crypted_number: MyString
+  token: MyString
+  card_type: MyString
+  street_address: MyString
+  city: 1
+  zip: MyString
+
+two:
+  users_id: 
+  name: MyString
+  crypted_number: MyString
+  token: MyString
+  card_type: MyString
+  street_address: MyString
+  city: 1
+  zip: MyString

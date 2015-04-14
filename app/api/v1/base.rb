@@ -15,6 +15,7 @@ module V1
     mount SchedulesAPI
     mount VerificationAPI
     mount SearchAPI
+    mount PaymentAPI
     
     add_swagger_documentation
   end

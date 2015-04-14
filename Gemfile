@@ -13,7 +13,7 @@ gem "settingslogic", "~> 2.0.9"
 gem "devise", "~> 3.1.1"
 
 # API Framework
-gem "grape", "~> 0.6.0"
+gem "grape", "~> 0.6.1"
 
 # OAuth 2 Authorization Server
 gem "doorkeeper", "~> 0.7.3"
@@ -72,6 +72,10 @@ gem 'redis-namespace'
 gem 'redis-rails'
 gem 'redis-rack-cache'
 
+#memcached
+gem 'dalli'
+gem 'cache_fu', :git => 'https://github.com/kreetitech/cache_fu.git'
+
 #upload
 gem 'paperclip'
 gem "paperclip-dropbox", ">= 1.1.7"
@@ -81,3 +85,7 @@ gem "paperclip-dropbox", ">= 1.1.7"
 gem 'geokit'
 gem 'geokit-rails'
 gem 'google-geocode'
+
+gem 'cielo', :git => 'https://github.com/vyctorbh/cielo.git'
+
+gem 'dumper'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150406171911) do
+ActiveRecord::Schema.define(version: 20150409185957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -209,6 +209,75 @@ ActiveRecord::Schema.define(version: 20150406171911) do
 
   add_index "gogopark_spaceverifications", ["gogopark_address_id"], name: "index_gogopark_spaceverifications_on_gogopark_address_id", using: :btree
   add_index "gogopark_spaceverifications", ["users_id"], name: "index_gogopark_spaceverifications_on_users_id", using: :btree
+
+  create_table "gogopay_authorizations", force: true do |t|
+    t.integer  "gogopay_creditcards_id"
+    t.integer  "gogopay_transactions_id"
+    t.string   "last_for_digits"
+    t.decimal  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopay_authorizations", ["gogopay_creditcards_id"], name: "index_gogopay_authorizations_on_gogopay_creditcards_id", using: :btree
+  add_index "gogopay_authorizations", ["gogopay_transactions_id"], name: "index_gogopay_authorizations_on_gogopay_transactions_id", using: :btree
+
+  create_table "gogopay_captures", force: true do |t|
+    t.integer  "gogopay_authorizations_id"
+    t.integer  "gogopay_transactions_id"
+    t.decimal  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopay_captures", ["gogopay_authorizations_id"], name: "index_gogopay_captures_on_gogopay_authorizations_id", using: :btree
+  add_index "gogopay_captures", ["gogopay_transactions_id"], name: "index_gogopay_captures_on_gogopay_transactions_id", using: :btree
+
+  create_table "gogopay_creditcards", force: true do |t|
+    t.integer  "users_id"
+    t.string   "name"
+    t.string   "crypted_number"
+    t.string   "token"
+    t.string   "card_type"
+    t.string   "street_address"
+    t.integer  "city"
+    t.string   "zip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopay_creditcards", ["users_id"], name: "index_gogopay_creditcards_on_users_id", using: :btree
+
+  create_table "gogopay_refunds", force: true do |t|
+    t.integer  "gogopay_authorizations_id"
+    t.integer  "gogopay_transactions_id"
+    t.decimal  "amount"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopay_refunds", ["gogopay_authorizations_id"], name: "index_gogopay_refunds_on_gogopay_authorizations_id", using: :btree
+  add_index "gogopay_refunds", ["gogopay_transactions_id"], name: "index_gogopay_refunds_on_gogopay_transactions_id", using: :btree
+
+  create_table "gogopay_transactions", force: true do |t|
+    t.integer  "users_id"
+    t.integer  "gogopay_creditcards_id"
+    t.string   "tid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopay_transactions", ["gogopay_creditcards_id"], name: "index_gogopay_transactions_on_gogopay_creditcards_id", using: :btree
+  add_index "gogopay_transactions", ["users_id"], name: "index_gogopay_transactions_on_users_id", using: :btree
+
+  create_table "gogopay_voids", force: true do |t|
+    t.string   "voidee_type"
+    t.integer  "gogopay_transactions_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "gogopay_voids", ["gogopay_transactions_id"], name: "index_gogopay_voids_on_gogopay_transactions_id", using: :btree
 
   create_table "oauth_access_grants", force: true do |t|
     t.integer  "resource_owner_id",              null: false

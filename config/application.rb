@@ -25,5 +25,16 @@ module Oauth2ApiSample
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
     config.autoload_paths += Dir["#{Rails.root}/app/services/*"]
     config.cache_store = :redis_store, 'redis://127.0.0.1:6379/0/cache', { expires_in: 90.minutes }
+    
+    config.action_mailer.delivery_method = :smtp
+    # SMTP settings for gmail
+    config.action_mailer.smtp_settings = {
+     :address              => ENV['smtp_host'],
+     :port                 => ENV['smtp_port'],
+     :user_name            => ENV['smtp_user'],
+     :password             => ENV['smtp_password'],
+     :authentication       => "plain",
+    :enable_starttls_auto => true
+    }
   end
 end

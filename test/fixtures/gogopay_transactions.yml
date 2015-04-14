@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  users_id: 
+  gogopay_creditcards_id: 
+  tid: MyString
+
+two:
+  users_id: 
+  gogopay_creditcards_id: 
+  tid: MyString
