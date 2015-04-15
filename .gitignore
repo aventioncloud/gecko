@@ -15,9 +15,6 @@
 /log/*.log
 /tmp
 
-# Ignore settings file
-/config/application.yml
-
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

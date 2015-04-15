@@ -1,0 +1,34 @@
+defaults: &defaults
+
+development:
+  <<: *defaults
+
+  # Secret tokens. Generate them with `rake secret`
+  secret_key: "WndZNvO89uCk7nxj"
+  devise_secret_key: "WndZNvO89uCk7nxj0"
+  smtp_host: "smtp.mandrillapp.com"
+  smtp_port: 587
+  smtp_user: "vyctorbh@gmail.com"
+  smtp_password: "rNd3LORstG56_Zey3fDOGw"  
+
+test:
+  <<: *defaults
+
+  # Secret tokens. Generate them with `rake secret`
+  secret_key: "WndZNvO89uCk7nxj"
+  devise_secret_key: "WndZNvO89uCk7nxj0"
+  smtp_host: "smtp.mandrillapp.com"
+  smtp_port: 587
+  smtp_user: "vyctorbh@gmail.com"
+  smtp_password: "rNd3LORstG56_Zey3fDOGw" 
+  
+production:
+  <<: *defaults
+
+  # Secret tokens. Generate them with `rake secret`
+  secret_key: "WndZNvO89uCk7nxj"
+  devise_secret_key: "WndZNvO89uCk7nxj0"
+  smtp_host: "smtp.mandrillapp.com"
+  smtp_port: 587
+  smtp_user: "vyctorbh@gmail.com"
+  smtp_password: "rNd3LORstG56_Zey3fDOGw"
