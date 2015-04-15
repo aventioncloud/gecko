@@ -172,7 +172,6 @@ ActiveRecord::Schema.define(version: 20150409185957) do
     t.string   "term"
     t.string   "type"
     t.string   "description"
-    t.integer  "amount"
     t.integer  "platform_group_id"
     t.integer  "users_id"
     t.datetime "created_at"

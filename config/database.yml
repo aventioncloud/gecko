@@ -19,12 +19,12 @@ test:
   password: pNbYvk95Heu6ptDD
 
 production:
-  host: 172.17.42.1
-  port: 49158
+  host: gogo.cbvsnzacabmc.us-east-1.rds.amazonaws.com
+  port: 5432
   adapter: postgresql
   encoding: unicode
-  database: db
+  database: gogopark
   pool: 5
-  username: root
-  password: pNbYvk95Heu6ptDD
+  username: gogopark
+  password: Idon522#
 
