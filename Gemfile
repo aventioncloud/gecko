@@ -90,4 +90,4 @@ gem 'google-geocode'
 
 gem 'cielo', :git => 'https://github.com/vyctorbh/cielo.git'
 
-gem 'dumper'
+#gem 'dumper'
