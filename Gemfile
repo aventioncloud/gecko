@@ -74,7 +74,7 @@ gem 'redis-rack-cache'
 
 #memcached
 gem 'dalli'
-gem 'cache_fu', :git => 'https://github.com/kreetitech/cache_fu.git'
+#gem 'cache_fu', :git => 'https://github.com/kreetitech/cache_fu.git'
 
 #upload
 gem 'paperclip'
