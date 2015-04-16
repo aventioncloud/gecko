@@ -76,6 +76,8 @@ gem 'redis-rack-cache'
 gem 'dalli'
 #gem 'cache_fu', :git => 'https://github.com/kreetitech/cache_fu.git'
 
+gem 'therubyracer',  platforms: :ruby
+
 #upload
 gem 'paperclip'
 gem "paperclip-dropbox", ">= 1.1.7"

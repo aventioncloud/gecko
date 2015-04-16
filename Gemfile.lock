@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/kreetitech/cache_fu.git
-  revision: 4ab15594477270a959ccddf53fffa2d7bfaa3f69
-  specs:
-    cache_fu (0.3.0)
-      rails (>= 2.3)
-
-GIT
   remote: https://github.com/vyctorbh/cielo.git
   revision: b00dde6e9d450d2dce887e3ba4c4595be3a3c8a8
   specs:
@@ -131,6 +124,7 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.2)
+    libv8 (3.16.14.7)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -219,6 +213,7 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.4)
       redis (>= 2.2)
+    ref (1.0.5)
     sass (3.2.19)
     sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
@@ -239,6 +234,9 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    therubyracer (0.12.2)
+      libv8 (~> 3.16.14.0)
+      ref
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
@@ -263,7 +261,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  cache_fu!
   cancancan (~> 1.10)
   cielo!
   coffee-rails (~> 4.0.0)
@@ -292,5 +289,6 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   sdoc
   settingslogic (~> 2.0.9)
+  therubyracer
   turbolinks
   uglifier (>= 1.3.0)
