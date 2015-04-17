@@ -76,10 +76,6 @@ GEM
       railties (>= 3.1)
     dropbox-sdk (1.6.4)
       json
-    dumper (1.6.0)
-      multi_json (>= 1.0)
-      multipart-post (>= 1.1.5)
-      posix-spawn (>= 0.3.6)
     equalizer (0.0.11)
     erubis (2.7.0)
     execjs (2.5.2)
@@ -134,7 +130,6 @@ GEM
     minitest (4.7.5)
     multi_json (1.11.0)
     multi_xml (0.5.5)
-    multipart-post (2.0.0)
     net-http-persistent (1.9)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -149,7 +144,6 @@ GEM
       paperclip (>= 3.1, < 5)
     pg (0.18.1)
     polyglot (0.3.5)
-    posix-spawn (0.3.11)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -267,7 +261,6 @@ DEPENDENCIES
   dalli
   devise (~> 3.1.1)
   doorkeeper (~> 0.7.3)
-  dumper
   geokit
   geokit-rails
   google-geocode

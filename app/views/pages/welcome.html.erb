@@ -1,2 +1,164 @@
-<h1>Pages#welcome</h1>
-<p>Find me in app/views/pages/welcome.html.erb</p>
+<div class="slide" data-slide="1" id="slide1" data-stellar-background-ratio="1"> 
+  <!--Header Block--> 
+  <!--Making visible for a large devices-->
+  
+  <div class="visible-lg">
+    <div class="first-slide" data-stellar-ratio="1.3"></div>
+    <div class="city-contour-back" data-stellar-ratio="1.15"></div>
+    <div class="city-contour" data-stellar-ratio="1.05"></div>
+  </div>
+  
+  <!--Making visible for a small devices. We do it because of IOS cannot properly render smooth scroll events-->
+  <div class="visible-xs visible-sm visible-md">
+    <div class="first-slide"></div>
+    <div class="city-contour-back"></div>
+    <div class="city-contour"></div>
+  </div>
+  <div id="hello">
+  
+
+
+    <h3 style ="background-color: #333; padding: 5px 0 5px">Se você acha que com tantos carros nas ruas ficou quase impossível estacionar conheça:</h3>
+    <h1><img src="/assets/logo.png"/></h1>
+    <h4>Seu jeito fácil e rápido de estacionar!</h4>
+    
+    <!--Starting CountDown-->
+    <div id="container-counter">
+      <div id="defaultCountdown"></div>
+    </div>
+  </div>
+  <div class="traffic">
+    <div class="vehicles1">
+      <div class="vehicles2"></div>
+    </div>
+  </div>
+  <div class="button-wrap button-effect"> <a class="button" data-slide="2" title=""><i class="fa fa-chevron-circle-down"></i></a></div>
+</div>
+<!--End Slide 1-->
+
+<div class="slide" id="slide2" data-slide="2" data-stellar-background-ratio="1">
+  <div id="guys-room">
+    <div class="container">
+      <div class="row">
+        <div id="introduction">
+          <div class="slidename">Gostou? É grátis!</div>
+          <p>Nosso aplicativo ajuda você a encontrar rapidamente uma vaga de estacionamento próximo de onde precisa ir. Você poderá fazer a reserva através do seu smartphone, ai é só chegar e estacionar. Cadastre-se e veja como é fácil. <br/> Ficar rodando a trás de vaga nunca mais!</p>
+        </div>
+        <div id="guys"> 
+          
+          <!--Here is container with email subscription-->
+          <div class="subscribe-block">
+            <h2>Cadastre-se agora!</h2>
+            <p>Entre com seu endereço de e-mail e inicie seu cadastro.</p>
+            <form action="save.php" id="subscribe-form" method="post" name="subscribe-form">
+              <input type="email" name="email" placeholder="Digite seu email" id="mail" class="email required" />
+              <button class="btn btn-default" id="submitmail" type="submit" value="Subscribe">Cadastrar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Half Circle--> 
+  <svg id="bigHalfCircle" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <path d="M0 100 C40 0 60 0 100 100 Z"/>
+  </svg>
+  <div class="button-wrap button-effect"> <a class="button" data-slide="3" title=""><i class="fa fa-chevron-circle-down"></i></a></div>
+</div>
+<!--End Slide 2-->
+
+<div class="slide" id="slide3" data-slide="3" data-stellar-background-ratio="1">
+  <div class="container">
+    <div class="row">
+      <div id="we-do-intro">
+        <div class="slidename">Sua Vaga em 3 passos</div>
+        <p>Conheça o mais inovador jeito de estacionar com rapidez, comodidade e segurança.</p>
+      </div>
+      <!--Our Missions Block-->
+      <div class="we-do-container">
+        <div class="col-md-4 col-sm-4">
+          <div class="we-do-blocks">
+            <div class="we-do-icon fa-search"></div>
+            <h2>1 - Encontre a vaga</h2>
+            <img src="/assets/tela01.png"> </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="we-do-blocks">
+            <div class="we-do-icon fa-check"></div>
+            <h2>2 - Reserve</h2>
+            <img src="/assets/tela02.png"> </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+          <div class="we-do-blocks">
+            <div class="we-do-icon fa-qrcode"></div>
+            <h2>3 - Apresente seu Código</h2>
+            <img src="/assets/tela03.png"></div>
+        </div>
+      </div>
+    </div>
+    
+   
+    <div class="slide-subheader">Disponível para:</div>
+    
+    <!--Clients-->
+    <div class="row">
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/1.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/2.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/3.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/4.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/5.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/6.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/7.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/8.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/9.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/10.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/11.png" alt="Client" /></a></div>
+      <div class="col-md-1 col-xs-3"><a href="#"><img class="img-responsive" src="/assets/slide3/12.png" alt="Client" /></a></div>
+    </div>
+  </div>
+  
+  <!--Half Circle--> 
+  
+ 
+</div>
+<!--End Slide 3-->
+
+
+<!--End Slide 4-->
+
+<div class="footer">
+  <p>GoGoParrk &reg; &#8482; 2015. E-mail: contato@gogopark.com.br </p>
+  
+  <!-- Social Media Buttons - CSS3 - Free to Remove Unneeded -->
+  <div class="social-buttons">
+    <ul class="social">
+      <li><a href="http://facebook.com/"><i class="icon-facebook-circled"></i></a></li>
+      <li><a href="http://linkedin.com/"><i class="icon-linkedin-circled"></i></a></li>
+      <li><a href="http://google.com/"><i class="icon-gplus-circled"></i></a></li>
+      <li><a href="http://twitter.com/"><i class="icon-twitter-circled"></i></a></li>
+      <li><a href="http://pinterest.com/"><i class="icon-pinterest-circled"></i></a></li>
+      <li><a href="http://tumblr.com/"><i class="icon-tumblr-circled"></i></a></li>
+      <li><a href="http://stumbleupon.com/"><i class="icon-stumbleupon-circled"></i></a></li>
+      <li><a href="http://dribble.com/"><i class="icon-dribbble-circled"></i></a></li>
+      <li><a href="http://vimeo.com/"><i class="icon-vimeo-circled"></i></a></li>
+      <li><a href="http://mixi.com/"><i class="icon-mixi"></i></a></li>
+      <li><a href="http://youtube.com/"><i class="icon-youtube"></i></a></li>
+      <li><a href="http://lastfm.com/"><i class="icon-lastfm-circled"></i></a></li>
+      <li><a href="http://instagram.com/"><i class="icon-instagram"></i></a></li>
+      <li><a href="http://vk.com/"><i class="icon-vkontakte"></i></a></li>
+      <li><a href="http://flickr.com/"><i class="icon-flickr-circled"></i></a></li>
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/assets/bootstrap.min.js"></script> 
+<script type="text/javascript" src="/assets/jquery.cbpQTRotator.min.js"></script> 
+<script type="text/javascript" src="/assets/jquery.stellar.min.js"></script> 
+<script type="text/javascript" src="/assets/waypoints.min.js"></script> 
+<script type="text/javascript" src="/assets/jquery.easing.1.3.js"></script> 
+<script type="text/javascript" src="/assets/jquery.jigowatt.js"></script> 
+<script type="text/javascript" src="/assets/jquery.backgroundpos.min.js"></script> 
+<script type="text/javascript" src="/assets/jquery.countdown.min.js"></script> 
+<script type="text/javascript" src="/assets/scripts.js"></script> 
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
