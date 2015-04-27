@@ -1,12 +1,12 @@
 development:
-  host: 172.17.42.1
-  port: 49158
+  host: 45.55.243.147
+  port: 5432
   adapter: postgresql
   encoding: unicode
-  database: db
+  database: geckodev
   pool: 5
-  username: root
-  password: pNbYvk95Heu6ptDD
+  username: postgres
+  password: Idon522#
 
 test:
   host: 172.17.42.1

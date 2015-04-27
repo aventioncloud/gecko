@@ -88,6 +88,8 @@ gem 'geokit'
 gem 'geokit-rails'
 gem 'google-geocode'
 
-gem 'cielo', :git => 'https://github.com/vyctorbh/cielo.git'
+gem 'apartment'
+
+gem 'simple_form'
 
 #gem 'dumper'

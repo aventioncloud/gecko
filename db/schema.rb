@@ -11,10 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150418130023) do
+ActiveRecord::Schema.define(version: 20150427190047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: true do |t|
+    t.integer  "owner_id"
+    t.string   "subdomain"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cidades", force: true do |t|
     t.string   "nome"
@@ -66,223 +73,6 @@ ActiveRecord::Schema.define(version: 20150418130023) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "gogopark_addresses", force: true do |t|
-    t.string   "size"
-    t.string   "address"
-    t.integer  "numberhome"
-    t.string   "complement"
-    t.string   "neighborhood"
-    t.string   "postcode"
-    t.integer  "cidade_id"
-    t.decimal  "latitude"
-    t.decimal  "longitude"
-    t.integer  "gogopark_space_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "amount"
-    t.boolean  "active"
-  end
-
-  add_index "gogopark_addresses", ["cidade_id"], name: "index_gogopark_addresses_on_cidade_id", using: :btree
-  add_index "gogopark_addresses", ["gogopark_space_id"], name: "index_gogopark_addresses_on_gogopark_space_id", using: :btree
-
-  create_table "gogopark_discounts", force: true do |t|
-    t.integer  "platform_group_id"
-    t.integer  "users_id"
-    t.float    "price"
-    t.string   "typediscount"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopark_discounts", ["platform_group_id"], name: "index_gogopark_discounts_on_platform_group_id", using: :btree
-  add_index "gogopark_discounts", ["users_id"], name: "index_gogopark_discounts_on_users_id", using: :btree
-
-  create_table "gogopark_invoices", force: true do |t|
-    t.integer  "users_id"
-    t.integer  "gogopark_spaceschedule_id"
-    t.float    "price"
-    t.datetime "dateref"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopark_invoices", ["gogopark_spaceschedule_id"], name: "index_gogopark_invoices_on_gogopark_spaceschedule_id", using: :btree
-  add_index "gogopark_invoices", ["users_id"], name: "index_gogopark_invoices_on_users_id", using: :btree
-
-  create_table "gogopark_payments", force: true do |t|
-    t.integer  "gogopark_progress_id"
-    t.integer  "gogopark_invoice_id"
-    t.string   "typepayment"
-    t.datetime "paidoff"
-    t.datetime "conferred"
-    t.integer  "usersconferred"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopark_payments", ["gogopark_invoice_id"], name: "index_gogopark_payments_on_gogopark_invoice_id", using: :btree
-  add_index "gogopark_payments", ["gogopark_progress_id"], name: "index_gogopark_payments_on_gogopark_progress_id", using: :btree
-
-  create_table "gogopark_progresses", force: true do |t|
-    t.integer  "users_id"
-    t.datetime "checkin"
-    t.datetime "checkout"
-    t.integer  "gogopark_spaceschedule_id"
-    t.float    "price"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "provided_start"
-    t.datetime "provided_end"
-    t.string   "status"
-  end
-
-  add_index "gogopark_progresses", ["gogopark_spaceschedule_id"], name: "index_gogopark_progresses_on_gogopark_spaceschedule_id", using: :btree
-  add_index "gogopark_progresses", ["users_id"], name: "index_gogopark_progresses_on_users_id", using: :btree
-
-  create_table "gogopark_spacefeatures", force: true do |t|
-    t.string   "contactphone"
-    t.boolean  "scheduleprivacy"
-    t.integer  "maxheight"
-    t.boolean  "eletricrecharge"
-    t.integer  "gogopark_address_id"
-    t.string   "others"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopark_spacefeatures", ["gogopark_address_id"], name: "index_gogopark_spacefeatures_on_gogopark_address_id", using: :btree
-
-  create_table "gogopark_spaceimages", force: true do |t|
-    t.string   "filename"
-    t.string   "description"
-    t.integer  "gogopark_address_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "image_remote_url"
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-  end
-
-  add_index "gogopark_spaceimages", ["gogopark_address_id"], name: "index_gogopark_spaceimages_on_gogopark_address_id", using: :btree
-
-  create_table "gogopark_spaces", force: true do |t|
-    t.string   "term"
-    t.string   "type"
-    t.string   "description"
-    t.integer  "amount"
-    t.integer  "platform_group_id"
-    t.integer  "users_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopark_spaces", ["platform_group_id"], name: "index_gogopark_spaces_on_platform_group_id", using: :btree
-  add_index "gogopark_spaces", ["users_id"], name: "index_gogopark_spaces_on_users_id", using: :btree
-
-  create_table "gogopark_spaceschedules", force: true do |t|
-    t.datetime "dateref"
-    t.integer  "dayofweek"
-    t.time     "end"
-    t.time     "start"
-    t.float    "price"
-    t.integer  "gogopark_address_id"
-    t.integer  "gogopark_discounts_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "maxreserve"
-    t.string   "description"
-    t.boolean  "active"
-    t.string   "name"
-  end
-
-  add_index "gogopark_spaceschedules", ["gogopark_address_id"], name: "index_gogopark_spaceschedules_on_gogopark_address_id", using: :btree
-  add_index "gogopark_spaceschedules", ["gogopark_discounts_id"], name: "index_gogopark_spaceschedules_on_gogopark_discounts_id", using: :btree
-
-  create_table "gogopark_spaceverifications", force: true do |t|
-    t.boolean  "spaceverications"
-    t.boolean  "spaceverified"
-    t.integer  "users_id"
-    t.string   "description"
-    t.integer  "gogopark_address_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopark_spaceverifications", ["gogopark_address_id"], name: "index_gogopark_spaceverifications_on_gogopark_address_id", using: :btree
-  add_index "gogopark_spaceverifications", ["users_id"], name: "index_gogopark_spaceverifications_on_users_id", using: :btree
-
-  create_table "gogopay_authorizations", force: true do |t|
-    t.integer  "gogopay_creditcards_id"
-    t.integer  "gogopay_transactions_id"
-    t.string   "last_for_digits"
-    t.decimal  "amount"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopay_authorizations", ["gogopay_creditcards_id"], name: "index_gogopay_authorizations_on_gogopay_creditcards_id", using: :btree
-  add_index "gogopay_authorizations", ["gogopay_transactions_id"], name: "index_gogopay_authorizations_on_gogopay_transactions_id", using: :btree
-
-  create_table "gogopay_captures", force: true do |t|
-    t.integer  "gogopay_authorizations_id"
-    t.integer  "gogopay_transactions_id"
-    t.decimal  "amount"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopay_captures", ["gogopay_authorizations_id"], name: "index_gogopay_captures_on_gogopay_authorizations_id", using: :btree
-  add_index "gogopay_captures", ["gogopay_transactions_id"], name: "index_gogopay_captures_on_gogopay_transactions_id", using: :btree
-
-  create_table "gogopay_creditcards", force: true do |t|
-    t.integer  "users_id"
-    t.string   "name"
-    t.string   "crypted_number"
-    t.string   "token"
-    t.string   "card_type"
-    t.string   "street_address"
-    t.integer  "city"
-    t.string   "zip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopay_creditcards", ["users_id"], name: "index_gogopay_creditcards_on_users_id", using: :btree
-
-  create_table "gogopay_refunds", force: true do |t|
-    t.integer  "gogopay_authorizations_id"
-    t.integer  "gogopay_transactions_id"
-    t.decimal  "amount"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopay_refunds", ["gogopay_authorizations_id"], name: "index_gogopay_refunds_on_gogopay_authorizations_id", using: :btree
-  add_index "gogopay_refunds", ["gogopay_transactions_id"], name: "index_gogopay_refunds_on_gogopay_transactions_id", using: :btree
-
-  create_table "gogopay_transactions", force: true do |t|
-    t.integer  "users_id"
-    t.integer  "gogopay_creditcards_id"
-    t.string   "tid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopay_transactions", ["gogopay_creditcards_id"], name: "index_gogopay_transactions_on_gogopay_creditcards_id", using: :btree
-  add_index "gogopay_transactions", ["users_id"], name: "index_gogopay_transactions_on_users_id", using: :btree
-
-  create_table "gogopay_voids", force: true do |t|
-    t.string   "voidee_type"
-    t.integer  "gogopay_transactions_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gogopay_voids", ["gogopay_transactions_id"], name: "index_gogopay_voids_on_gogopay_transactions_id", using: :btree
 
   create_table "oauth_access_grants", force: true do |t|
     t.integer  "resource_owner_id",              null: false
