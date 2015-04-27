@@ -24,24 +24,16 @@ module V1
         end
       end
       
-      desc "Create a Image Address."
+      desc "Add reserve."
       params do
-        requires :address, type: Integer, desc: "Address Id."
-        requires :filename, type: String, desc: "Filename Id."
-        optional :description, type: String, desc: "Description."
+        requires :schedule, type: Integer, desc: "Schedule Id."
+        requires :provide_start, type: DateTime, desc: "Date Time Provided Start."
+        requires :provide_end, type: DateTime, desc: "Date Time Provided End."
+        optional :user, type: Integer, desc: "Users Id."
       end
-      post do
+      post "reserve" do
         guard!
-        space = GogoparkSpaceimages.new do |u|
-          u.gogopark_address_id = params[:address]
-          u.filename = params[:filename]
-          u.description = params[:description]
-        end
-        if space.save
-            space
-        else
-            space.errors.full_messages
-        end
+        
       end
       
       desc "Update a Image Address."

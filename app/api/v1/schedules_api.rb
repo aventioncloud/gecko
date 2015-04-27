@@ -27,11 +27,15 @@ module V1
       desc "Create a Schedules Address."
       params do
         requires :address, type: Integer, desc: "Address Id."
-        optional :dateref, type: Date, desc: "Data references."
+        requires :maxreserve, type: Integer, desc: "Numb Max Reserve."
+        requires :name, type: String, desc: "Name Schedules."
+        requires :description, type: String, desc: "Description Schedules."
+        requires :dateref, type: Date, desc: "Data references."
         optional :dayofweek, type: Integer, desc: "Day of week."
         requires :start, type: Time, desc: "Time start Schedules."
         requires :end, type: Time, desc: "Time end Schedules."
         requires :price, type: Float, desc: "Price Schedules."
+        optional :active, default: true, type: Boolean, desc: "Schedules Active?"
         optional :discounts, type: Integer, desc: "Discounts ID."
       end
       post do
@@ -43,6 +47,10 @@ module V1
           u.start = params[:start]
           u.end = params[:end]
           u.price = params[:price]
+          u.maxreserve = params[:maxreserve]
+          u.name = params[:name]
+          u.description = params[:description]
+          u.active = params[:active]
           u.gogopark_discounts_id = params[:discounts]
         end
         if space.save

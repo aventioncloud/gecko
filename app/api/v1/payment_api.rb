@@ -17,11 +17,11 @@ module V1
         requires :cardaddress, type: String, desc: "Endereço do Cartão de Credito."
         requires :city, type: Integer, city: true, desc: "City ID"
         requires :zip, type: String, desc: "Zip Code."
-        requires :amount, type: Float, regexp: /^\d*[0-9](\.\d*[0-9])?$/, desc: "Amount."
+        requires :amount, type: Integer, regexp: /^[0-9]+$/, desc: "Amount."
         requires :urlretorno, regexp: /^(http|https)/, type: String, desc: "URL Return."
       end
       post do
-        #guard!
+        guard!
         #Cria o Token baseado no numero do cartão de credito
         token_request = Cielo::Token.new
         token_parameters = {
@@ -35,11 +35,25 @@ module V1
         
         #recupera o token
         token = response[:"retorno-token"][:token][:"dados-token"][:"codigo-token"]
+        crypted_number = response[:"retorno-token"][:token][:"dados-token"][:"numero-cartao-truncado"]
         
         cielo = GogoParkLib::CieloGateWay.new
-        @transaction = cielo.transaction!(token, params[:cardbanner], params[:cardname], params[:cardsecurity], params[:amount])
-        @transaction
+        @transaction = cielo.transaction!(token, crypted_number, current_user["id"], params[:cardbanner], params[:cardname], params[:cardsecurity], params[:amount], params[:cardaddress], params[:city], params[:zip])
+        
+        @ary = { tid: @transaction.tid, crypted_number: crypted_number, createat: @transaction.created_at,  cardname: params[:cardname], cardbanner: params[:cardbanner]}
+        @ary
+        
       end
-    
+      
+      desc "Verify transaction."
+      params do
+        requires :tid, type: String, desc: "TID Code."
+      end
+      post "verify" do
+        guard!
+        cielo = GogoParkLib::CieloGateWay.new
+        @verify = cielo.verify!(params[:tid])
+        @verify
+      end
   end
 end

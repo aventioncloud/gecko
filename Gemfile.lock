@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/vyctorbh/cielo.git
-  revision: b00dde6e9d450d2dce887e3ba4c4595be3a3c8a8
+  revision: bf637fc27dbb81d52fb5a92f05c29b2967259125
   specs:
     cielo (0.1.5)
       activesupport (>= 3.0.7)

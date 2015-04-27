@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150409185957) do
+ActiveRecord::Schema.define(version: 20150418130023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(version: 20150409185957) do
     t.datetime "updated_at"
     t.datetime "provided_start"
     t.datetime "provided_end"
+    t.string   "status"
   end
 
   add_index "gogopark_progresses", ["gogopark_spaceschedule_id"], name: "index_gogopark_progresses_on_gogopark_spaceschedule_id", using: :btree
@@ -172,6 +173,7 @@ ActiveRecord::Schema.define(version: 20150409185957) do
     t.string   "term"
     t.string   "type"
     t.string   "description"
+    t.integer  "amount"
     t.integer  "platform_group_id"
     t.integer  "users_id"
     t.datetime "created_at"
@@ -191,6 +193,10 @@ ActiveRecord::Schema.define(version: 20150409185957) do
     t.integer  "gogopark_discounts_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "maxreserve"
+    t.string   "description"
+    t.boolean  "active"
+    t.string   "name"
   end
 
   add_index "gogopark_spaceschedules", ["gogopark_address_id"], name: "index_gogopark_spaceschedules_on_gogopark_address_id", using: :btree
