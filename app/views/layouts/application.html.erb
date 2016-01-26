@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--[if IE 9 ]>    <html class="ie9" lang="en" ng-app="naut"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
-<html lang="pt" ng-app="naut">
+<html lang="pt">
 <!--<![endif]-->
 
 <head>
@@ -9,10 +9,10 @@
    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
    <meta name="description" content="{{app.description}}">
    <meta name="keywords" content="app, responsive, angular, bootstrap, dashboard, admin">
-   <title data-ng-bind="pageTitle()">Naut</title>
+   <title data-ng-bind="pageTitle()">Gecko</title>
    <!-- build:css app/css/application.css-->
    <%= stylesheet_link_tag    "bootstrap", media: "all", "data-turbolinks-track" => true %>
-   <%= stylesheet_link_tag    "styles", media: "all", "data-turbolinks-track" => true %>
+   <%= stylesheet_link_tag    "main", media: "all", "data-turbolinks-track" => true %>
    <!--<link rel="stylesheet" href="app/css/bootstrap.css">
    <link rel="stylesheet" href="app/css/styles.css">
        endbuild-->
@@ -20,6 +20,5 @@
 </head>
    <!-- endbuild-->
 <%= yield %>
-
 </html>
 

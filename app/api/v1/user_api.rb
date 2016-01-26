@@ -4,6 +4,11 @@ module V1
     namespace "user"
     authorizes_routes!
     
+      desc 'Return current user, requires authentication'
+      get 'me', authorize: ['read', 'User']  do
+        current_user
+      end
+    
       desc "Return all Users."
       get '/', authorize: ['read', 'User'] do
         User.where(:accounts_id => current_user["accounts_id"])
