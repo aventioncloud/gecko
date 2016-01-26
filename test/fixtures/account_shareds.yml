@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  account_invests_id: 
+  users_id: 
+  platform_groups_id: 
+  write: false
+
+two:
+  account_invests_id: 
+  users_id: 
+  platform_groups_id: 
+  write: false

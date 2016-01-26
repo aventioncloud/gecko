@@ -11,14 +11,55 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150427190047) do
+ActiveRecord::Schema.define(version: 20151108175624) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "account_invests", force: true do |t|
+    t.string   "title"
+    t.integer  "banks_id"
+    t.integer  "account"
+    t.integer  "numberapplication"
+    t.date     "startdate"
+    t.date     "enddate"
+    t.date     "shortage"
+    t.decimal  "indexador"
+    t.boolean  "iof"
+    t.decimal  "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "users_id"
+  end
+
+  add_index "account_invests", ["banks_id"], name: "index_account_invests_on_banks_id", using: :btree
+  add_index "account_invests", ["users_id"], name: "index_account_invests_on_users_id", using: :btree
+
+  create_table "account_shareds", force: true do |t|
+    t.integer  "account_invests_id"
+    t.integer  "users_id"
+    t.integer  "platform_groups_id"
+    t.boolean  "write"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "account_shareds", ["account_invests_id"], name: "index_account_shareds_on_account_invests_id", using: :btree
+  add_index "account_shareds", ["platform_groups_id"], name: "index_account_shareds_on_platform_groups_id", using: :btree
+  add_index "account_shareds", ["users_id"], name: "index_account_shareds_on_users_id", using: :btree
+
   create_table "accounts", force: true do |t|
     t.integer  "owner_id"
     t.string   "subdomain"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "banks", force: true do |t|
+    t.string   "name"
+    t.string   "numberbank"
+    t.string   "imagesmall"
+    t.string   "imagelarge"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -113,6 +154,20 @@ ActiveRecord::Schema.define(version: 20150427190047) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "permissions", force: true do |t|
+    t.string   "subject_class"
+    t.string   "action"
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "permissions_roles", force: true do |t|
+    t.integer "permission_id"
+    t.integer "role_id"
+  end
+
   create_table "platform_groups", force: true do |t|
     t.string   "name"
     t.integer  "groupdad"
@@ -159,6 +214,12 @@ ActiveRecord::Schema.define(version: 20150427190047) do
   add_index "platform_teams", ["platform_group_id"], name: "index_platform_teams_on_platform_group_id", using: :btree
   add_index "platform_teams", ["users_id"], name: "index_platform_teams_on_users_id", using: :btree
 
+  create_table "roles", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -173,9 +234,24 @@ ActiveRecord::Schema.define(version: 20150427190047) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "roles"
+    t.integer  "accounts_id"
+    t.string   "name"
   end
 
+  add_index "users", ["accounts_id"], name: "index_users_on_accounts_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+    t.string   "ip"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
 end

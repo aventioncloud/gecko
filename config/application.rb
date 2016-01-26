@@ -19,12 +19,23 @@ module Oauth2ApiSample
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    
+    config.middleware.insert_before "ActionDispatch::Static", "Rack::Cors" do
+      # Permit CORS from any origin, only in the API route
+      allow do
+        origins '*'
+        resource '/api/*', :headers => :any
+      end
+    end
 
     config.paths.add "app/api", glob: "**/*.rb"
     config.paths.add "app/services", glob: "**/*.rb"
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
     config.autoload_paths += Dir["#{Rails.root}/app/services/*"]
     config.cache_store = :redis_store, 'redis://127.0.0.1:6379/0/cache', { expires_in: 90.minutes }
+    
+    config.assets.paths += Dir["#{Rails.root}/vendor/views/*"].sort_by { |dir| -dir.size }
+    config.assets.paths += Dir["#{Rails.root}/vendor/img/*"].sort_by { |dir| -dir.size }
     
     config.action_mailer.delivery_method = :smtp
     # SMTP settings for gmail

@@ -23,17 +23,31 @@ module APIGuard
   module HelperMethods
     
     def fetch_users
-      users =  $redis.get("users")
-      if users.nil?
-        users = User.all.to_json
-        $redis.set("users", users)
+      #binding.pry
+      #domain = request.host
+      #hosts = domain.sub!(".dokkuapp.com", "")
+      users =  User.all.to_json
+      #if users.nil?
+      #  users = User.all.to_json
+      #  $redis.set("users", users)
         #$redis.expire("categories",3.hour.to_i)
-      end
+      #end
       @users = JSON.load users
     end
     def find_byid(id)
+      #binding.pry
       @users =  fetch_users()
       @user = @users.find { |h| h['id'] == id }
+    end
+    
+    def find_permission(id, subject_class, action)
+      #binding.pry
+      domain = request.host
+      hosts = domain.sub!(".kurumin.xyz", "")
+      Apartment::Tenant.switch!(hosts)
+      
+      @permissions = Role.joins(:permissions).select("permissions.*").where("roles.id = ? and permissions.subject_class = ? and permissions.action = ?", id, subject_class, action)
+      @permissions
     end
     
     # Invokes the doorkeeper guard.
@@ -56,9 +70,24 @@ module APIGuard
     #   scopes: (optional) scopes required for this guard.
     #           Defaults to empty array.
     #
+    
+    def guarddommain!(domain)
+      hosts = domain.sub!(".kurumin.xyz", "")
+      #binding.pry
+      Apartment::Tenant.switch!(hosts)
+      guard!
+    end
+    
+    def auth_routes!
+      token_strings = ""
+    end 
+    
     def guard!(scopes: [])
+      Apartment::Database.switch('public')
+      #binding.pry
+      #
       token_string = get_token_string()
-
+      #binding.pry
       if token_string.blank?
         raise MissingTokenError
 
@@ -78,12 +107,24 @@ module APIGuard
 
         when Oauth2::AccessTokenValidationService::VALID
           @current_user = find_byid(access_token.resource_owner_id)
-
+          PaperTrail.whodunnit = @current_user["id"]
         end
       end
     end
 
     def current_user
+      #binding.pry
+      if get_token_string() != nil
+        token_string = get_token_string()
+        access_token = find_access_token(token_string)
+        @current = find_byid(access_token.resource_owner_id)
+        if @users != nil
+          @current_user = @users[0]
+        else
+          @current_user = nil
+        end
+        #print 'oauu'
+      end
       @current_user
     end
 
@@ -95,10 +136,14 @@ module APIGuard
     end
 
     def find_access_token(token_string)
+      #binding.pry
+      Apartment::Database.switch!("public")
+      #AccessToken.authenticate(token_string)
       Doorkeeper::AccessToken.authenticate(token_string)
     end
 
     def validate_access_token(access_token, scopes)
+      #binding.pry
       Oauth2::AccessTokenValidationService.validate(access_token, scopes: scopes)
     end
   end
@@ -116,6 +161,21 @@ module APIGuard
         guard! scopes: scopes
       end
     end
+    
+    def authorizes_routes!
+      before do
+        guard!
+        opts = env['api.endpoint'].options[:route_options]
+        @current_user = current_user
+        if @current_user != nil and opts[:authorize] != nil
+          #binding.pry
+          permissions = find_permission(@current_user["roles"], opts[:authorize][1], opts[:authorize][0])
+          if permissions.length == 0
+            error!('401 Unauthorized', 401)
+          end
+        end
+      end
+    end 
 
     private
     def install_error_responders(base)

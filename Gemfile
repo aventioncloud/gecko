@@ -13,12 +13,23 @@ gem "settingslogic", "~> 2.0.9"
 gem "devise", "~> 3.1.1"
 
 # API Framework
+gem 'kramdown'
+gem 'kaminari'
 gem "grape", "~> 0.6.1"
+gem 'active_model_serializers'
+gem 'grape-active_model_serializers'
+gem 'grape-swagger'
+gem 'swagger-ui_rails'
+gem 'api-pagination'
+gem 'rack-cors', :require => 'rack/cors'
 
 # OAuth 2 Authorization Server
 gem "doorkeeper", "~> 0.7.3"
 
-gem 'cancancan', '~> 1.10'
+gem 'cancan', '~> 1.6'
+
+gem 'haml'
+gem 'bootstrap-sass'
 
 gem 'grape-cancan'
 
@@ -50,8 +61,6 @@ group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
-
-gem 'grape-swagger'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
@@ -91,5 +100,7 @@ gem 'google-geocode'
 gem 'apartment'
 
 gem 'simple_form'
+
+gem 'paper_trail', '~> 4.0.0'
 
 #gem 'dumper'

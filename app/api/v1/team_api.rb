@@ -4,6 +4,7 @@ module V1
     
       desc "Return all team."
       get '/' do
+        apartment!
         guard!
         #binding.pry
         
@@ -16,6 +17,7 @@ module V1
         requires :group_id, type: Integer, desc: "Group id."
       end
       post do
+        apartment!
         guard!
         team = PlatformTeam.new do |u|
           u.users_id = params[:user_id]
@@ -35,6 +37,7 @@ module V1
         requires :group_id, type: Integer, desc: "Group id."
       end
       put ':id' do
+        apartment!
         guard!
         PlatformTeam.find(params[:id]).update({
           users_id: params[:user_id],
@@ -47,6 +50,7 @@ module V1
         requires :group_id, type: Integer, desc: "Group ID."
       end
       delete do
+        apartment!
         guard!
         PlatformTeam.destroy_all(:platform_group_id => id)
       end

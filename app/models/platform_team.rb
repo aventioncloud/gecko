@@ -1,4 +1,6 @@
 class PlatformTeam < ActiveRecord::Base
+  has_paper_trail
+  
   belongs_to :platform_group
   belongs_to :users
   

@@ -1,30 +1,30 @@
 development:
-  host: 45.55.243.147
+  host: 191.101.2.6
   port: 5432
   adapter: postgresql
   encoding: unicode
   database: geckodev
   pool: 5
   username: postgres
-  password: Idon522#
+  password: 123456
 
 test:
-  host: 172.17.42.1
+  host: 191.101.2.6
   port: 49158
   adapter: postgresql
   encoding: unicode
-  database: db
+  database: geckodev
   pool: 5
-  username: root
-  password: pNbYvk95Heu6ptDD
+  username: postgres
+  password: 123456
 
 production:
-  host: gogo.cbvsnzacabmc.us-east-1.rds.amazonaws.com
+  host: 191.101.2.6
   port: 5432
   adapter: postgresql
   encoding: unicode
-  database: gogopark
+  database: geckodev
   pool: 5
-  username: gogopark
-  password: Idon522#
+  username: postgres
+  password: 123456
 

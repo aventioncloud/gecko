@@ -8,4 +8,4 @@
 
 roles = PlatformRoles.create([{ name: 'Administrador' }, { name: 'Consultor' }, { name: 'Cliente' }])
 menu = PlatformMenu.create([{ name: 'Dashboard', url: '', href: '', short: 1, menudad: nil, icon: ''}])
-PlatformMenuRoles.create(menu_id: menu.first, role_id: roles.first, principalid: 'read')
+PlatformMenuRoles.create(menu_id: menu.first.id, role_id: roles.first.id, principalid: 'read')

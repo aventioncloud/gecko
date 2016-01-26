@@ -4,10 +4,11 @@ module V1
     
       get '/' do
         guard!
-        #binding.pry
         
+        apartment!
+                
         ary = Array.new
-        
+        binding.pry
         PlatformMenuRoles.where(role_id: current_user["roles"]).find_each do |menuroles|
           ary << PlatformMenu.find(menuroles.menu_id)
         end

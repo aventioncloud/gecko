@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: MyString
+  banks_id: 
+  account: 1
+  numberapplication: 1
+  start: 2015-11-08
+  end: 2015-11-08
+  shortage: 2015-11-08
+  indexador: 9.99
+  iof: 
+  value: 9.99
+
+two:
+  title: MyString
+  banks_id: 
+  account: 1
+  numberapplication: 1
+  start: 2015-11-08
+  end: 2015-11-08
+  shortage: 2015-11-08
+  indexador: 9.99
+  iof: 
+  value: 9.99
