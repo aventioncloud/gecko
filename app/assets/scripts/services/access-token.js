@@ -1,5 +1,3 @@
-'use strict';
-
 /**
   * @ngdoc service
   * @name geckoCliApp.accessToken
@@ -7,9 +5,7 @@
   * # accessToken
   * Service in the geckoCliApp.
  */
-angular.module('geckoCliApp');
-
-app.service('AccessToken', function($localStorage, $timeout) {
+angular.module('geckoCliApp').service('AccessToken', function($localStorage, $timeout) {
   return {
     get: function() {
       return $localStorage.token;

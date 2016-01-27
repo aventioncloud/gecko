@@ -8,6 +8,25 @@
  *
  * Main module of the application.
  */
+function testInterceptor(AccessToken, Rails) {
+  return {
+    request: function(config) {
+      return config;
+    },
+
+    requestError: function(config) {
+      return config;
+    },
+
+    response: function(res) {
+      return res;
+    },
+
+    responseError: function(res) {
+      return res;
+    }
+  }
+}
 angular
   .module('geckoCliApp', [
     'ngAnimate',
@@ -17,32 +36,18 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.router', 
-    'templates', 
     'ngStorage'
   ])
-  .config(function ($httpProvider) {
+  .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
     
-    //$httpProvider.interceptors.push('tokenInterceptor');
-    //$httpProvider.responseInterceptors.push('unauthorizedInterceptor');
-    /*$routeProvider
-      .when('/', {
-        templateUrl: 'assets/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
-      })
-      .when('/about', {
-        templateUrl: 'assets/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });*/
+    
+    $httpProvider.interceptors.push('tokenInterceptor');
+    $httpProvider.interceptors.push('unauthorizedInterceptor');
+
   }).factory('tokenInterceptor', function(AccessToken, Rails) {
   return {
     request: function(config) {
       var token;
-      alert(Rails.host);
       if (config.url.indexOf("//" + Rails.host) === 0) {
         token = AccessToken.get();
         if (token) {

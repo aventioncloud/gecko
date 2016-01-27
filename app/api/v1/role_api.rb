@@ -12,6 +12,14 @@ module V1
         Role.joins(:permissions).select("permissions.*").where("roles.id = ?", params[:role])
       end
       
+      desc "List my permissions."
+      get "me" do
+        guard!
+        role_id = current_user["roles"]
+        apartment!
+        Role.joins(:permissions).select("permissions.*").where("roles.id = ?", role_id)
+      end
+      
       desc "Create permission."
       params do
         requires :name, type: String, desc: "Name Permission."

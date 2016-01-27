@@ -33,10 +33,10 @@
     </div>
 
     <div class="container">
-   <div class="oauth" ng-controller="AuthCtrl">
-     <a class="oauth__link oauth__link--login" ng-hide="loggedIn" ng-href="{{ loginUrl }}">Login</a><button class="oauth__link oauth__link--logout" ng-click="logout()" ng-show="loggedIn" type="button">Logout</button>
-   </div>
-    <div ng-view=""></div>
+     <div class="oauth" ng-controller="AuthCtrl">
+       <a class="oauth__link oauth__link--login" ng-hide="loggedIn" ng-href="{{ loginUrl }}">Login</a><button class="oauth__link oauth__link--logout" ng-click="logout()" ng-show="loggedIn" type="button">Logout</button>
+     </div>
+    <div ui-view></div>
     </div>
 
     <div class="footer">d
@@ -44,11 +44,4 @@
         <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
       </div>
     </div>
-   
-   <script src="/assets/bower.js"></script>
-   <script src="/assets/services.js"></script>
-   <script src="/assets/controllers.js"></script>
-   <script src="/assets/routes.js"></script>
-   <script src="/assets/app.js"></script>
-   <%= js_env %>
 </body>

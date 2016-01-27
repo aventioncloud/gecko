@@ -10,15 +10,4 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery.min
-//= require angular.min
-//= require bootstrap.min
-//= require angular-animate.min
-//= require angular-cookies.min
-//= require angular-mocks
-//= require angular-resource.min
-//= require angular-route.min
-//= require angular-sanitize.min
-//= require angular-touch.min
-//= require angular-ui-router
-//= require ngStorage.min
+//= require_tree ./directives

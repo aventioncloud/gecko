@@ -10,7 +10,8 @@
     "angular-route": "^1.4.0",
     "angular-sanitize": "^1.4.0",
     "angular-touch": "^1.4.0",
-    "ngStorage": ""
+    "ngStorage": "0.3.2",
+    "angular-ui-router": "0.2.17"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"

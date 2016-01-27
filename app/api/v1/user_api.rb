@@ -4,9 +4,23 @@ module V1
     namespace "user"
     authorizes_routes!
     
+      helpers do
+        def current_token; env['api.token']; end
+        def warden; env['warden']; end
+
+        def current_resource_owner
+          User.find(current_token.resource_owner_id) if current_token
+        end
+      end
+    
       desc 'Return current user, requires authentication'
       get 'me', authorize: ['read', 'User']  do
         current_user
+      end
+      
+      desc 'Logout user'
+      delete 'logout' do
+        warden.logout
       end
     
       desc "Return all Users."
