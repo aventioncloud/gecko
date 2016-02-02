@@ -1,4 +1,4 @@
-# OAuth2 API Guard Sample
+# Gecko Unicoop
 
 This Rails app demos how to build an OAuth 2 Authorization Server and Resource Server (API), and guard it with OAuth 2 Bearer Token.
 
