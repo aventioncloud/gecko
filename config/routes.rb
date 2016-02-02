@@ -17,7 +17,7 @@ Oauth2ApiSample::Application.routes.draw do
   constraints(SubdomainPresent) do
     use_doorkeeper do
       # it accepts :authorizations, :tokens, :applications and :authorized_applications
-      #controllers :authorizations => 'custom_authorizations', :tokens => 'custom_token', :applications => 'custom_applications'
+      controllers :authorizations => 'custom_authorizations', :tokens => 'custom_token', :applications => 'custom_applications'
       #controllers :applications => 'custom_applications', :tokens => 'custom_token'
     end
     devise_for :users

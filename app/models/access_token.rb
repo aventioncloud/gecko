@@ -37,6 +37,15 @@
       token = last_authorized_token_for(application, resource_owner_id)
       token if token && ScopeChecker.matches?(token.scopes, scopes)
     end
+    
+    def self.last_authorized_token_for(application, resource_owner_id)
+      where(:application_id => application.id,
+            :resource_owner_id => resource_owner_id,
+            :revoked_at => nil).
+      order('created_at desc').
+      limit(1).
+      first
+    end
 
     def token_type
       "bearer"

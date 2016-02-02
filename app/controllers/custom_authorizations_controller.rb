@@ -1,7 +1,7 @@
 class CustomAuthorizationsController < Doorkeeper::ApplicationsController
 
   before_filter :authenticate_resource_owner!
-  before_filter :load_schema
+  #before_filter :load_schema
     
   def load_schema
     #binding.pry
@@ -18,7 +18,7 @@ class CustomAuthorizationsController < Doorkeeper::ApplicationsController
   def current_account
     @current_account ||= Account.find_by(subdomain: request.subdomain)
   end
-  helper_method :current_account
+  #helper_method :current_account
 
     def new
       if pre_auth.authorizable?
@@ -59,6 +59,7 @@ class CustomAuthorizationsController < Doorkeeper::ApplicationsController
     end
 
     def pre_auth
+      Apartment::Database.switch('public')
       @pre_auth ||= Doorkeeper::OAuth::PreAuthorization.new(Doorkeeper.configuration,
                                                 server.client_via_uid,
                                                 params)

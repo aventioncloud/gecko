@@ -21,6 +21,7 @@ module Doorkeeper
       end
 
       def authorizable?
+        print 'ola mundo'
         valid?
       end
 
@@ -43,6 +44,7 @@ module Doorkeeper
       end
 
       def validate_client
+        print 'ola mundo 333'
         client.present?
       end
 
