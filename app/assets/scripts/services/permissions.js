@@ -11,7 +11,7 @@ angular.module('geckoCliApp')
       permission = permission.trim();
       if($localStorage.permissionList != undefined && $localStorage.permissionList.data != undefined && $localStorage.permissionList.data.length > 0)
       {
-          return _.some($localStorage.permissionList.Data, function(item) {
+          return $.each(JSON.stringify($localStorage.permissionList.Data), function(item) {
             if(typeof item.action === 'string') {
               return item.action.trim() === permission
             }

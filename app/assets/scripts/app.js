@@ -1,32 +1,6 @@
 'use strict';
 
-/**
- * @ngdoc overview
- * @name geckoCliApp
- * @description
- * # geckoCliApp
- *
- * Main module of the application.
- */
-function testInterceptor(AccessToken, Rails) {
-  return {
-    request: function(config) {
-      return config;
-    },
 
-    requestError: function(config) {
-      return config;
-    },
-
-    response: function(res) {
-      return res;
-    },
-
-    responseError: function(res) {
-      return res;
-    }
-  }
-}
 angular
   .module('geckoCliApp', [
     'ngAnimate',
@@ -57,7 +31,23 @@ angular
       return config;
     }
   };
-  }).factory('unauthorizedInterceptor', function($q, $injector) {
+  }).factory('unauthorizedInterceptor', function($q, $injector, $location) {
+    return {
+      responseError: function(response) {
+        if (response.status === 401 && response.config.url.indexOf("role/me") === -1) {
+          $location.path('/unauthorized');
+        }
+        return $q.reject(response);
+        return response;
+      }
+    }
+  });
+    
+    
+    
+    
+    /*
+    
     return function(promise) {
       var error, success;
       success = function(response) {
@@ -71,4 +61,4 @@ angular
       };
       return promise.then(success, error);
     };
-  });
+  });*/

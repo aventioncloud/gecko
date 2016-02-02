@@ -14,7 +14,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider.state('about', {
     url: '/about',
     templateUrl: 'assets/about.html',
-    controllerAs: 'about'
+    controllerAs: 'about',
+    permission: 'read'
   });
   $stateProvider.state('accessToken', {
     url: '/access_token=:response',
@@ -32,6 +33,6 @@ app.config(function($stateProvider, $urlRouterProvider) {
         return $state.go('index');
       }
     },
-    templateUrl: '401.html'
+    templateUrl: 'assets/401.html'
   });
 });
