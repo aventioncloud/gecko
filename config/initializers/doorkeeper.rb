@@ -2,6 +2,10 @@ Doorkeeper.configure do
   # Change the ORM that doorkeeper will use.
   # Currently supported options are :active_record, :mongoid2, :mongoid3, :mongo_mapper
   orm :active_record
+  
+  skip_authorization do
+    true
+  end 
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
@@ -23,7 +27,7 @@ Doorkeeper.configure do
   # access_token_expires_in 2.hours
 
   # Issue access tokens with refresh token (disabled by default)
-  # use_refresh_token
+  use_refresh_token
 
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter :confirmation => true (default false) if you want to enforce ownership of
@@ -59,7 +63,7 @@ Doorkeeper.configure do
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with trusted a application.
-  # skip_authorization do |resource_owner, client|
+  #skip_authorization do |resource_owner, client|
   #   client.superapp? or resource_owner.admin?
   # end
 end

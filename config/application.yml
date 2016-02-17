@@ -12,6 +12,8 @@ development:
   smtp_password: "rNd3LORstG56_Zey3fDOGw"  
   host: 'kurumin.xyz:3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
+  theme: 'unicoop'
+  title: 'Unicoop'
 
 
 test:
@@ -26,6 +28,8 @@ test:
   smtp_password: "rNd3LORstG56_Zey3fDOGw" 
   host: 'kurumin.xyz:3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
+  theme: 'unicoop'
+  title: 'Unicoop'
   
 production:
   <<: *defaults
@@ -39,3 +43,5 @@ production:
   smtp_password: "rNd3LORstG56_Zey3fDOGw"
   host: 'kurumin.xyz:3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
+  theme: 'unicoop'
+  title: 'Unicoop'

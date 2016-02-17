@@ -11,11 +11,14 @@ angular.module('geckoCliApp')
       permission = permission.trim();
       if($localStorage.permissionList != undefined && $localStorage.permissionList.data != undefined && $localStorage.permissionList.data.length > 0)
       {
-          return $.each(JSON.stringify($localStorage.permissionList.Data), function(item) {
-            if(typeof item.action === 'string') {
-              return item.action.trim() === permission
+         for(var i =0; i < $localStorage.permissionList.data.length; i++)
+         {
+            if(typeof $localStorage.permissionList.data[i].action === 'string') {
+              if($localStorage.permissionList.data[i].action.trim() === permission)
+                return false;
             }
-          });
+         }
+         return true;
       }
       else
       {

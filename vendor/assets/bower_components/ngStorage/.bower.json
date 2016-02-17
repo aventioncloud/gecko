@@ -36,6 +36,6 @@
     "commit": "bc19e281d84de2b52f50d3639401ecf4f4a1d3f1"
   },
   "_source": "git://github.com/agrublev/ngStorage.git",
-  "_target": "*",
+  "_target": "0.3.2",
   "_originalSource": "ngStorage"
 }

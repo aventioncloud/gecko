@@ -1,0 +1,32 @@
+<!--<div>
+  <label for="{{id}}">
+    {{options.label || 'Select'}}
+    {{options.required ? '*' : ''}}
+  </label>
+  <select id="{{id}}"
+          class="form-control"
+          aria-describedby="{{id}}_description"
+          ng-model="value"
+          ng-required="options.required"
+          ng-disabled="options.disabled"
+          ng-options="option.id as option.name for option in options.options track by option.id">
+  </select>
+  <p>{{value}}</p>
+  <p id="{{id}}_description" ng-if="options.name">{{options.name}}</p>
+</div>-->
+<label for="{{id}}">
+  {{options.templateOptions.label || 'Select'}}
+  {{options.templateOptions.required ? '*' : ''}}
+</label><br>
+<select
+        id="{{id}}"
+        kendo-drop-down-list
+        style="width: 335px;"
+        k-option-label="'Selecione... '"
+        k-placeholder="options.templateOptions.placeholder"
+        k-data-text-field="'name'"
+        k-data-value-field="'id'"
+        k-value-primitive="true"  
+        k-data-source="options.templateOptions.options"
+        style="width: 200px" name="role_id" k-ng-model="model[options.key]"></select>
+<p></p>

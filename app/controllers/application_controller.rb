@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     redirect_to admin_organizations_path, :alert => exception.message
   end
 
-  before_filter :load_schema, :set_mailer_host
+  before_filter :load_schema, :set_mailer_host, :load_init
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
   protected
@@ -20,6 +20,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  
+  def load_init
+    app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../config/application.yml', __FILE__)).read).result)[Rails.env]
+    @theme = app_config['theme']
+    @title = app_config['title']
+  end
 
   def load_schema
     #binding.pry

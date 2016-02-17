@@ -1,6 +1,8 @@
 module V1
   class RoleAPI < Base
+    require_relative '../../lib/api/validations/deletrolevalid_value'
     namespace "role"
+    authorizes_routes!
     
       #Permission
       desc "All permissions in roles."
@@ -17,7 +19,7 @@ module V1
         guard!
         role_id = current_user["roles"]
         apartment!
-        Role.joins(:permissions).select("permissions.*").where("roles.id = ?", role_id)
+        Role.joins(:permissions).select("permissions.id, permissions.subject_class, permissions.action").where("roles.id = ?", role_id)
       end
       
       desc "Create permission."
@@ -53,11 +55,15 @@ module V1
       end
     
       desc "Return all Roles."
-      get '/', authorize: ['all', 'Super Admin'] do
+      get '/' do
+        @user = current_user
         apartment!
-        #binding.pry
-        
-        Role.all
+        @role = Role.where(:name => 'Super Admin')
+        if @role[0][:id] != @user["roles"]
+           Role.where("roles.id != ?", @role[0][:id])
+        else
+           Role.all
+        end
       end
       
       desc "Return one Role."
@@ -65,7 +71,7 @@ module V1
         requires :id, type: Integer
       end
       route_param :id do
-      get '', authorize: ['all', 'Super Admin'] do
+      get '' do
           apartment!
           @role = Role.find(params[:id]) rescue nil
         end
@@ -99,7 +105,7 @@ module V1
       
       desc "Delete a Role."
       params do
-        requires :id, type: String, desc: "Role ID."
+        requires :id, deletrolevalid: true, type: String, desc: "Role ID."
       end
       delete ':id', authorize: ['all', 'Super Admin'] do
         apartment!

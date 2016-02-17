@@ -37,6 +37,8 @@ module Oauth2ApiSample
     config.assets.paths += Dir["#{Rails.root}/vendor/views/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/vendor/img/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/vendor/assets/bower_components/*"].sort_by { |dir| -dir.size }
+    config.assets.paths += Dir["#{Rails.root}/app/assets/lib/*"].sort_by { |dir| -dir.size }
+    config.assets.paths += Dir["#{Rails.root}/app/assets/theme/*"].sort_by { |dir| -dir.size }
     
     config.action_mailer.delivery_method = :smtp
     # SMTP settings for gmail

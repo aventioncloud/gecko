@@ -1,0 +1,16 @@
+<label for="{{id}}">
+  {{options.label || 'Select'}}
+  {{options.required ? '*' : ''}}
+</label>
+<select
+  id="{{id}}"
+  kendo-multi-select
+  style="width: 335px;"
+  k-option-label="'Selecione... '"
+  k-placeholder="options.placeholder"
+  k-data-text-field="'name'"
+  k-data-value-field="'id'"
+  k-data-source="options.options"
+  ng-model="value"
+  style="width: 200px" name="roles"></select>
+<p></p>

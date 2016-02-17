@@ -118,8 +118,8 @@ module APIGuard
         token_string = get_token_string()
         access_token = find_access_token(token_string)
         @current = find_byid(access_token.resource_owner_id)
-        if @users != nil
-          @current_user = @users[0]
+        if @current != nil
+          @current_user = @current
         else
           @current_user = nil
         end
