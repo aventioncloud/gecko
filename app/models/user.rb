@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
          
   attr_accessor :created_at_format
+  
+  has_and_belongs_to_many :products
          
   after_save :clear_cache
   before_create :record_active
@@ -20,6 +22,6 @@ class User < ActiveRecord::Base
   
   private
     def record_active
-      self.acitve = 'S'
+      self.active = 'S'
     end
 end

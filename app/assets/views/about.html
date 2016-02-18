@@ -1,6 +1,9 @@
-<div ng-controller="AboutCtrl">
+<div ng-controller="AboutCtrl as vm">
     <p>This is the about view.</p>
-    <div has-permission='!read'>  
-      Teste
-    </div>
+      <form ng-submit="vm.onSubmit()" name="form" novalidate>
+        <formly-form model="vm.model" fields="vm.fields" options="vm.options">
+          <button type="submit" class="btn btn-primary submit-button" ng-disabled="form.$invalid">Submit</button>
+          <button type="button" class="btn btn-default" ng-click="vm.options.resetModel()">Reset</button>
+        </formly-form>
+      </form>
 </div>

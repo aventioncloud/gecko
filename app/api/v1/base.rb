@@ -14,6 +14,7 @@ module V1
     mount UserAPI
     mount AccountAPI
     mount RoleAPI
+    mount ProductAPI
     
     add_swagger_documentation base_path: "/api",
         api_version: 'v1',
