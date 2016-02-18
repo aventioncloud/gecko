@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216140155) do
+ActiveRecord::Schema.define(version: 20160217140407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -225,6 +225,12 @@ ActiveRecord::Schema.define(version: 20160216140155) do
   add_index "platform_teams", ["platform_group_id"], name: "index_platform_teams_on_platform_group_id", using: :btree
   add_index "platform_teams", ["users_id"], name: "index_platform_teams_on_users_id", using: :btree
 
+  create_table "products", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -254,6 +260,11 @@ ActiveRecord::Schema.define(version: 20160216140155) do
   add_index "users", ["accounts_id"], name: "index_users_on_accounts_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "users_products", force: true do |t|
+    t.integer "user_id"
+    t.integer "product_id"
+  end
 
   create_table "versions", force: true do |t|
     t.string   "item_type",  null: false

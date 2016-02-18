@@ -158,9 +158,8 @@ angular.module('geckoCliApp')
         key: 'name',
         type: 'input',
         templateOptions: {
-          label: 'Nome',
-          maxlength: 150,
-          required: true
+          required: true,
+          label: 'Nome'
         }
       },
       {

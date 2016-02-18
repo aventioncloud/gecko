@@ -171,7 +171,6 @@ angular.module('geckoCliApp')
         type: 'input',
         templateOptions: {
           label: 'Nome',
-          maxlength: 150,
           required: true
         }
       },
@@ -183,7 +182,6 @@ angular.module('geckoCliApp')
           type: 'email',
           label: 'E-mail',
           required: true,
-          maxlength: 150,
           onKeydown: function(value, options) {
             options.validation.show = false;
           },
@@ -235,9 +233,7 @@ angular.module('geckoCliApp')
         type: 'input',
         templateOptions: {
           type: 'password',
-          label: 'Senha',
-          maxlength: 15,
-          minlength: 8
+          label: 'Senha'
         },
         expressionProperties: {
           'templateOptions.required': 'model.id === undefined'

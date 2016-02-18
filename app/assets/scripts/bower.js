@@ -11,7 +11,7 @@
 // about supported directives.
 //
 //= require jquery.min
-//= require angular.min
+//= require angular
 //= require bootstrap.min
 //= require angular-animate.min
 //= require angular-cookies.min

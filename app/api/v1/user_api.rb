@@ -30,10 +30,39 @@ module V1
         optional :id, type: Integer
       end
       get 'validemail', authorize: ['read', 'User']  do
-        if params[:id] == nil and params[:id] != nil
-          User.exists?(:email => params[:email])
+        if params[:id] == nil or params[:id] != 0
+          User.exists?(:email => params[:email]) ? 1 : 0
         else
-          User.where("id != ? and email = ? and active = 'S'", params[:id], params[:email]).exists?
+          User.where("id != ? and email = ? and active = 'S'", params[:id], params[:email]).exists? ? 1 : 0
+        end
+      end
+      
+      desc 'Link user product'
+      params do
+        requires :user_id, type: Integer
+        requires :products, type: String
+      end
+      post 'linkproduct', authorize: ['read', 'User']  do
+        @user = User.find(params[:user_id]) rescue { :error => "Usuário não encontrado." }
+        if defined?(@user.id)
+          UsersProducts.where(:user_id => @user.id).destroy_all
+          result = params[:products].split(/,/)
+          result.each do |item|
+             @productitem = Product.find(item) rescue { :error => "Produto não encontrado." }
+             #binding.pry
+             if defined?(@productitem.id)
+                userproduct = UsersProducts.new(:user_id => @user.id, :product_id => @productitem.id)
+                if userproduct.save
+                  userproduct
+                else
+                  userproduct.errors.full_messages
+                end
+              else
+                @productitem
+             end
+          end
+        else
+          @user
         end
       end
       
@@ -67,7 +96,7 @@ module V1
         else
           User.where("accounts_id = ? and (? = '' or upper(name) like upper(?))" , current_user["accounts_id"], @search, '%'+@search+'%').find_each do |item|
               apartment!
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
           end
         end
         ary
@@ -80,7 +109,9 @@ module V1
       route_param :id do
         get '', authorize: ['read', 'User'] do
           Apartment::Database.switch!("public")
-          @user = User.find(params[:id]) rescue nil
+          @useritem = User.find(params[:id]) rescue nil
+          apartment!
+          @user = {:id => @useritem.id, :name => @useritem.name, :email => @useritem.email, :created_at => @useritem.created_at, :roles => @useritem.roles, :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => params[:id])}
           @user
         end
       end

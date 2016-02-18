@@ -14,7 +14,6 @@ angular
     'ngProgress',
     'toaster',
     'ngTable',
-    'ngTableToCsv',
     'formly', 
     'formlyBootstrap',
     'oitozero.ngSweetAlert',
@@ -38,10 +37,10 @@ angular
       wrapper: ['loader']
     });
 
-    formlyConfigProvider.setWrapper({
+    /*fformlyConfigProvider.setWrapper({
       template: '<formly-transclude></formly-transclude><div my-messages="options"></div>',
       types: ['input', 'checkbox', 'select', 'textarea', 'radio', 'input-loader']
-    });
+    });*/
     
   })
   .run(function (Progress, $rootScope) {
