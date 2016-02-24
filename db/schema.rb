@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217140407) do
+ActiveRecord::Schema.define(version: 20160222202433) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,17 @@ ActiveRecord::Schema.define(version: 20160217140407) do
     t.datetime "updated_at"
   end
 
+  create_table "atendimentos", force: true do |t|
+    t.integer  "users_id"
+    t.string   "ischat"
+    t.string   "ispf"
+    t.string   "ispj"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "atendimentos", ["users_id"], name: "index_atendimentos_on_users_id", using: :btree
+
   create_table "banks", force: true do |t|
     t.string   "name"
     t.string   "numberbank"
@@ -72,6 +83,21 @@ ActiveRecord::Schema.define(version: 20160217140407) do
   end
 
   add_index "cidades", ["estado_id"], name: "index_cidades_on_estado_id", using: :btree
+
+  create_table "contacts", force: true do |t|
+    t.string   "phone"
+    t.string   "address"
+    t.string   "number"
+    t.string   "cpfcnpj"
+    t.string   "city"
+    t.string   "active"
+    t.string   "zipcode"
+    t.string   "email"
+    t.string   "letter"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+  end
 
   create_table "estados", force: true do |t|
     t.string   "sigla"
@@ -125,6 +151,45 @@ ActiveRecord::Schema.define(version: 20160217140407) do
   end
 
   add_index "groups", ["users_id"], name: "index_groups_on_users_id", using: :btree
+
+  create_table "lead_histories", force: true do |t|
+    t.integer  "leadstatus_id"
+    t.integer  "user_id"
+    t.string   "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "lead_histories", ["leadstatus_id"], name: "index_lead_histories_on_leadstatus_id", using: :btree
+  add_index "lead_histories", ["user_id"], name: "index_lead_histories_on_user_id", using: :btree
+
+  create_table "lead_products", force: true do |t|
+    t.integer  "product_id"
+    t.integer  "lead_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "lead_statuses", force: true do |t|
+    t.string   "name"
+    t.string   "color"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "leads", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "leadstatus_id"
+    t.integer  "contact_id"
+    t.string   "title"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "leads", ["contact_id"], name: "index_leads_on_contact_id", using: :btree
+  add_index "leads", ["leadstatus_id"], name: "index_leads_on_leadstatus_id", using: :btree
+  add_index "leads", ["user_id"], name: "index_leads_on_user_id", using: :btree
 
   create_table "oauth_access_grants", force: true do |t|
     t.integer  "resource_owner_id",              null: false
@@ -255,10 +320,15 @@ ActiveRecord::Schema.define(version: 20160217140407) do
     t.string   "name"
     t.string   "active"
     t.datetime "deleted_at"
+    t.integer  "groups_id"
+    t.string   "isemail"
+    t.string   "islead"
+    t.string   "celular"
   end
 
   add_index "users", ["accounts_id"], name: "index_users_on_accounts_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["groups_id"], name: "index_users_on_groups_id", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "users_products", force: true do |t|

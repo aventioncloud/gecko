@@ -1,7 +1,7 @@
 <div class="row">
     <button class="btn btn-primary btn-sm  pull-right" has-visible='{{toolbar.controller}}' type="button" ng-click="goSearch = !goSearch">Pesquisa<span class="glyphicon glyphicon-chevron-right" style="margin-left: 10px;" ng-hide="goSearch"></span><span class="glyphicon glyphicon-chevron-down" style="margin-left: 10px;" ng-show="goSearch"></span></button>
     <a ui-sref="{{toolbar.list}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='!{{toolbar.controller}}'>Voltar</a>
-    <a ui-sref="{{toolbar.add}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='{{toolbar.controller}}' has-permission='!create'>Adicionar</a>
+    <a ui-sref="{{toolbar.add}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='{{toolbar.controller}}' has-permission='{{toolbar.permissioncreate}}'>Adicionar</a>
     <!--<a class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='{{toolbar.controller}}' ng-click='csv.generate()' ng-href="{{ csv.link() }}"
          download="myTable.csv">Exportar</a>-->
 </div>

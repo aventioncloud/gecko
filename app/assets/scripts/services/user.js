@@ -41,6 +41,22 @@ app.service('User', function($http, Rails) {
                     headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
              });
     },
+    linkproduct: function(_value) {
+      return $http({
+                    method  : 'POST',
+                    url     : base + '/linkproduct',
+                    data    : $.param(_value),  // pass in data as strings
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+             });
+    },
+    atendimento: function(_value) {
+      return $http({
+                    method  : 'POST',
+                    url     : base + '/atendimento',
+                    data    : $.param(_value),  // pass in data as strings
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+             });
+    },
     delete: function(id) {
       return $http["delete"](base + '/' + id);
     },

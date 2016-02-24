@@ -1,0 +1,52 @@
+<div class="email-wrapper" style="position: absolute !important;width: 100%; height: calc(100% - 219px);">
+
+  <barleft></barleft>
+
+  <div class="email-list b-r b-grey" ng-hide="mobileviews" id="mobileviews">
+    <!--<div class="email-refresh">{{balistviewitem.groupitem.quantidade}} indicações(s) <i class="fa fa-refresh fs-24" style="margin-left: 10px;cursor:pointer;" kendo-tooltip k-content="'Atualizar registros'" ng-click="refresh()"></i><i class="fa pg-arrow_left fs-24" style="margin-left: 10px;cursor:pointer;" kendo-tooltip k-content="'Voltar'" ng-click="back()"></i><i class="fa pg-arrow_right fs-24" style="margin-left: 5px;cursor:pointer;" kendo-tooltip k-content="'Próximo'" ng-click="next()"></i></div>-->
+    <div class="list-view" ng-hide="!isfilter" class="cssSlideUp ng-scope">
+      <div style="height:245px; background: #f0f0f0;">
+        <form name="searchForm" id="groupForm" ng-submit="submitfilter()" novalidate> 
+            <formly-form model="modelsearch" fields="fieldsssearch" options="optionssearch" form="groupForm">
+                <button class="btn btn-primary btn-sm pull-left bottomsmall" style="margin-left: 9px;" type="submit" ng-disabled="searchForm.$invalid" style="margin-right: 10px;" has-visible='!user'>Pesquisar</button>
+            </formly-form>
+        </form>
+      </div>
+    </div>
+    
+    <div id="emailList" class="list-view" data-ng-repeat="baritem in balistviewitem.groupitem">
+      <h2 class="list-view-fake-header">{{baritem.name}}</h2>
+      <div class="list-view-wrapper" data-ios="false">
+        <div class="list-view-group-container">
+          <div class="list-view-group-header">
+            <span>{{baritem.name}}</span>
+          </div>
+          <ul class="no-padding" kendo-list-view="klistview" id="listView" k-data-source="source">
+            <li class="item padding-10" style="height: 30px !important;"  k-template data-email-id="item.id" ng-drag="true" ng-drag-data="dataItem" ng-center-anchor="true">
+              <div class="thumbnail-wrapper"><span class="label {{dataItem.color}}">{{dataItem.status}}</span><p style="margin-top: 10px;"><span class="label magintop {{dataItem.colors}}">{{dataItem.usuario}}</span></p></div>
+              <!--<div class="thumbnail-wrapper d32 circular bg-success">
+                <div style="color: white;">{{dataItem.letter}}</div>
+              </div>-->
+              <div class="checkbox p-l-20" style="margin-left: 10px;">
+                <input type="checkbox" value="1" id="emailcheckbox-0-{{dataItem.id}}" value="{{dataItem.id}}"
+                ng-click="toggleSelection(dataItem.id)">
+                <label for="emailcheckbox-0-{{dataItem.id}}"></label>
+              </div>
+              <div class="inline m-l-15" ui-sref="lead.details({id: dataItem.id})" ng-click="lead.details({id: dataItem.id})">
+                <p class="recipients no-margin hint-text small">{{dataItem.name}}</p>
+                <p class="subject no-margin">{{dataItem.title}}</p>
+                <p class="body no-margin">{{dataItem.description}}</p>
+              </div>
+              <div class="datetime">{{dataItem.data}}</div>
+              <div class="clearfix"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="email-opened" ui-view>
+
+  </div>
+</div>

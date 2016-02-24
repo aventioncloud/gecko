@@ -23,14 +23,14 @@ module V1
         #guard!
         
         Apartment::Tenant.create(params[:subdomain])
-        Apartment::Tenant.switch!(params[:subdomain])
+        Apartment::Database.switch('public')
         
         user = User.new(
               :email                 => params[:email],
               :password              => params[:password],
               :password_confirmation => params[:password],
               :name =>params[:name],
-              :roles => 1#Administrator
+              :roles => 1#Super Admin
           )
           user.save!
           
@@ -52,10 +52,9 @@ module V1
         requires :subdomain, type: String, desc: "Subdomain name."
       end
       delete '', authorize: ['all', 'Super Admin'] do
-        guard!
+        Apartment::Database.switch!("public")
         account = Account.where(:subdomain => params[:subdomain])
         Account.destroy_all(:subdomain => params[:subdomain])
-        #User.destroy_all(:accounts_id => account.firts.id)
         Apartment::Tenant.drop(params[:subdomain])
       end
   end

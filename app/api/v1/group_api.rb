@@ -16,14 +16,14 @@ module V1
         if @role[0][:id] != @user["roles"]
           Group.where("active = 'S'").find_each do |item|
               apartment!
-              ary << {:id => item[:id],:name => item[:name], :dadgroup => Group.find(item[:dadgroup]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+              ary << {:id => item[:id],:name => item[:name], :owner => User.find(item[:users_id]), :dadgroup => Group.find(item[:dadgroup]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
           end
         else
           Group.all().find_each do |item|
               if item[:dadgroup] != nil
-                ary << {:id => item[:id],:name => item[:name], :active => item[:active], :dadgroup => Group.find(item[:dadgroup]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+                ary << {:id => item[:id],:name => item[:name], :active => item[:active], :owner => User.find(item[:users_id]), :dadgroup => Group.find(item[:dadgroup]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
               else
-                ary << {:id => item[:id],:name => item[:name], :active => item[:active], :dadgroup => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+                ary << {:id => item[:id],:name => item[:name], :active => item[:active], :owner => User.find(item[:users_id]), :dadgroup => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
               end
           end
         end

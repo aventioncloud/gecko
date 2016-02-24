@@ -30,17 +30,20 @@ angular.module('geckoCliApp')
       templateUrl: 'assets/user/form.html',
       controller: 'UserCtrl'
     });
-  }).controller('UserCtrl', function ($scope, $location, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert) {
+  }).controller('UserCtrl', function ($scope, $location, $rootScope, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Product) {
 
     var vm = this;
     var Id = $stateParams.id;
+    
+    $rootScope.$broadcast('disablefilterChanged');
     
     //Toolbar
     //Alterar para o parametro do crud
     $scope.toolbar = {
       controller: "user",
       add: "user.add",
-      list: "user.list"
+      list: "user.list",
+      permissioncreate: "{'subject_class':'User','action':'create'}"
     };
     
     //Super Admin
@@ -66,6 +69,7 @@ angular.module('geckoCliApp')
       $scope.filter.name = undefined;
       $scope.filter.email = undefined;
       $scope.globalSearchTerm = undefined;
+      $scope.filter.group_id = undefined; 
     };
     
     $scope.optionsselect = function(item){
@@ -81,7 +85,8 @@ angular.module('geckoCliApp')
       //Alterar para o parametro do crud
       $scope.filteroptions = [
           {name: 'name', value: 'Nome'},
-          {name: 'email', value: 'E-mail'}
+          {name: 'email', value: 'E-mail'},
+          {name: 'group', value: 'Grupo'}
       ];
     } else {
       //Super Admin
@@ -94,7 +99,8 @@ angular.module('geckoCliApp')
       $scope.filteroptions = [
           {name: 'name', value: 'Nome'},
           {name: 'email', value: 'E-mail'},
-          {name: 'active', value: 'Ativo'}
+          {name: 'active', value: 'Ativo'},
+          {name: 'group', value: 'Grupo'}
       ];
     }
     
@@ -108,7 +114,7 @@ angular.module('geckoCliApp')
           $scope.data = data.data;
           $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
-                count: 10,          // count per page
+                count: 25,          // count per page
                 filter: $scope.filter,
                 sorting: {
                     name: 'asc'     // initial sorting
@@ -144,18 +150,28 @@ angular.module('geckoCliApp')
           $scope.filter.name = term; 
           $scope.filter.email = undefined; 
           $scope.filter.active = undefined;
+          $scope.filter.group_id = undefined; 
       }
       else if($scope.optionsselectitem.name === 'active'){
           
           $scope.filter.active = $scope.isInvertedSearch ? 'S' : 'N'; 
           $scope.filter.name = undefined; 
+          $scope.filter.email = undefined;
+          $scope.filter.group_id = undefined; 
+      }
+      else if($scope.optionsselectitem.name === 'group')
+      {
+          $scope.filter.group_id = term; 
+          $scope.filter.name = undefined; 
           $scope.filter.email = undefined; 
+          $scope.filter.active = undefined;
       }
       else
       {
           $scope.filter.email = term; 
           $scope.filter.name = undefined; 
           $scope.filter.active = undefined;
+          $scope.filter.group_id = undefined; 
       }
     }
     
@@ -163,87 +179,190 @@ angular.module('geckoCliApp')
     //Create model form
     $scope.model = {};
     $scope.options = {};
+    $scope.model.products = [];
     //Alterar para o parametro do crud
     $scope.fields = [
       {
+        className: 'row large',
+        fieldGroup: [
+        {
         // this field's ng-model will be bound to vm.model.username
-        key: 'name',
-        type: 'input',
-        templateOptions: {
-          label: 'Nome',
-          required: true
-        }
-      },
-      {
-        key: 'email',
-        type: 'input',
-        templateOptions: {
-          width: '200px',
-          type: 'email',
-          label: 'E-mail',
-          required: true,
-          onKeydown: function(value, options) {
-            options.validation.show = false;
-          },
-          onBlur: function(value, options) {
-            options.validation.show = null;
+          className: 'col-xs-7',
+          key: 'name',
+          type: 'input',
+          templateOptions: {
+            label: 'Nome',
+            required: true
           }
         },
-        asyncValidators: {
-            uniqueUsername: {
-              expression: function($viewValue, $modelValue, scope) {
-                scope.options.templateOptions.loading = true;
-                var idedit = 0;
-                if($scope.model.id != undefined)
-                  idedit = $scope.model.id
-                return User.validemail($viewValue, idedit).then(function(data) {
-                  scope.options.templateOptions.loading = false; 
-                  if (data.data === "1") {
-                    throw new Error('taken');
-                  }
-                }, 1000); 
-              },
-              message: '"Este e-mail já está cadastrado."'
+        {
+          className: 'col-xs-7',
+          key: 'email',
+          type: 'input',
+          templateOptions: {
+            width: '200px',
+            type: 'email',
+            label: 'E-mail',
+            required: true,
+            onKeydown: function(value, options) {
+              options.validation.show = false;
+            },
+            onBlur: function(value, options) {
+              options.validation.show = null;
             }
           },
-          modelOptions: {
-            updateOn: 'blur'
-          }
+          asyncValidators: {
+              uniqueUsername: {
+                expression: function($viewValue, $modelValue, scope) {
+                  scope.options.templateOptions.loading = true;
+                  var idedit = 0;
+                  if($scope.model.id != undefined)
+                    idedit = $scope.model.id
+                  return User.validemail($viewValue, idedit).then(function(data) {
+                    scope.options.templateOptions.loading = false; 
+                    if (data.data === "1") {
+                      throw new Error('taken');
+                    }
+                  }, 1000); 
+                },
+                message: '"Este e-mail já está cadastrado."'
+              }
+            },
+            modelOptions: {
+              updateOn: 'blur'
+            }
+        }],
       },
       {
-        key: 'roles',
-        templateUrl: 'assets/partials/customselect.html',
-        templateOptions: {
-          label: 'Perfil',
-          placeholder: 'Selecione um perfil',
-          required: true,
-          "options": { 
-            type: "json",
-            serverFiltering: true,
-            transport: {
-              read: {
-                url: "http://"+Rails.host + "/api/v1/role?access_token="+$localStorage.token
+      className: 'row large',
+      fieldGroup: [
+        {
+          className: 'col-xs-7',
+          key: 'roles',
+          templateUrl: 'assets/partials/customselect.html',
+          templateOptions: {
+            label: 'Perfil',
+            placeholder: 'Selecione um perfil',
+            required: true,
+            "options": { 
+              type: "json",
+              serverFiltering: true,
+              transport: {
+                read: {
+                  url: "http://"+Rails.host + "/api/v1/role?access_token="+$localStorage.token
+                }
+              }
+            }
+          }
+        },
+        {
+          key: 'group_id',
+          className: 'col-xs-7',
+          templateUrl: 'assets/partials/customselect.html',
+          templateOptions: {
+            label: 'Grupo',
+            placeholder: 'Selecione um grupo',
+            required: true,
+            "options": { 
+              type: "json",
+              serverFiltering: true,
+              transport: {
+                read: {
+                  url: "http://"+Rails.host + "/api/v1/group?access_token="+$localStorage.token
+                }
               }
             }
           }
         }
-      },
+      ]},
       {
-        key: 'password',
-        type: 'input',
-        templateOptions: {
-          type: 'password',
-          label: 'Senha'
+      className: 'row large',
+      fieldGroup: [
+        {
+          key: 'password',
+          className: 'col-xs-7',
+          type: 'input',
+          templateOptions: {
+            type: 'password',
+            label: 'Senha'
+          },
+          expressionProperties: {
+            'templateOptions.required': 'model.id === undefined'
+          }
         },
-        expressionProperties: {
-          'templateOptions.required': 'model.id === undefined'
+        {
+          // this field's ng-model will be bound to vm.model.username
+          key: 'celular',
+          className: 'col-xs-7',
+          type: 'input',
+          templateOptions: {
+            label: 'Celular'
+          }
         }
-      }
+      ]},
+      {
+        className: 'row large',
+        fieldGroup: [
+        {
+          // this field's ng-model will be bound to vm.model.username
+          key: 'isemail',
+          className: 'col-xs-7',
+          type: 'checkbox',
+          templateOptions: {
+            label: 'Recebe e-mail'
+          }
+        },
+        {
+          // this field's ng-model will be bound to vm.model.username
+          key: 'islead',
+          className: 'col-xs-7',
+          type: 'checkbox',
+          templateOptions: {
+            label: 'Permite mais de 20 produtos'
+          }
+        }
+        ]},
+        {
+          key: 'products',
+          templateUrl: 'assets/partials/custommultiselect.html',
+          templateOptions: {
+            label: 'Produtos',
+            required: false,
+            selectOptions: {
+              placeholder: "Selecione os produtos...",
+              dataTextField: "name",
+              dataValueField: "id",
+              valuePrimitive: true,
+              autoBind: false,
+              dataSource: {
+                  type: "json",
+                  serverFiltering: true,
+                  transport: {
+                      read: {
+                          url: "http://"+Rails.host + "/api/v1/product?access_token="+$localStorage.token
+                      }
+                  }
+              }
+        }
+          },
+          "modelOptions": {
+            "getterSetter": true,
+            "allowInvalid": true
+          }
+        },
     ];
     
     //Edit form
     if(Id){
       User.get(Id).then(function(data){
+        data.data.isemail = data.data.isemail == "true" ? true : false;
+        data.data.islead = data.data.islead == "true" ? true : false;
+        var itens = new Array();
+        for(var i = 0;i < data.data.products.length;i++)
+        {
+          itens[i] = data.data.products[i].id;
+        }
+        data.data.products = itens;
         $scope.model = data.data;
       });
     }
@@ -256,8 +375,24 @@ angular.module('geckoCliApp')
       if($scope.model.id === undefined || $scope.model.id === null)
         User.post($scope.model).then(function(data){
           if (data) {
-              toaster.success({title: "Cadastro", body:"Cadastro salvo com sucesso."});
-              $location.path('/user');
+              //cadastra o vinculo com produto;
+              if($scope.model.products.length > 0){
+                var productsvar = "";
+                for(var i = 0;i < $scope.model.products.length;i++)
+                {
+                  productsvar += $scope.model.products[i] +",";
+                }
+                productsvar = productsvar.slice(0, -1);
+                var _value = { user_id: data.data.id, products: productsvar};
+                User.linkproduct(_value).then(function(data)
+                {
+                    toaster.success({title: "Cadastro", body:"Cadastro salvo com sucesso."});
+                    $location.path('/user');
+                });
+              } else {
+                toaster.success({title: "Cadastro", body:"Cadastro salvo com sucesso."});
+                $location.path('/user');
+              }
           }
           else{
               toaster.error({title: "Cadastro", body:"Error ao cadastradar. Erro 1001."});
@@ -266,8 +401,24 @@ angular.module('geckoCliApp')
       else
         User.put($scope.model).then(function(data){
           if (data) {
-              toaster.success({title: "Cadastro", body:"Cadastro alterado com sucesso."});
-              $location.path('/user');
+              //cadastra o vinculo com produto;
+              if($scope.model.products.length > 0){
+                var productsvar = "";
+                for(var i = 0;i < $scope.model.products.length;i++)
+                {
+                  productsvar += $scope.model.products[i] +",";
+                }
+                productsvar = productsvar.slice(0, -1);
+                var _value = { user_id: $scope.model.id, products: productsvar};
+                User.linkproduct(_value).then(function(data)
+                {
+                  toaster.success({title: "Cadastro", body:"Cadastro alterado com sucesso."});
+                  $location.path('/user');
+                });
+              } else {
+                toaster.success({title: "Cadastro", body:"Cadastro alterado com sucesso."});
+                $location.path('/user');
+              }
           }
           else{
               toaster.error({title: "Cadastro", body:"Error ao alterar. Erro 1002."});
@@ -279,6 +430,23 @@ angular.module('geckoCliApp')
     $scope.actived = function(id) {
         User.active(id).then(function(data) {
           toaster.success({title: 'Ativação', body: 'Usuário ativado com sucesso.!', sound: false});
+          $scope.loadgrid();
+        });
+    };
+    $scope.newItemType = 'bill';
+    $scope.change = function () {
+        alert($scope.newItemType);
+    };
+    
+    //Atendimento
+    $scope.atendimento = function(id, tipo, ativa) {
+       var itemativo = 'N';
+       if(ativa == undefined || ativa == null || ativa == 'N')
+        itemativo = 'S';
+        
+        var _value = { user_id: id, atendimento: tipo, active: itemativo};
+        User.atendimento(_value).then(function(data) {
+          toaster.success({title: 'Atendimento', body: 'Atendimento alterado com sucesso.!', sound: false});
           $scope.loadgrid();
         });
     };

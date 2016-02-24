@@ -2,6 +2,11 @@ html {
   height: 100%;
 }
 
+.marginprimeiro
+{
+  margin-left: 30px;
+}
+
 body {
   background-color: #fafafa;
   height: 100%;
@@ -875,11 +880,11 @@ body.dashboard .page-container {
 .page-container .page-content-wrapper {
   min-height: 100%;
   position: relative;
+  height: 800px !important;
 }
 
 .page-container .page-content-wrapper .content {
   z-index: 10;
-  padding-top: 60px;
   padding-bottom: 72px;
   min-height: 100%;
   -webkit-transition: all 0.3s ease;
@@ -900,6 +905,8 @@ body.dashboard .page-container {
 
 .page-container .page-content-wrapper .content:only-child {
   padding-bottom: 0px;
+  /*margin-left: 18px;*/
+  width: 96%;
 }
 
 .page-container .page-content-wrapper .content.overlay-footer {
@@ -9112,6 +9119,7 @@ input.list-view-search {
 .email-wrapper {
   height: 100%;
   position: relative;
+  margin-top: -30px;
 }
 .email-wrapper .email-sidebar {
   background: #2d3446;
@@ -9277,7 +9285,7 @@ input.list-view-search {
   font-family: arial;
   font-size: 11.1px;
   position: absolute;
-  right: 20px;
+  right: 30px;
   top: 15px;
 }
 .email-wrapper .email-opened {
@@ -10852,6 +10860,10 @@ Responsive Util
 .padding-30 {
   padding: 30px !important;
 }
+
+.magintop {
+  margin-top: 60px !important;
+}
 .p-t-35 {
   padding-top: 35px !important;
 }
@@ -12034,7 +12046,7 @@ Responsive Util
     -webkit-perspective: 1000;
   }
   .page-container .page-content-wrapper .content {
-    padding-top: 60px;
+    padding-top: 0px;
   }
   .error-page .error-container {
     width: auto;
@@ -12145,7 +12157,7 @@ Responsive Util
     padding-right: 0;
   }
   .page-container .page-content-wrapper .content {
-    padding-top: 48px;
+    padding-top: 0px;
     padding-bottom: 100px;
   }
   .page-sidebar .sidebar-header {

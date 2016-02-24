@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
          
   attr_accessor :created_at_format
   
+  belongs_to :lead
+  
   has_and_belongs_to_many :products
          
   after_save :clear_cache

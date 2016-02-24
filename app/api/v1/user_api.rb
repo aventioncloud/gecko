@@ -14,12 +14,13 @@ module V1
       end
     
       desc 'Return current user, requires authentication'
-      get 'me', authorize: ['read', 'User']  do
+      get 'me' do
+        guard!
         @user = current_user
         ary = Array.new
         User.where("id = ?", @user['id']).find_each do |item|
             apartment!
-            ary << {:id => item[:id],:name => item[:name], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+            ary << {:id => item[:id],:name => item[:name], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id] }
         end
         ary
       end
@@ -70,6 +71,40 @@ module V1
       delete 'logout' do
         warden.logout
       end
+      
+      desc "Active atendimento a User."
+      params do
+        requires :user_id, type: String, desc: "User ID."
+        requires :atendimento, type: String, desc: "Atendimento(C => Chat, F => Fisica, J => Juridica) ID."
+        requires :active, type: String, desc: "User ID."
+      end
+      post 'atendimento', authorize: ['create', 'User']  do
+        apartment!
+        @atendimento = Atendimento.where(:users_id => params[:user_id]).first
+        id = 0
+        if @atendimento == nil
+          atendimentoitem = Atendimento.new(:users_id => params[:user_id])
+          atendimentoitem.save
+          id = atendimentoitem.id
+        else
+          id = @atendimento.id
+        end
+        
+        ativostatus = nil
+        if params[:active] == 'S'
+          ativostatus = 'S'
+        end
+        
+        if params[:atendimento] == 'C'
+          Atendimento.find(id).update(ischat: ativostatus)
+        elsif params[:atendimento] == 'F'
+          Atendimento.find(id).update(ispf: ativostatus)
+        elsif params[:atendimento] == 'J'
+          Atendimento.find(id).update(ispj: ativostatus)
+        else
+          { :error => "Tipo de atendimento não encontrado." }
+        end
+      end
     
       desc "Return all Users."
       params do
@@ -91,12 +126,12 @@ module V1
         if @role[0][:id] != @user["roles"]
           User.where("accounts_id = ? and roles != ? and active = 'S' and (? = '' or name like '%?%')", current_user["accounts_id"],  @role[0][:id], @search, @search).find_each do |item|
               apartment!
-              ary << {:id => item[:id],:name => item[:name], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:id]).first, :group => Group.where(:id => item[:groups_id]).first }
           end
         else
           User.where("accounts_id = ? and (? = '' or upper(name) like upper(?))" , current_user["accounts_id"], @search, '%'+@search+'%').find_each do |item|
               apartment!
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:id]).first, :group => Group.where(:id => item[:groups_id]).first }
           end
         end
         ary
@@ -111,7 +146,7 @@ module V1
           Apartment::Database.switch!("public")
           @useritem = User.find(params[:id]) rescue nil
           apartment!
-          @user = {:id => @useritem.id, :name => @useritem.name, :email => @useritem.email, :created_at => @useritem.created_at, :roles => @useritem.roles, :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => params[:id])}
+          @user = {:id => @useritem.id, :name => @useritem.name, :email => @useritem.email, :created_at => @useritem.created_at, :roles => @useritem.roles, :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => params[:id]), :isemail => @useritem.isemail, :islead => @useritem.islead, :celular => @useritem.celular, :group_id => @useritem.groups_id}
           @user
         end
       end
@@ -122,6 +157,10 @@ module V1
         requires :email, email: true, type: String, desc: "E-mail User."
         requires :roles, type: Integer, desc: "Role User."
         requires :password, type: String, desc: "Password User."
+        requires :group_id, type: Integer, desc: "Group User."
+        optional :isemail, type: String, desc: "Is e-mail(S or N)."
+        optional :islead, type: String, desc: "Is lead 20(S or N)."
+        optional :celular, type: String, desc: "User Phone."
       end
       post '', authorize: ['create', 'User'] do
         
@@ -131,6 +170,10 @@ module V1
               :password_confirmation => params[:password],
               :name =>params[:name],
               :roles => params[:roles],
+              :groups_id => params[:group_id],
+              :isemail => params[:isemail],
+              :islead => params[:islead],
+              :celular => params[:celular],
               :accounts_id => current_user["accounts_id"]
         )
         
@@ -147,7 +190,11 @@ module V1
         requires :name, type: String, desc: "User name."
         requires :email, type: String, desc: "E-mail User."
         requires :roles, type: Integer, desc: "Role User."
+        requires :group_id, type: Integer, desc: "Group User."
         optional :password, type: String, desc: "Password User."
+        optional :isemail, type: String, desc: "Is e-mail(S or N)."
+        optional :islead, type: String, desc: "Is lead 20(S or N)."
+        optional :celular, type: String, desc: "User Phone."
       end
       put ':id', authorize: ['create', 'User']  do
        
@@ -156,6 +203,10 @@ module V1
           name: params[:name],
           email: params[:email],
           roles: params[:roles],
+          groups_id: params[:group_id],
+          isemail: params[:isemail],
+          islead: params[:islead],
+          celular: params[:celular],
           password: params[:password],
           password_confirmation: params[:password]
         })
@@ -163,7 +214,11 @@ module V1
         User.find(params[:id]).update({
           name: params[:name],
           email: params[:email],
-          roles: params[:roles]
+          roles: params[:roles],
+          groups_id: params[:group_id],
+          isemail: params[:isemail],
+          islead: params[:islead],
+          celular: params[:celular],
         })
        end
       end

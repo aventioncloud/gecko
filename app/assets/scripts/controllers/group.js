@@ -30,10 +30,12 @@ angular.module('geckoCliApp')
       templateUrl: 'assets/group/form.html',
       controller: 'GroupCtrl'
     });
-  }).controller('GroupCtrl', function ($scope, $location, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Group) {
+  }).controller('GroupCtrl', function ($scope, $location, permissions, $rootScope, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Group) {
 
     var vm = this;
     var Id = $stateParams.id;
+    
+    $rootScope.$broadcast('disablefilterChanged');
     
     //Toolbar
     //Alterar para o parametro do crud

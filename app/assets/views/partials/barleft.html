@@ -1,0 +1,29 @@
+<nav class="email-sidebar padding-30">
+  <button class="btn btn-complete btn-block btn-compose m-b-30" ui-sref="{{barleftitem.insertbutton.href}}" ng-click="barleftitem.insertbutton.event()">{{barleftitem.insertbutton.name}}</button>
+  <p class="menu-title">{{barleftitem.name}}</p>
+  <ul class="main-menu">
+    <li class="{{baritem.active ? 'active' : ''}}" ng-repeat="baritem in barleftitem.listitem">
+      <a style="cursor:pointer;" ng-click="baritem.event()">
+        <span class="title"><i class="{{baritem.icon}}"></i> {{baritem.name}}</span>
+        <!--<span class="badge pull-right">{{baritem.count}}</span>-->
+      </a>
+      <ul class="sub-menu no-padding">
+        <li class="{{item.active ? 'active' : ''}}" ng-repeat="item in baritem.item">
+          <a style="cursor:pointer;" ng-click="item.event()">
+            <span class="title"><i class="fa {{item.icon}}"></i>{{item.name}}</span>
+            <!--<span class="badge pull-right">{{item.count}}</span>-->
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <p class="menu-title m-t-20 all-caps">Tag</p>
+  <ul class="sub-menu no-padding">
+    <li ng-repeat="quickitem in tagpoint"  ng-drop="true" ng-drop-success="onDropComplete($data,$event, quickitem)">
+      <a style="cursor:pointer;" ng-click="quickitem.event(quickitem.id, quickitem.name)">
+        <span class="title">{{quickitem.name}}</span>
+        <!--<span class="badge pull-right">{{quickitem.count}}</span>-->
+      </a>
+    </li>
+  </ul>
+</nav>

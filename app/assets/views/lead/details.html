@@ -1,0 +1,235 @@
+<div class="email-content-wrapper" style="display: block !important;">
+  <div class="actions-wrapper bg-master-lightest" style="display: block !important;">
+    <div class="btn-group sm-m-t-10" style="margin-left: 20px;margin-top: 10px;">
+      <!--<button type="button" class="btn btn-default" kendo-tooltip k-content="'Salvar'" ng-show="Id && crud" ng-click="salvar(item.id);"><i class="fa fa-save"></i>
+      </button>-->
+      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Enviar'" ng-show="Id && crud" ng-click="concluir(item.id);"><i class="fa fa-check"></i>
+      </button>
+      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Baixar Anexo'" ng-show="arquivo" ng-click="baixar(item.file);"><i class="fa fa-file"></i>
+      </button>
+    </div>
+    <div class="btn-group sm-m-t-10" style="margin-left: 20px;margin-top: 10px;">
+      <!--      <li class="no-padding hidden-md hidden-xs" ng-show="Id && !isfavorite"><a style="cursor:pointer;" ng-click="onfavorite(item.id);" class="text-warning"><i class="fa fa-star-o"></i>Favoritos</a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="Id && isfavorite"><a style="cursor:pointer;" ng-click="unfavorite(item.id);" class="text-warning"><i class="fa fa-star"></i>Favoritos</a>
+      -->
+      <button type="button" class="btn btn-default" kendo-tooltip k-content="'Favoritar'" ng-show="remover && !isfavorite" ng-click="onfavorite(item.id);"><i class="fa fa-star-o"></i>
+      </button>
+      <button type="button" class="btn btn-default" kendo-tooltip k-content="'Remover Favoritar'" ng-show="remover && isfavorite" ng-click="unfavorite(item.id);"><i class="fa fa-star"></i>
+      </button>
+      <!--<button type="button" class="btn btn-default" kendo-tooltip k-content="'Compartilhar'" ng-click="win1.open()"><i class="fa fa-share-square-o"></i>
+      </button>
+      <button type="button" class="btn btn-default" kendo-tooltip k-content="'Alterar'" ng-show="crud" ui-sref="app.lead.edit({id: item.id})"><i class="fa fa-pencil-square-o"></i>
+      </button>-->
+      <button type="button" class="btn btn-default" kendo-tooltip k-content="'Remover'" ng-show="remover" ng-click="ondelete(item.id);"><i class="fa fa-close"></i>
+      </button>
+    </div>
+    <!--<ul class="actions no-margin p-l-20" style="display: block !important;">
+      <li class="visible-sm-inline-block visible-xs-inline-block">
+        <a href="email.html#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
+        </a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="Id && crud"><a style="cursor:pointer;" ng-click="salvar(item.id);" class="text-info">Salvar</a>
+    </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="Id && crud"><a style="cursor:pointer;" ng-click="concluir(item.id);" class="text-sucess">Concluir</a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="crud"><a  style="cursor:pointer;" class="text-info" ui-sref="app.lead.edit({id: item.id})">Alterar</a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="Id && !isfavorite"><a style="cursor:pointer;" ng-click="onfavorite(item.id);" class="text-warning"><i class="fa fa-star-o"></i>Favoritos</a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="Id && isfavorite"><a style="cursor:pointer;" ng-click="unfavorite(item.id);" class="text-warning"><i class="fa fa-star"></i>Favoritos</a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs" ng-show="Id && crud"><a style="cursor:pointer;" ng-click="ondelete(item.id);" class="text-danger">Cancelar</a>
+      </li>
+    </ul>-->
+    <div class="clearfix"></div>
+  </div>
+  <div class="email-content">
+    <div class="email-content-header">
+      <div class="thumbnail-wrapper"><span class="label label-danger">{{item.status}}</span></div>
+
+      <div class="sender inline m-l-10">
+        <p class="name no-margin bold">{{item.title}}</p>
+        <p class="datetime no-margin">{{item.data}}</p>
+      </div>
+      <div class="clearfix"></div>
+      <!--<div class="subject m-t-20 m-b-20 semi-bold">Your site has some very imaginative animation /movement, especially the Sluggo! </div>-->
+    </div>
+
+    <div class="panel panel-default" style="margin-top: 15px;">
+      <div class="panel-heading">
+        <div class="panel-title">{{item.name}}
+        </div>
+        <div class="panel-controls">
+          <ul>
+            <li><a style="cursor:pointer;" ng-click="showbody = !showbody" class="portlet-collapse" data-toggle="collapse"><i class="portlet-icon portlet-icon-collapse"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="item-description">
+          <div class="container-sm-height">
+            <div class="row-sm-height">
+              <div class="col-md-9 col-sm-height sm-no-padding">
+                <p class="small no-margin">E-mail</p>
+                <h5 class="semi-bold m-t-0">{{item.email}}</h5>
+                <address>
+                  <strong>{{item.city}}</strong>
+                  <br>
+                  {{item.contact.address}}<br>
+                  {{item.contact.number}} {{item.contact.zipcode}}
+                </address>
+              </div>
+              <div class="col-md-3 col-sm-height col-bottom sm-no-padding sm-p-b-20">
+                <br>
+                <div>
+                  <div class="pull-left font-montserrat bold all-caps">CPF/CNPJ :</div>
+                  <div class="pull-right">{{item.cpfcnpj}}</div>
+                  <div class="clearfix"></div>
+                </div>
+                <div>
+                  <div class="pull-left font-montserrat bold all-caps">Telefone :</div>
+                  <div class="pull-right">{{item.phone}}</div>
+                  <div class="clearfix"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9 col-sm-height sm-no-padding">
+              <br><div class="thumbnail-wrapper" ng-repeat="dataproduct in leadproduct"><span class="label label-danger">{{dataproduct.product.name}}</span></div>
+              <br><br><h5 class="semi-bold m-t-0">Descrição da Indicação</h5>
+              <div ng-bind-html="item.description">{{item.description}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <br>
+    <div ng-repeat="dataitem in leadhistory" class="panel panel-default {{dataitem.status.color}}">
+      <div class="panel-heading">
+        <div class="panel-title">{{dataitem.status}}
+        </div>
+        <div class="panel-controls">
+          <ul>
+            <li><a style="cursor:pointer;" ng-click="showbody = !showbody" class="portlet-collapse" data-toggle="collapse"><i class="portlet-icon portlet-icon-collapse"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="item-description">
+          <h3 ng-bind-html="dataitem.comment|htmlcoder"></h3>
+        </div>
+      </div>
+      <div class="item-footer clearfix">
+        <div class="pull-left">por <span class="text-complete">{{dataitem.users.firstName}}</span>
+        </div>
+        <div class="pull-right hint-text">
+          {{dataitem.created}}
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+
+    <div class="wysiwyg5-wrapper b-a b-grey m-t-30" ng-show="crud">
+      <textarea kendo-editor ng-model="comment"></textarea>
+    </div>
+    <div class="wysiwyg5-wrapper b-a b-grey m-t-30" ng-show="crud">
+        Anexar
+        <input ng-file-select type="file"/>
+        
+        <div class="col-md-9" style="margin-bottom: 40px" ng-show="isupload">
+
+            <h3>Fila de Arquivos</h3>
+
+            <p>Tamanho: {{ uploader.queue.length }}</p>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th width="50%">Nome</th>
+                    <th ng-show="uploader.isHTML5">Tamanho</th>
+                    <th ng-show="uploader.isHTML5">Progresso</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in uploader.queue">
+                    <td><strong>{{ item.file.name }}</strong></td>
+                    <td ng-show="uploader.isHTML5" nowrap>{{
+                        item.file.size/1024/1024|number:2 }} MB
+                    </td>
+                    <td ng-show="uploader.isHTML5">
+                        <div class="progress" style="margin-bottom: 0;">
+                            <div class="progress-bar" role="progressbar"
+                                 ng-style="{ 'width': item.progress + '%' }"></div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span ng-show="item.isSuccess"><i
+                                class="glyphicon glyphicon-ok"></i></span>
+                        <span ng-show="item.isCancel"><i
+                                class="glyphicon glyphicon-ban-circle"></i></span>
+                        <span ng-show="item.isError"><i
+                                class="glyphicon glyphicon-remove"></i></span>
+                    </td>
+                    <td nowrap>
+                        <button type="button" class="btn btn-success btn-xs"
+                                ng-click="item.upload()"
+                                ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                            <span class="glyphicon glyphicon-upload"></span>
+                            Upload
+                        </button>
+                        <!--<button type="button" class="btn btn-warning btn-xs"
+                                ng-click="item.cancel()"
+                                ng-disabled="!item.isUploading">
+                            <span class="glyphicon glyphicon-ban-circle"></span>
+                            Cancelar
+                        </button>-->
+                        <button type="button" class="btn btn-danger btn-xs"
+                                ng-click="item.remove()">
+                            <span class="glyphicon glyphicon-trash"></span>
+                            Remover
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--<div>
+                <p>
+                    Progresso:
+
+                <div class="progress" style="">
+                    <div class="progress-bar" role="progressbar"
+                         ng-style="{ 'width': uploader.progress + '%' }"></div>
+                </div>
+                </p>
+                <button type="button" class="btn btn-success btn-s"
+                        ng-click="uploader.uploadAll()"
+                        ng-disabled="!uploader.getNotUploadedItems().length">
+                    <span class="glyphicon glyphicon-upload"></span> Enviar tudo
+                </button>
+                <button type="button" class="btn btn-warning btn-s"
+                        ng-click="uploader.cancelAll()"
+                        ng-disabled="!uploader.isUploading">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Cancelar tudo
+                </button>
+                <button type="button" class="btn btn-danger btn-s"
+                        ng-click="uploader.clearQueue()"
+                        ng-disabled="!uploader.queue.length">
+                    <span class="glyphicon glyphicon-trash"></span> Remover tudo
+                </button>
+            </div>-->
+
+        </div>
+        
+    </div>
+  </div>
+  <div kendo-window="win1" k-title="'Compartilhar'" k-on-open="win1visible = true" k-on-close="win1visible = false" style="display: none;width: 400px; height: 150px;top: 50%;">
+
+  </div>
+</div>

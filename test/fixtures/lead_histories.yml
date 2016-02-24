@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  leadstatus_id: 
+  user_id: 
+  comment: MyString
+
+two:
+  leadstatus_id: 
+  user_id: 
+  comment: MyString

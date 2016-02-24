@@ -17,7 +17,8 @@ angular
     'formly', 
     'formlyBootstrap',
     'oitozero.ngSweetAlert',
-    'kendo.directives'
+    'kendo.directives',
+    'ui.select'
   ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider, formlyConfigProvider) {
     $httpProvider.interceptors.push('tokenInterceptor');
@@ -30,12 +31,30 @@ angular
         '<span class="glyphicon glyphicon-refresh loader" ng-show="to.loading"></span>'
       ].join(' ')
     });
+    
+    formlyConfigProvider.setType({
+      name: 'ui-select',
+      extends: 'select',
+      template: '<ui-select ng-model="model[options.key]" theme="bootstrap" ng-required="{{to.required}}" ng-disabled="{{to.disabled}}" reset-search-input="false"> <ui-select-match placeholder="{{to.placeholder}}"> {{$select.selected[to.labelProp || \'name\']}} </ui-select-match> <ui-select-choices group-by="to.groupBy" repeat="option[to.valueProp || \'value\'] as option in to.options | filter: $select.search"> <div ng-bind-html="option[to.labelProp || \'name\'] | highlight: $select.search"></div> </ui-select-choices> </ui-select>'
+    })
 
     formlyConfigProvider.setType({
       name: 'input-loader',
       extends: 'input',
       wrapper: ['loader']
     });
+    
+    formlyConfigProvider.setType({
+      name: 'multiselect',
+      extends: 'select',
+      defaultOptions: {
+        ngModelAttrs: {
+          'true': {
+            value: 'multiple'
+          }
+        }
+      }
+    })
 
     /*fformlyConfigProvider.setWrapper({
       template: '<formly-transclude></formly-transclude><div my-messages="options"></div>',

@@ -1,0 +1,17 @@
+<div class="email-content-wrapper" style="display: block !important;">
+  <div class="actions-wrapper bg-master-lightest" style="display: block !important;">
+    <ul class="actions no-margin p-l-20" style="display: block !important;">
+      <li class="visible-sm-inline-block visible-xs-inline-block">
+        <a href="email.html#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
+        </a>
+      </li>
+      <li class="no-padding hidden-md hidden-xs"><a  style="cursor:pointer;" class="text-info" ng-click="onSubmit()">Salvar</a>
+      </li>
+    </ul>
+    <div class="clearfix"></div>
+  </div>
+  <div class="email-content">
+    <formly-form result="item" fields="formFields" options="formOptions" ng-submit="onSubmit()"></formly-form>
+    <br><br><br>
+  </div>
+</div>

@@ -6,9 +6,16 @@ module JsEnv
 
   def js_env
     app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../../config/application.yml', __FILE__)).read).result)[Rails.env]
+    domain = request.host
+    #binding.pry
+    subdomain = domain.sub!(".#{app_config['host']}", "")
+    uri = "http://#{subdomain}.#{app_config['host']}:#{app_config['port']}/"
+    Apartment::Database.switch!("public")
+    app = Application.where(:redirect_uri => uri).first
+    uri = "#{subdomain}.#{app_config['host']}:#{app_config['port']}/"
     data = {
-      host: request.host+':3001',
-      application_id: app_config['application_id']
+      host: uri,
+      application_id: app.uid
     }
 
     <<-EOS.html_safe

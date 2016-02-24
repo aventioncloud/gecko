@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  users_id: 
+  ischat: MyString
+  ispf: MyString
+  ispj: MyString
+
+two:
+  users_id: 
+  ischat: MyString
+  ispf: MyString
+  ispj: MyString

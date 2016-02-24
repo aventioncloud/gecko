@@ -1,0 +1,16 @@
+<!--<li class="inline">
+  <a style="cursor:pointer;" ng-show="toolbar.showEdit" ng-click="toolbar.edithandler()" id="mark-email" class="mark-email text-info m-l-20"><i class="fa fa-pencil fs-16"></i></a>
+</li>
+<li class="inline">
+  <a style="cursor:pointer;" ng-show="toolbar.showDelete" ng-click="toolbar.deletehandler()" id="mark-email" class="mark-email text-info m-l-20"><i class="fa fa-trash-o fs-16"></i></a>
+</li>-->
+<ul class="notification-list no-margin hidden-sm hidden-xs b-grey b-l b-r no-style p-l-30 p-r-20">
+  <li class="p-r-15 inline" style="margin-top: 10px;">
+      <a href="javascript:;" id="notification-center" class="icon-set globe-fill" data-toggle="dropdown">
+        <!--<span class="bubble" style="width: 20px; height: 20px; left: 12px; font-size: small!important;">&nbsp;{{ notify }}</span>-->
+      </a>
+  </li>
+  <li ng-repeat="item in toolbar" class="p-r-15 inline">
+    <a style="cursor:pointer;" ng-show="item.show" ng-click="item.onhandler()"><i class="fa {{item.icon}} fs-16"></i></a>
+  </li>
+</ul>

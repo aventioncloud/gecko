@@ -10,7 +10,8 @@ development:
   smtp_port: 587
   smtp_user: "vyctorbh@gmail.com"
   smtp_password: "rNd3LORstG56_Zey3fDOGw"  
-  host: 'kurumin.xyz:3001'
+  host: 'kurumin.xyz'
+  port: '3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
   theme: 'unicoop'
   title: 'Unicoop'
@@ -26,7 +27,8 @@ test:
   smtp_port: 587
   smtp_user: "vyctorbh@gmail.com"
   smtp_password: "rNd3LORstG56_Zey3fDOGw" 
-  host: 'kurumin.xyz:3001'
+  host: 'kurumin.xyz'
+  port: '3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
   theme: 'unicoop'
   title: 'Unicoop'
@@ -41,7 +43,8 @@ production:
   smtp_port: 587
   smtp_user: "vyctorbh@gmail.com"
   smtp_password: "rNd3LORstG56_Zey3fDOGw"
-  host: 'kurumin.xyz:3001'
+  host: 'kurumin.xyz'
+  port: '3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
   theme: 'unicoop'
   title: 'Unicoop'
