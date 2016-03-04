@@ -8,8 +8,8 @@ development:
   devise_secret_key: "WndZNvO89uCk7nxj0"
   smtp_host: "smtp.mandrillapp.com"
   smtp_port: 587
-  smtp_user: "vyctorbh@gmail.com"
-  smtp_password: "rNd3LORstG56_Zey3fDOGw"  
+  smtp_user: "app32689271@heroku.com"
+  smtp_password: "TYuxdvFhNFGKyP7tleF8vg"  
   host: 'kurumin.xyz'
   port: '3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
@@ -25,8 +25,8 @@ test:
   devise_secret_key: "WndZNvO89uCk7nxj0"
   smtp_host: "smtp.mandrillapp.com"
   smtp_port: 587
-  smtp_user: "vyctorbh@gmail.com"
-  smtp_password: "rNd3LORstG56_Zey3fDOGw" 
+  smtp_user: "app32689271@heroku.com"
+  smtp_password: "TYuxdvFhNFGKyP7tleF8vg"  
   host: 'kurumin.xyz'
   port: '3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
@@ -41,8 +41,8 @@ production:
   devise_secret_key: "WndZNvO89uCk7nxj0"
   smtp_host: "smtp.mandrillapp.com"
   smtp_port: 587
-  smtp_user: "vyctorbh@gmail.com"
-  smtp_password: "rNd3LORstG56_Zey3fDOGw"
+  smtp_user: "app32689271@heroku.com"
+  smtp_password: "TYuxdvFhNFGKyP7tleF8vg"  
   host: 'kurumin.xyz'
   port: '3001'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'

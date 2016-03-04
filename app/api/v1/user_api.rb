@@ -19,7 +19,7 @@ module V1
         @user = current_user
         ary = Array.new
         User.where("id = ?", @user['id']).find_each do |item|
-            apartment!
+            #apartment!
             ary << {:id => item[:id],:name => item[:name], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id] }
         end
         ary
@@ -36,6 +36,90 @@ module V1
         else
           User.where("id != ? and email = ? and active = 'S'", params[:id], params[:email]).exists? ? 1 : 0
         end
+      end
+      
+      desc "Audit all User."
+      params do
+        optional :id, type: Integer, desc: "ID do User."
+        optional :date_sta, type: String, desc: "Date Start."
+        optional :date_end, type: String, desc: "Date End."
+      end
+      get 'audit', authorize: ['all', 'Super Admin'] do
+        apartment!
+        if params[:id] != nil and params[:id] != 0
+          User.find(params[:id]).versions
+        else
+          data_start = Date.parse(params[:date_sta])
+          data_end = Date.parse(params[:date_end])
+          #         filter += " and leads.created_at::timestamp::date between '"+params[:data]+"' and '"+params[:data_end]+"'"
+          PaperTrail::Version
+              .where("item_type = 'User' and created_at::timestamp::date between ? and ?",data_start,data_end)
+              .order('id DESC')
+              .limit(10)
+          #Lead.versions.between(data_start, data_end)
+        end
+      end
+      
+      desc "Compare Version Audit."
+      params do
+        optional :id, type: Integer, desc: "ID do User."
+        requires :version_id, type: Integer, desc: "Version ID"
+      end
+      get 'compare', authorize: ['all', 'Super Admin'] do
+        apartment!
+        content_1 = User.find(params[:id])
+        content_2 = content_1.versions.find(params[:version_id]).reify
+        #changes = Diffy::SplitDiff.new(content_1.to_json, content_2.to_json, :format => :html)
+        #changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
+        #content_1.to_json
+        
+        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
+                                     include_plus_and_minus_in_html: true, 
+                                     include_diff_info: false)
+        changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
+        
+      end
+      
+      desc "Import a User."
+      post 'import', authorize: ['create', 'User'] do
+        apartment!
+        docfile = params[:file]
+        
+        attachment = {
+            :filename => docfile[:filename],
+            :type => docfile[:type],
+            :headers => docfile[:head],
+            :tempfile => docfile[:tempfile]
+        }
+        @user = current_user
+        importfile = ImportFile.create(docfile: ActionDispatch::Http::UploadedFile.new(attachment), status: 'User')
+        filename = Rails.root.join("public", "importtmp/"+importfile.docfile_file_name)
+        
+        options = {:col_sep => ";", :row_sep => "\n", :file_encoding => 'ISO-8859-1'}
+        ary = Array.new
+        senha = "trocar12!"
+        role = 4 #usuario
+        
+        SmarterCSV.process(filename, options) do |array|
+          apartment!
+          groupcheck = Group.where('code = ? and code is not null',array.first[:groupid]).first rescue nil
+          group_id = nil
+          if !groupcheck.nil?
+            group_id = groupcheck.id
+          end
+          if !User.where(:code => array.first[:code]).exists?
+            user = User.create(groups_id: group_id, name: array.first[:name], email: array.first[:email], password: senha, password_confirmation: senha, roles: role, isemail: 'true', islead: 'false', accounts_id: @user["accounts_id"], code: array.first[:code])
+            if user.save
+              ary << {code: '1', message: 'sucesse', user: array.first[:name]}
+            else
+              ary << {code: '2', message: 'error', user: array.first[:name], error: user.errors.full_messages}
+            end
+          else
+            group = User.where(:code => array.first[:code]).first.update(name: array.first[:name])
+            ary << {code: '1', message: 'sucesse', group: array.first[:name]}
+          end
+        end
+        ary
       end
       
       desc 'Link user product'
@@ -65,11 +149,6 @@ module V1
         else
           @user
         end
-      end
-      
-      desc 'Logout user'
-      delete 'logout' do
-        warden.logout
       end
       
       desc "Active atendimento a User."
@@ -112,26 +191,43 @@ module V1
       end
       get '/', authorize: ['read', 'User'] do
         @user = current_user
-        apartment!
-        @role = Role.where(:name => 'Super Admin')
-        
+        ary = Array.new
         ary = Array.new
         Apartment::Database.switch!("public")
-        
+        @rolelist = Role.all()#.find(item[:roles])
         @search = ''
         if params[:name] != nil
           @search = params[:name]
         end
         
-        if @role[0][:id] != @user["roles"]
+        apartment!
+        @atendimentolist = Atendimento.all()
+        @grouplist = Group.all()
+        
+        if 1 != @user["roles"]
           User.where("accounts_id = ? and roles != ? and active = 'S' and (? = '' or name like '%?%')", current_user["accounts_id"],  @role[0][:id], @search, @search).find_each do |item|
+              @role = @rolelist.detect{|w| w.id == item[:roles]}
               apartment!
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:id]).first, :group => Group.where(:id => item[:groups_id]).first }
+              @atendimento = @atendimentolist.detect{|w| w.users_id == item[:id]}
+              @group = @grouplist.detect{|w| w.id == item[:groups_id]}
+              #@products = UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id])
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], 
+                      :email => item[:email], :roles => @role, :products => nil, 
+                      :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), 
+                      :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
+                      :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:groups_id]).first, :group => @group }
           end
         else
           User.where("accounts_id = ? and (? = '' or upper(name) like upper(?))" , current_user["accounts_id"], @search, '%'+@search+'%').find_each do |item|
-              apartment!
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], :roles => Role.find(item[:roles]), :products => UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:id]).first, :group => Group.where(:id => item[:groups_id]).first }
+              @role = @rolelist.detect{|w| w.id == item[:roles]}
+             apartment!
+              @atendimentos = @atendimentolist.detect{|w| w.users_id == item[:id]}
+              @groups = @grouplist.detect{|w| w.id == item[:groups_id]}
+               #@products = UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id])
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], 
+                    :roles => @role, :products => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), 
+                    :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
+                    :group_id => item[:groups_id], :atendimento => @atendimentos, :group => @groups }
           end
         end
         ary
@@ -228,7 +324,6 @@ module V1
         requires :id, type: String, desc: "User ID."
       end
       delete ':id', authorize: ['delete', 'User']  do
-        guard!
         User.find(params[:id]).update(active: 'N')
       end
       
@@ -237,7 +332,6 @@ module V1
         requires :id, type: String, desc: "User ID."
       end
       post ':id', authorize: ['create', 'User']  do
-        guard!
         User.find(params[:id]).update(active: 'S')
       end
   end

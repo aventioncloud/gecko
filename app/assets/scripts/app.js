@@ -18,7 +18,8 @@ angular
     'formlyBootstrap',
     'oitozero.ngSweetAlert',
     'kendo.directives',
-    'ui.select'
+    'ui.select',
+    'angularFileUpload'
   ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider, formlyConfigProvider) {
     $httpProvider.interceptors.push('tokenInterceptor');
@@ -85,11 +86,13 @@ angular
       return config;
     }
   };
-  }).factory('unauthorizedInterceptor', function($q, $injector, $location) {
+  }).factory('unauthorizedInterceptor', function($q, $injector, $location, Rails) {
     return {
       responseError: function(response) {
         if (response.status === 401 && response.config.url.indexOf("role/me") === -1) {
-          $location.path('/unauthorized');
+          var loginUrl = "//" + Rails.host + "/oauth/authorize?response_type=token&client_id=" + Rails.application_id + "&redirect_uri=http://" + Rails.host;
+          //$location.path('/unauthorized');
+          window.location = loginUrl;
         }
         return $q.reject(response);
         return response;

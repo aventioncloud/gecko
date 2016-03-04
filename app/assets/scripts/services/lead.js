@@ -33,8 +33,31 @@ app.service('Lead', function($http, Rails) {
     delete: function(id) {
       return $http["delete"](base + '/' + id);
     },
+    history: function(_lead_id, _status_id) {
+      return $http.get(base + '/history', {
+        params: { id: _lead_id, status_id: _status_id }
+      });
+    },
     active: function(id) {
       return $http["post"](base + '/' + id);
+    },
+    changelead: function(_id, _status, _comment, _file_id) {
+      _value = {id: _id, status: _status, comment: _comment, file_id: _file_id};
+      return $http({
+                    method  : 'POST',
+                    url     : base + '/changestatus',
+                    data    : $.param(_value),  // pass in data as strings
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+             });
+    },
+    changesconsult: function(_id, _user_id) {
+      _value = {id: _id, user_id: _user_id};
+      return $http({
+                    method  : 'POST',
+                    url     : base + '/changesconsult',
+                    data    : $.param(_value),  // pass in data as strings
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+             });
     }
   };
 });

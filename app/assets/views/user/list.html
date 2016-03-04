@@ -32,8 +32,8 @@
 <div class="row">
     <table ng-table="tableParams" class="table table-hover table-condensed table-detailed no-footer" role="grid" export-csv="csv" separator=";">
         <tr ng-repeat-start="user in $data" class="odd" ng-class="user.expanded ? 'odd shown' : 'odd'" role="row" ng-click="user.expanded = !user.expanded">
-          <td data-title="'Email'" sortable="'email'">{{user.email}}</td>
-          <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
+          <td data-title="'E-mail'" sortable="'email'">{{user.email}}</td>
+          <td data-title="'Nome'" sortable="'name'">{{user.name}}</td>
           <td>
             <div style="float:right;">
                 <div class="btn-group" has-permission='{"subject_class":"User","action":"create"}'>

@@ -41,7 +41,7 @@ angular.module('geckoCliApp')
     controller: 'LeadCtrl'
   });
 })
-.controller('LeadCtrl', function ($scope, $location, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Product, $rootScope, Lead) {
+.controller('LeadCtrl', function ($scope, $location, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Product, $rootScope, Lead, FileUploader) {
 
     $rootScope.$on('$locationChangeSuccess', function() {
         $rootScope.actualLocation = $location.path();
@@ -54,7 +54,7 @@ angular.module('geckoCliApp')
     });
     
     $scope.isfilter = false;
-    $scope.modelsearch = {data : null, users_id: null, orderby: 'leads.id desc'}
+    $scope.modelsearch = {data : null, users_id: null, orderby: 'leads.id desc', awesome: false}
     $scope.optionssearch = {}
     
     var filter_list = [
@@ -73,6 +73,7 @@ angular.module('geckoCliApp')
         "name": "Cliente Desc.",
         "abbr": "contacts.name desc"
       }]
+      
     
     $scope.fieldsssearch = [
       {
@@ -82,12 +83,23 @@ angular.module('geckoCliApp')
         templateOptions: {
           type: 'date',
           required: false,
-          label: 'Data'
+          label: 'Data Inicio'
+        }
+      },
+      {
+        // this field's ng-model will be bound to vm.model.username
+        key: 'data_end',
+        type: 'input',
+        templateOptions: {
+          type: 'date',
+          required: false,
+          label: 'Data Fim'
         }
       },
       {
         key: 'users_id',
         templateUrl: 'assets/partials/customautocomplete.html',
+        hide: !permissions.hasPermission('{"action": "searchconsult", "subject_class": "Lead"}'),
         templateOptions: {
           label: 'Consultor',
           placeholder: '',
@@ -107,7 +119,7 @@ angular.module('geckoCliApp')
           selectitem: function (e) {
             if (e != undefined) {
                 var dataItem = this.dataItem(e.item.index());
-                alert(dataItem.id);
+                //alert(dataItem.id);
                 $scope.selecteditem = dataItem.id;
                 $scope.modelsearch.users_id = dataItem.id;
             }
@@ -129,6 +141,44 @@ angular.module('geckoCliApp')
         }
       }
     ];
+    
+    
+    $scope.modelchange = {users_id: null}
+    $scope.optionschange = {}
+    
+    
+    $scope.fieldchange = [{
+        key: 'users_id',
+        templateUrl: 'assets/partials/customautocomplete.html',
+        templateOptions: {
+          label: 'Consultor',
+          placeholder: '',
+          required: false,
+          options: { 
+            type: "json",
+            serverFiltering: true,
+            transport: {
+              read: function(e){
+                User.search(e.data.filter.filters[0].value).then(function(item){
+                    e.success(item.data);
+                });
+              }
+            }
+          },
+          templatenode: "<span style=&quot;display: inline-block; width: 170px;&quot;>${ data.name }</span>",
+          selectitem: function (e) {
+            if (e != undefined) {
+                var dataItem = this.dataItem(e.item.index());
+                //alert(dataItem.id);
+                $scope.modelchange.users_id = dataItem.id;
+            }
+         }
+        },
+        "modelOptions": {
+          "getterSetter": true,
+          "allowInvalid": true
+        }
+      }]
     
     $scope.submitfilter = function()
     {
@@ -176,16 +226,22 @@ angular.module('geckoCliApp')
     $scope.tag = '';
 
     $scope.limit = 300;
-    $scope.skip = 0;
+    $scope.skip = 1;
+    $scope.pages = 1;
 
     $scope.crud;
     
+    $scope.disabledback = true;
+    
     $scope.isupload = false;
     $scope.remover;
+    $scope.notify = true;
+    
+    $scope.leadnotify = 0;
 
     $scope.usuario = $localStorage.user;
 
-    var crudServiceBaseUrl = "http://unicoop.herokuapp.com/api";
+    $scope.crudServiceBaseUrl = "//" + Rails.host + "api/v1/lead/download_file";
     //var crudServiceBaseUrl = "http://dokkuapp.com:3005/api";
 
     var Id = $stateParams.id;
@@ -193,38 +249,44 @@ angular.module('geckoCliApp')
     var model = Lead;
     
     $scope.arquivo = "";
+    $scope.arquivo_id = null;
 
 // selected fruits
     $scope.selection = [];
     
     
-    /*var uploader = $scope.uploader = $fileUploader.create({
+    var uploader = $scope.uploader = new FileUploader({
       scope: $scope,                          // to automatically update the html. Default: $rootScope
-      url: '/api/containers/unicoop/upload',
+      url: "//" + Rails.host + "api/v1/lead/upload/",
+      queueLimit: 1,
+      autoUpload: true,
+      removeAfterUpload: false,
       formData: [
-        { key: 'value' }
-      ],
-      filters: [
-        function (item) {                    // first user filter
-          console.info('filter1');
-          return true;
-        }
+        { key: 'docfile' }
       ]
     });
     
-    uploader.bind('beforeupload', function (event, item) {
-      $scope.isupload = true;
-    });
+    uploader.filters.push({
+            name: 'docfile',
+            fn: function(item /*{File|FileLikeObject}*/, options) {
+                return this.queue.length < 10;
+            }
+        });
     
-    uploader.bind('afteraddingall', function (event, items) {
-      console.info('After adding all files', items);
+    uploader.onBeforeUploadItem =  function (item) {
       $scope.isupload = true;
-    });
+    };
     
-    uploader.bind('complete', function (event, xhr, item, response) {
-      console.info('Complete', xhr, item, response);
-      $scope.arquivo = item.file.name;
-    });*/
+    uploader.onAfterAddingFile = function (items) {
+      //console.info('After adding all files', items);
+      $scope.isupload = true;
+    };
+    
+   uploader.onCompleteItem = function (fileItem, response, status, headers) {
+      //console.info('Complete', xhr, item, response);
+      $scope.arquivo = response.docfile_file_name;
+      $scope.arquivo_id = response.id;
+    };
     
     
 
@@ -243,23 +305,53 @@ angular.module('geckoCliApp')
       }
     };
 
-    $scope.refresh = function () {
+    $scope.reload = function () {
       var listView = $("#listView").data("kendoListView");
       listView.dataSource.read();   // added line
       listView.refresh();
+    }
+
+    $scope.refresh = function () {
+      $scope.skip = 1;
+      $scope.reload();
     };
 
     $scope.next = function () {
-      $scope.skip = $scope.skip + $scope.limit;
-      $scope.refresh();
+      $scope.skip = $scope.skip + 1;
+      $scope.reload();
     };
 
     $scope.back = function () {
       if ($scope.skip != 0) {
-        $scope.skip = $scope.skip - $scope.limit;
-        $scope.refresh();
+        $scope.skip = $scope.skip - 1;
+        $scope.reload();
       }
     };
+    
+    $scope.checklead = function(id, usuario, status)
+    {
+      if(usuario === null)
+        return 'leaduser';
+      else if(id === $scope.leadnotify && $scope.notify && status === 1)
+      {
+        return 'leadnotify';
+      }
+      else
+        return '';
+    }
+    
+    var pusher = new Pusher('63230285f168f50e6200', {
+      encrypted: true
+    });
+    var channel = pusher.subscribe('lead_channel');
+    channel.bind('created', function(data) {
+      if($scope.notify && (data.user == $scope.usuario.id || permissions.hasPermission('{"action": "changelead", "subject_class": "Lead"}')))
+      {
+        $scope.leadnotify = data.lead;
+        toaster.success({title: 'Lead', body: data.message, sound: true});
+        $scope.refresh();
+      }
+    });
 
     $scope.source = new kendo.data.DataSource({
       type: "json",
@@ -267,7 +359,17 @@ angular.module('geckoCliApp')
       transport: {
         read: function (e) {
               list = [];
+              $scope.modelsearch.page = $scope.skip;
               Lead.all($scope.modelsearch).then(function(list){
+                 if(list.data.length > 0)
+                 {
+                    $scope.pages = list.data[0].pages;
+                    if($scope.skip > 1)
+                      $scope.disabledback = false;
+                    else
+                      $scope.disabledback = true;
+                 }
+                    
                  e.success(list.data); 
               });
           }
@@ -330,33 +432,6 @@ angular.module('geckoCliApp')
       iten['name'] = "Minhas Indicações";
       iten['items'] = [];
       $scope.balistviewitem["groupitem"].push(iten);
-      
-      /*Contact.find(function (data) {
-        if (data != undefined && data.length > 0) {
-          $scope.balistviewitem["groupitem"] = [];
-
-          var iten = {};
-          var contactiten = {};
-          var contactitems = [];
-
-          iten['name'] = "Minhas Indicações";
-          iten['items'] = [];
-
-          for (var i = 0; i < data.length; i++) {
-            contactiten = {};
-            contactiten['index'] = i;
-            contactiten['id'] = data[i].id;
-            contactiten['header'] = data[i].phone;
-            contactiten['text'] = data[i].name;
-            contactiten['footer'] = data[i].email;
-            contactiten['time'] = data[i].created;
-            contactitems.push(contactiten);
-          }
-
-          iten['items'] = contactitems;
-          $scope.balistviewitem["groupitem"].push(iten);
-        }
-      });*/
     }
 
     load();
@@ -404,6 +479,8 @@ angular.module('geckoCliApp')
     
     $scope.isdelete = false;
     
+    $scope.usuarioitem = null;
+    
     $('#mobileviews').show();
     
     function detectmob() { 
@@ -421,95 +498,56 @@ angular.module('geckoCliApp')
         return false;
       }
     }
+    
+    function loadhistory(Id)
+    {
+      //Carrega proposta
+      Lead.history(Id, 3).then(function(data){
+        $scope.leadhistory = data.data;
+      });
+    }
 
     function loadoportuidade(Id, item)
     {
+      if(Id === $scope.leadnotify)
+      {
+        $scope.leadnotify = 0;
+        var listView = $("#listView").data("kendoListView");
+        listView.dataSource.read();   // added line
+        listView.refresh();
+      }
+            
       if(detectmob())
       {
         $('#mobileviews').hide();
       }
-      $scope.crud = true;
+      
       $scope.item = {};
       $scope.item = item[0];
-      //$scope.arquivo = data.return[0].file;
+      loadhistory(Id);
       
-      /*Lead.leadDetails({leadid: Id}, function (data) {
-        if (data.return.length > 0) {
-
-          $scope.item = data.return[0];
-
-          if (data.return[0].ownerid != user || (data.return[0].statusid == '54b9397ebcbf77a824cccb87' || data.return[0].statusid == '54b93988bcbf77a824cccb88')) {
-            $scope.crud = false;
-          }
-          else {
-            $scope.crud = true;
-          }
-
-          $scope.item.contactid = data.return[0].contact.name;
-          $scope.contactid = data.return[0].contact.id;
-          $scope.item.ownerid = data.return[0].user.firstName;
-          $scope.ownerid = data.return[0].user.id;
-          $scope.arquivo = data.return[0].file;
-
-          LeadBook.find({filter: {where: {userid: user, leadid: Id}}}, function (itembook) {
-            console.log('victor', itembook[0].favorite);
-            $scope.isfavorite = itembook[0].favorite;
-          });
-
-          LeadHistory.find({filter: {where: {leadid: Id, statusid: {nin: ['54b93964bcbf77a824cccb85']}}, include: ['status', 'users'], order: 'id DESC'}}, function (itemhistory) {
-            $scope.leadhistory = itemhistory;
-          });
-
-          Leadproduct.find({filter: {where: {leadid: Id}, include: ['product']}}, function (itemproduct) {
-            $scope.leadproduct = itemproduct;
-          });
-
-        }
-        else {
-          toasty.pop.error({title: 'Problema no lead.', msg: 'Não foi encontrado este Lead!', sound: false})
-        }
-      });*/
+      //$scope.arquivo = data.return[0].file;
     }
 
     if (Id) {
       Lead.get(Id).then(function (data) {
-        if (data.data.length > 0) {
+        if($scope.usuario.id == data.data[0].user_id && data.data[0].status_id === 1)  
+        {
+          //Altera o status para Não Lido
+          Lead.changelead(Id, 2);
+          $scope.leadnotify = 0;
           var listView = $("#listView").data("kendoListView");
           listView.dataSource.read();   // added line
           listView.refresh();
+          data.data[0].status_id = 2
+          data.data[0].status = 'LIDO'
+        }
+        if (data.data.length > 0) {
+          // Verifica a permissão de changestatus, e altera o status do Lead
+          if(permissions.hasPermission('{"action": "send", "subject_class": "Lead"}') || $scope.usuario.id == data.data[0].user_id)
+            $scope.crud = true;
+            
           loadoportuidade(Id, data.data);
-          /*if(data.data.status_id == "1")
-          {
-            if(data.return[0].ownerid != user || (data.return[0].statusid == '54b9397ebcbf77a824cccb87' || data.return[0].statusid == '54b93988bcbf77a824cccb88'))
-            {
-                var listView = $("#listView").data("kendoListView");
-                listView.dataSource.read();   // added line
-                listView.refresh();
-                loadoportuidade(Id); 
-            }
-            else
-            {
-                Lead.upsert({id: Id, statusid: '54b93970bcbf77a824cccb86'}, function () {
-                  LeadHistory.create({
-                    "leadid": Id,
-                    "statusid": "54b93970bcbf77a824cccb86",
-                    "ownerid": user,
-                    "created": new Date(),
-                    "comment": "Cotação em andamento"
-                  }, function () {
-                    var listView = $("#listView").data("kendoListView");
-                    listView.dataSource.read();   // added line
-                    listView.refresh();
-                    loadoportuidade(Id); 
-                  });
-                });
-            }
-          }
-          else
-          {
-            loadoportuidade(Id);
-          }
-*/
         }
       });
     }
@@ -829,50 +867,45 @@ angular.module('geckoCliApp')
       });
     }
 
-    $scope.baixar = function(arquivos){
-      var urlfile = "/api/containers/unicoop/download/" + arquivos;
-      var win = window.open(urlfile, '_blank');
-      win.focus();
+    $scope.showModal = false;
+    $scope.changeconsult = function(Id){
+      $scope.showModal = !$scope.showModal;
+    }
+    
+    $scope.submitchange = function(Id)
+    {
+      $scope.notify = false;
+      Lead.changesconsult($stateParams.id, $scope.modelchange.users_id).then(function(data){
+        toaster.success({title: "Indicação", body:"Indicação enviada com sucesso."});
+        var listView = $("#listView").data("kendoListView");
+        listView.dataSource.read();   // added line
+        listView.refresh();
+        $scope.item.usuario = data.data.user.id;
+        $scope.showModal = !$scope.showModal;
+        setTimeout(function(){ $scope.notify = true; }, 30000);
+      });
     }
 
-    $scope.concluir = function(itemId){
-      
-      if($scope.arquivo != null)
+    $scope.concluir = function(){
+      //var teste = $scope.comment;
+      //Envia a proposta;
+      if($scope.comment != null && $scope.comment != '')
       {
-        model.upsert({id: itemId, statusid: '54b9397ebcbf77a824cccb87', file: $scope.arquivo}, function (data, data1) {
-            LeadHistory.create({
-              "leadid": itemId,
-              "statusid": "54b9397ebcbf77a824cccb87",
-              "ownerid": user,
-              "created": new Date(),
-              "comment": $scope.comment
-            }, function () {
-              //Envia e-mail
-              model.leadEmail({leadid: itemId, mensagem: $scope.comment, arquivo: $scope.arquivo});
-              
-              var listView = $("#listView").data("kendoListView");
-              listView.dataSource.read();   // added line
-              listView.refresh();
-              //$state.go('app.lead.list');
-            });
+        Lead.changelead(Id, 3, $scope.comment, $scope.arquivo_id).then(function (data) {
+            toaster.success({title: "Indicação", body:"Proposta enviada com sucesso."});
+            loadhistory(Id);
+            var listView = $("#listView").data("kendoListView");
+            listView.dataSource.read();   // added line
+            listView.refresh();
+            $scope.item.status_id = 2
+            $scope.item.status = 'Concluído';
+            $scope.comment = '';
+            $scope.arquivo_id = '';
         });
       }
       else
       {
-        model.upsert({id: itemId, statusid: '54b9397ebcbf77a824cccb87'}, function () {
-            LeadHistory.create({
-              "leadid": itemId,
-              "statusid": "54b9397ebcbf77a824cccb87",
-              "ownerid": user,
-              "created": new Date(),
-              "comment": $scope.comment
-            }, function () {
-              var listView = $("#listView").data("kendoListView");
-              listView.dataSource.read();   // added line
-              listView.refresh();
-              //$state.go('app.lead.list');
-            });
-        });
+        toaster.error({title: "Proposta", body:"Campo comentario da proposta é obrigatorio."});
       }
     }
 
@@ -903,21 +936,8 @@ angular.module('geckoCliApp')
         confirmButtonColor: '#89cb4e'
       }, function (isConfirm) {
         if (isConfirm) {
-
-          model.upsert({id: itemId, statusid: '54b93988bcbf77a824cccb88'}, function () {
-
-            LeadHistory.create({
-              "leadid": itemId,
-              "statusid": "54b93988bcbf77a824cccb88",
-              "ownerid": user,
-              "created": new Date(),
-              "comment": 'Lead Cancelado'
-            }, function () {
-              var listView = $("#listView").data("kendoListView");
-              listView.dataSource.read();   // added line
-              listView.refresh();
-              $state.go('app.lead.list');
-            });
+          Lead.delete(itemId).then(function(data){
+            toaster.success({title: "Indicação", body:"Indicação removida com sucesso."});
           });
         }
       });

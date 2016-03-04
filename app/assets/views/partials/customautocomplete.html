@@ -2,7 +2,14 @@
   {{options.templateOptions.label || 'Select'}}
   {{options.templateOptions.required ? '*' : ''}}
 </label><br>
+  <div class="input-group">
   <input kendo-auto-complete style="width: 335px;" k-ignore-case="false" k-min-length="3" k-placeholder="options.templateOptions.placeholder" k-select="options.templateOptions.selectitem"  k-data-text-field="'name'" k-data-value-field="'id'" k-data-source="options.templateOptions.options"  style="width: 400px"
   k-template="options.templateOptions.templatenode" k-ng-model="value"/>
   <input type="text" style="display:none;" value="{{model.user_id}}" ng-model="value"/>
+  <span class="input-group-btn" style="margin-left: 304px;float:left;margin-top:-27px;">
+    <button class="btn btn-default  btn-xs" type="button" ng-show="value" ng-click="value=null;model.users_id=null">
+      <span class="glyphicon glyphicon-remove"></span>
+    </button>
+  </span>
+  </div>
   <p></p>

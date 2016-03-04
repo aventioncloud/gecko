@@ -99,3 +99,12 @@ body.pg-loaded > .inner {
 .cssSlideUp.ng-hide {
     height:0;
 }
+
+.inputlogin
+{
+  border: none;
+  min-height: 25px;
+  padding: 0;
+  margin-top: -4px;
+  background: none;
+}

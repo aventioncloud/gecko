@@ -17,6 +17,7 @@ module V1
     mount ProductAPI
     mount LeadAPI
     mount ContactAPI
+    mount LoginAPI
     
     add_swagger_documentation base_path: "/api",
         api_version: 'v1',

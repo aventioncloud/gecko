@@ -10,15 +10,12 @@ module V1
         requires :role, type: String, desc: "Role ID."
       end
       get "permission", authorize: ['all', 'Super Admin'] do
-        apartment!
         Role.joins(:permissions).select("permissions.*").where("roles.id = ?", params[:role])
       end
       
       desc "List my permissions."
       get "me" do
-        guard!
         role_id = current_user["roles"]
-        apartment!
         Role.joins(:permissions).select("permissions.id, permissions.subject_class, permissions.action").where("roles.id = ?", role_id)
       end
       
@@ -29,7 +26,6 @@ module V1
         requires :cancan_action, type: String, desc: "Cancan Permission."
       end
       post "permission", authorize: ['all', 'Super Admin'] do
-        apartment!
         permission = Permission.new
         permission.name = params[:name]
         permission.subject_class =  params[:model]
@@ -46,7 +42,6 @@ module V1
         requires :permission, type: String, desc: "Permission ID."
       end
       post "permissionrole", authorize: ['all', 'Super Admin'] do
-        apartment!
         permission = Permission.find(params[:permission])
         if !permission.nil?
             permission.roles << Role.find(params[:role])
@@ -57,7 +52,6 @@ module V1
       desc "Return all Roles."
       get '/' do
         @user = current_user
-        apartment!
         @role = Role.where(:name => 'Super Admin')
         if @role[0][:id] != @user["roles"]
            Role.where("roles.id != ?", @role[0][:id])
@@ -72,7 +66,6 @@ module V1
       end
       route_param :id do
       get '' do
-          apartment!
           @role = Role.find(params[:id]) rescue nil
         end
       end
@@ -82,8 +75,6 @@ module V1
         requires :name, type: String, desc: "Role name."
       end
       post '', authorize: ['all', 'Super Admin'] do
-        apartment!
-        
         item = Role.create(name: params[:name])
         
         if item.save
@@ -99,7 +90,6 @@ module V1
         requires :name, type: String, desc: "Role name."
       end
       put ':id', authorize: ['all', 'Super Admin'] do
-        apartment!
         Role.find(params[:id]).update({name: params[:name]})
       end
       
@@ -108,7 +98,6 @@ module V1
         requires :id, deletrolevalid: true, type: String, desc: "Role ID."
       end
       delete ':id', authorize: ['all', 'Super Admin'] do
-        apartment!
         Role.find(params[:id]).destroy
       end
   end

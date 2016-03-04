@@ -42,9 +42,9 @@ module APIGuard
     
     def find_permission(id, subject_class, action)
       #binding.pry
-      domain = request.host
-      hosts = domain.sub!(".kurumin.xyz", "")
-      Apartment::Tenant.switch!(hosts)
+      #domain = request.host
+      #hosts = domain.sub!(".kurumin.xyz", "")
+      #Apartment::Tenant.switch!(hosts)
       
       @permissions = Role.joins(:permissions).select("permissions.*").where("roles.id = ? and permissions.subject_class = ? and permissions.action = ?", id, subject_class, action)
       @permissions
@@ -119,6 +119,7 @@ module APIGuard
         access_token = find_access_token(token_string)
         @current = find_byid(access_token.resource_owner_id)
         if @current != nil
+          PaperTrail.whodunnit = @current["id"]
           @current_user = @current
         else
           @current_user = nil

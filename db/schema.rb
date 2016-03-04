@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222202433) do
+ActiveRecord::Schema.define(version: 20160304142635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,8 @@ ActiveRecord::Schema.define(version: 20160222202433) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.string   "code"
+    t.string   "typecontact"
   end
 
   create_table "estados", force: true do |t|
@@ -148,18 +150,40 @@ ActiveRecord::Schema.define(version: 20160222202433) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "active"
+    t.string   "code"
   end
 
   add_index "groups", ["users_id"], name: "index_groups_on_users_id", using: :btree
 
-  create_table "lead_histories", force: true do |t|
-    t.integer  "leadstatus_id"
-    t.integer  "user_id"
-    t.string   "comment"
+  create_table "import_files", force: true do |t|
+    t.string   "docfile_file_name"
+    t.string   "docfile_path"
+    t.string   "docfile"
+    t.string   "status"
+    t.string   "message"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  create_table "lead_files", force: true do |t|
+    t.string   "docfile_file_name"
+    t.string   "docfile_path"
+    t.string   "docfile"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "lead_histories", force: true do |t|
+    t.integer  "leadstatus_id"
+    t.integer  "user_id"
+    t.text     "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "lead_id"
+    t.integer  "lead_file_id"
+  end
+
+  add_index "lead_histories", ["lead_id"], name: "index_lead_histories_on_lead_id", using: :btree
   add_index "lead_histories", ["leadstatus_id"], name: "index_lead_histories_on_leadstatus_id", using: :btree
   add_index "lead_histories", ["user_id"], name: "index_lead_histories_on_user_id", using: :btree
 
@@ -182,9 +206,14 @@ ActiveRecord::Schema.define(version: 20160222202433) do
     t.integer  "leadstatus_id"
     t.integer  "contact_id"
     t.string   "title"
-    t.string   "description"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "docfile"
+    t.string   "docfile_path"
+    t.string   "docfile_file_name"
+    t.integer  "numberproduct"
+    t.string   "code"
   end
 
   add_index "leads", ["contact_id"], name: "index_leads_on_contact_id", using: :btree
@@ -324,6 +353,7 @@ ActiveRecord::Schema.define(version: 20160222202433) do
     t.string   "isemail"
     t.string   "islead"
     t.string   "celular"
+    t.string   "code"
   end
 
   add_index "users", ["accounts_id"], name: "index_users_on_accounts_id", using: :btree

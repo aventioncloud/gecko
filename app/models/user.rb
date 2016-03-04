@@ -7,7 +7,14 @@ class User < ActiveRecord::Base
          
   attr_accessor :created_at_format
   
-  belongs_to :lead
+  has_many :lead, class_name: "Lead",
+                            foreign_key: "user_id"
+                            
+  has_many :atendimento, class_name: "Atendimento",
+                            foreign_key: "users_id"
+                            
+  has_many :users_products, class_name: "UsersProducts",
+                              foreign_key: "user_id"
   
   has_and_belongs_to_many :products
          

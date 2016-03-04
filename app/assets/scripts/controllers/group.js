@@ -42,7 +42,8 @@ angular.module('geckoCliApp')
     $scope.toolbar = {
       controller: "group",
       add: "group.add",
-      list: "group.list"
+      list: "group.list",
+      permissioncreate: "{'subject_class':'Group','action':'create'}"
     };
     
     //Super Admin

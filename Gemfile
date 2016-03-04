@@ -105,4 +105,14 @@ gem 'simple_form'
 
 gem 'paper_trail', '~> 4.0.0'
 
+gem 'will_paginate', '~> 3.0.6'
+
+gem 'pusher'
+
+gem 'htmlascii'
+
+gem 'diffy' 
+
+gem 'smarter_csv'
+
 #gem 'dumper'

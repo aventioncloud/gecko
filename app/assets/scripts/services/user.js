@@ -5,6 +5,7 @@ app = angular.module('geckoCliApp');
 app.service('User', function($http, Rails) {
   var base;
   base = "//" + Rails.host + "/api/v1/user";
+  baselogin = "//" + Rails.host + "/api/v1/login";
   return {
     all: function() {
       return $http.get(base + '/');
@@ -61,7 +62,7 @@ app.service('User', function($http, Rails) {
       return $http["delete"](base + '/' + id);
     },
     logout: function() {
-      return $http["delete"](base + '/logout');
+      return $http["delete"](baselogin + '/logout');
     },
     active: function(id) {
       return $http["post"](base + '/' + id);

@@ -1,0 +1,40 @@
+<div class="register-container full-height sm-p-t-30">
+   <div class="container-sm-height full-height">
+      <div class="row row-sm-height">
+         <div class="col-sm-12 col-sm-height col-middle" style="background-color: #48b0f7;">
+            <img src="http://unicoop.herokuapp.com/pages/img/logo-horizontal-unicoop.png" alt="logo" data-src="http://unicoop.herokuapp.com/pages/img/logo-horizontal-unicoop.png" data-src-retina="assets/img/logo_2x.png" width="230" height="42">
+            <h3>Alterar senha</h3>
+            <%= simple_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+                 <%= f.error_notification %>
+               <div class="row">
+                  <div class="col-sm-12">
+                     <div class="form-group form-group-default">
+                        <%= f.input :email, :required => true, :autofocus => true, label_html: { class: 'my_class' }, input_html: { class: 'inputlogin' } %>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm-12">
+                     <div class="form-group form-group-default">
+                        <%= f.input :current_password, :required => true, label: 'Senha atual', placeholder: 'Senha atual', label_html: { class: 'my_class' }, input_html: { class: 'inputlogin' } %>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-sm-6">
+                     <div class="form-group form-group-default">
+                        <%= f.input :password, :autocomplete => "off", :required => false, label: 'Nova senha', placeholder: 'Nova senha', label_html: { class: 'my_class' }, input_html: { class: 'inputlogin' } %>
+                     </div>
+                  </div>
+                  <div class="col-sm-6">
+                     <div class="form-group form-group-default">
+                        <%= f.input :password_confirmation, :required => false, label: 'Confirme a nova senha', placeholder: 'Confirme a nova senha', label_html: { class: 'my_class' }, input_html: { class: 'inputlogin' } %>
+                     </div>
+                  </div>
+               </div>
+               <%= f.button :submit, "Alterar", :class => 'btn btn-primary btn-cons m-t-10' %>
+            <% end %>
+         </div>
+      </div>
+   </div>
+</div>

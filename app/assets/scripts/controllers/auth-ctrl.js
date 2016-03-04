@@ -6,6 +6,12 @@ angular.module('geckoCliApp').controller('AuthCtrl', function($scope, $state, $r
     $scope.name = "";
     
     
+  $scope.changepass = function()
+  {
+    var url = "//" + Rails.host + "users/edit";
+    window.location = url;
+  }
+    
   $scope.loginUrl = "//" + Rails.host + "/oauth/authorize?response_type=token&client_id=" + Rails.application_id + "&redirect_uri=http://" + Rails.host;
   $scope.logout = function() {
     AccessToken["delete"]();

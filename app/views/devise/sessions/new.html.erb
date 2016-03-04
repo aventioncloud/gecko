@@ -1,0 +1,53 @@
+<div class="login-wrapper ">
+
+  <div class="bg-pic">
+
+    <img src="http://unicoop.herokuapp.com/assets/img/demo/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg" data-src="assets/img/demo/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg" data-src-retina="assets/img/demo/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg" alt="" class="lazy">
+
+
+    <div class="bg-caption pull-bottom sm-pull-bottom text-white p-l-20 m-b-20">
+      <p class="small">
+        © 2014-2016 Unicoop. v2.0.1
+      </p>
+    </div>
+
+  </div>
+
+  <div class="login-container bg-white">
+    <div class="p-l-50 m-l-20 p-r-50 m-r-20 p-t-50 m-t-30 sm-p-l-15 sm-p-r-15 sm-p-t-40">
+      <p class="p-t-35">Entre com sua conta</p>
+      <!--<div class="alert alert-danger" ng-if="loginError">Usuário ou senha estão incorretos.</div>-->
+      <%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+
+        <div class="form-group form-group-default" style="border-color: #000 !important; border-style: solid; border-width: 2px !important;">
+          <div class="controls">
+            <%= f.input :email, label: 'E-mail', placeholder: 'E-mail', label_html: { class: 'my_class' }, input_html: { class: 'inputlogin' }, :required => false, :autofocus => true %>
+            <!--<input type="text" name="username" placeholder="Usuário" ng-model="credentials.email" class="form-control" required autofocus>-->
+          </div>
+        </div>
+
+
+        <div class="form-group form-group-default" style="border-color: #000 !important; border-style: solid; border-width: 2px !important;">
+          <div class="controls">
+            <%= f.input :password, label: 'Senha', placeholder: 'Senha', input_html: { class: 'inputlogin' }, label_html: { class: 'my_class' }, :required => false %>
+            <!--<input type="password" class="form-control" name="password" placeholder="Senha" ng-model="credentials.password" required>-->
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 no-padding">
+            <div class="checkbox ">
+              <%= f.input :remember_me, label: 'Mantenha-me conectado', label_html: { class: 'my_class' }, :as => :boolean if devise_mapping.rememberable? %>
+              <!--<input type="checkbox" value="1" id="checkbox1" ng-model="credentials.rememberMe">-->
+            </div>
+          </div>
+          <!--<div class="col-md-6 text-right">
+            <a href="login.html#" class="text-info small">Help? Contact Support</a>
+          </div>-->
+        </div>
+        <%= f.button :submit, "Entrar", :class => 'btn btn-primary btn-cons m-t-10' %>
+      <% end %>
+    </div>
+  </div>
+
+</div>

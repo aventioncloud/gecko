@@ -3,9 +3,11 @@
     <div class="btn-group sm-m-t-10" style="margin-left: 20px;margin-top: 10px;">
       <!--<button type="button" class="btn btn-default" kendo-tooltip k-content="'Salvar'" ng-show="Id && crud" ng-click="salvar(item.id);"><i class="fa fa-save"></i>
       </button>-->
-      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Enviar'" ng-show="Id && crud" ng-click="concluir(item.id);"><i class="fa fa-check"></i>
+      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Enviar'" ng-show="Id && crud" ng-click="concluir(item.id);"><i class="fa fa-send"></i>
       </button>
-      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Baixar Anexo'" ng-show="arquivo" ng-click="baixar(item.file);"><i class="fa fa-file"></i>
+      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Alterar consultor'" ng-hide="item.usuario" ng-click="changeconsult(item.id);"><i class="fa fa-user"></i>
+      </button>
+      <button type="button" class="btn btn-default" kendo-tooltip k-content="'Remover'" has-permission='{"subject_class":"Lead","action":"delete"}' ng-click="ondelete(item.id);"><i class="fa fa-close"></i>
       </button>
     </div>
     <div class="btn-group sm-m-t-10" style="margin-left: 20px;margin-top: 10px;">
@@ -21,8 +23,7 @@
       </button>
       <button type="button" class="btn btn-default" kendo-tooltip k-content="'Alterar'" ng-show="crud" ui-sref="app.lead.edit({id: item.id})"><i class="fa fa-pencil-square-o"></i>
       </button>-->
-      <button type="button" class="btn btn-default" kendo-tooltip k-content="'Remover'" ng-show="remover" ng-click="ondelete(item.id);"><i class="fa fa-close"></i>
-      </button>
+
     </div>
     <!--<ul class="actions no-margin p-l-20" style="display: block !important;">
       <li class="visible-sm-inline-block visible-xs-inline-block">
@@ -109,7 +110,7 @@
     <br>
     <div ng-repeat="dataitem in leadhistory" class="panel panel-default {{dataitem.status.color}}">
       <div class="panel-heading">
-        <div class="panel-title">{{dataitem.status}}
+        <div class="panel-title">CONCLUÍDO
         </div>
         <div class="panel-controls">
           <ul>
@@ -124,10 +125,10 @@
         </div>
       </div>
       <div class="item-footer clearfix">
-        <div class="pull-left">por <span class="text-complete">{{dataitem.users.firstName}}</span>
+        <div class="pull-left" ng-show="dataitem.docfile_file_name">Anexo <span class="text-complete"><a href="{{crudServiceBaseUrl}}?id={{dataitem.file_id}}">{{dataitem.docfile_file_name}}</a></span>
         </div>
         <div class="pull-right hint-text">
-          {{dataitem.created}}
+          {{dataitem.data}}
         </div>
         <div class="clearfix"></div>
       </div>
@@ -138,9 +139,22 @@
     </div>
     <div class="wysiwyg5-wrapper b-a b-grey m-t-30" ng-show="crud">
         Anexar
-        <input ng-file-select type="file"/>
+        <input nv-file-select="" uploader="uploader" type="file"/>
         
-        <div class="col-md-9" style="margin-bottom: 40px" ng-show="isupload">
+        <div ng-show="isupload" ng-repeat="item in uploader.queue">
+            <div class="progress" style="margin-bottom: 0;">
+            <div class="progress-bar" role="progressbar"
+                ng-style="{ 'width': item.progress + '%' }" ng-hide="item.isSuccess||item.isCancel||item.isError"></div>
+            </div>
+           <span ng-show="item.isSuccess"><i
+                  class="glyphicon glyphicon-ok"></i> Arquivo salvo!</span>
+          <span ng-show="item.isCancel"><i
+                  class="glyphicon glyphicon-ban-circle"></i></span>
+          <span ng-show="item.isError"><i
+                  class="glyphicon glyphicon-remove"></i></span>
+        </div>
+        
+        <div class="col-md-9" style="margin-bottom: 40px" ng-show="false">
 
             <h3>Fila de Arquivos</h3>
 
@@ -229,7 +243,15 @@
         
     </div>
   </div>
-  <div kendo-window="win1" k-title="'Compartilhar'" k-on-open="win1visible = true" k-on-close="win1visible = false" style="display: none;width: 400px; height: 150px;top: 50%;">
+  <div kendo-window="win1" k-title="'Compartilhar'" k-ng-model="comment" k-on-open="win1visible = true" k-on-close="win1visible = false" style="display: none;width: 400px; height: 150px;top: 50%;">
 
   </div>
+  
+  <modal title="Alterar responsável" visible="showModal">
+    <form name="changeconsultForm" id="gchangeForm" ng-submit="submitchange(item.id)" novalidate> 
+      <formly-form model="modelchange" fields="fieldchange" options="optionschange" form="gchangeForm">
+          <button class="btn btn-default" style="margin-left: 9px;" type="submit" ng-disabled="changeconsultForm.$invalid" style="margin-right: 10px;">Alterar</button>
+      </formly-form>
+    </form>
+  </modal>
 </div>

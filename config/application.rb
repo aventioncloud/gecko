@@ -40,13 +40,15 @@ module Oauth2ApiSample
     config.assets.paths += Dir["#{Rails.root}/app/assets/lib/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/app/assets/theme/*"].sort_by { |dir| -dir.size }
     
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.perform_deliveries = true
     config.action_mailer.delivery_method = :smtp
     # SMTP settings for gmail
     config.action_mailer.smtp_settings = {
-     :address              => ENV['smtp_host'],
-     :port                 => ENV['smtp_port'],
-     :user_name            => ENV['smtp_user'],
-     :password             => ENV['smtp_password'],
+     :address              => 'smtp.mandrillapp.com',
+     :port                 => 587,
+     :user_name            => 'app32689271@heroku.com',
+     :password             => 'TYuxdvFhNFGKyP7tleF8vg',
      :authentication       => "plain",
     :enable_starttls_auto => true
     }

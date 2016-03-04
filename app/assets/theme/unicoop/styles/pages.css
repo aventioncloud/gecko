@@ -879,8 +879,8 @@ body.dashboard .page-container {
 
 .page-container .page-content-wrapper {
   min-height: 100%;
-  position: relative;
-  height: 800px !important;
+  /*position: relative;
+  height: 800px !important;*/
 }
 
 .page-container .page-content-wrapper .content {
@@ -2269,7 +2269,8 @@ hr.dotted {
 }
 
 .bg-warning-dark {
-  background-color: #c9a843;
+  /*background-color: #c9a843;4c9689*/
+  background-color: #4c9689;
 }
 
 .bg-warning-darker {
@@ -2827,8 +2828,8 @@ hr.dotted {
 }
 
 .btn-warning.active,.btn-warning:active,.btn-warning.active:focus,.btn-warning:active:focus,.btn-warning:active:hover,.open .dropdown-toggle.btn-warning {
-  background-color: #c9a843;
-  border-color: #c9a843;
+  background-color: #4c9689;/*c9a843*/;
+  border-color: #4c9689;
   color: #ffffff;
 }
 
@@ -8597,7 +8598,7 @@ div.cs-skin-slide .cs-options ul li.cs-selected span {
   margin: 0;
   min-height: 1px;
   overflow: hidden;
-  padding: 26px 0 0 0;
+  padding: 50px 0 0 0;
   position: relative;
 }
 
@@ -9206,7 +9207,7 @@ input.list-view-search {
 }
 .email-wrapper .email-list {
   float: left;
-  width: 360px;
+  width: 400px;
   background: #fff;
   height: 100%;
   overflow-y: auto;
@@ -9231,7 +9232,7 @@ input.list-view-search {
 .email-wrapper .email-list .list-view-fake-header,
 .email-wrapper .email-list .list-view-group-header {
   background: #f0f0f0;
-  height: 30px;
+  height: 50px;
   color: rgba(98, 98, 98, 0.7);
   font-family: 'Montserrat';
   text-transform: uppercase;
@@ -9289,7 +9290,6 @@ input.list-view-search {
   top: 15px;
 }
 .email-wrapper .email-opened {
-  margin-left: 610px;
   position: relative;
   overflow: auto;
   height: 100%;
@@ -9351,7 +9351,7 @@ input.list-view-search {
 }
 .email-wrapper .email-opened .email-content-wrapper .email-content {
   margin: 0 auto;
-  width: 600px;
+  width: 100%;
   display: block;
   padding-top: 62px;
   padding-bottom: 70px;
@@ -12591,4 +12591,16 @@ Responsive Util
     opacity: 0.8;
     background-size: 114px 29px;
   }
+}
+
+.leadnotify{
+  background: aquamarine !important;
+}
+
+.leaduser{
+  background: #F9A0A0 !important;
+}
+
+.email-wrapper .email-list .list-view-fake-header, .email-wrapper .email-list .list-view-group-header {
+   width: 95%;
 }

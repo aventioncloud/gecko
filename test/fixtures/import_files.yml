@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  docfile_file_name: MyString
+  docfile_path: MyString
+  docfile: MyString
+  status: MyString
+  message: MyString
+
+two:
+  docfile_file_name: MyString
+  docfile_path: MyString
+  docfile: MyString
+  status: MyString
+  message: MyString

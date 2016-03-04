@@ -114,7 +114,7 @@ angular.module('geckoCliApp')
           $scope.data = data.data;
           $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
-                count: 25,          // count per page
+                count: 100,          // count per page
                 filter: $scope.filter,
                 sorting: {
                     name: 'asc'     // initial sorting
