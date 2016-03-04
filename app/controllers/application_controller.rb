@@ -45,8 +45,10 @@ class ApplicationController < ActionController::Base
   helper_method :current_account
 
   def set_mailer_host
+    app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../config/application.yml', __FILE__)).read).result)[Rails.env]
     subdomain = current_account ? "#{current_account.subdomain}." : ""
-    ActionMailer::Base.default_url_options[:host] = "#{subdomain}kurumin.xyz:3001"
+    uri = "http://#{subdomain}.#{app_config['host']}:#{app_config['port']}/"
+    ActionMailer::Base.default_url_options[:host] = uri#"#{subdomain}kurumin.xyz:3001"
   end
 
   def after_sign_out_path_for(resource_or_scope)
