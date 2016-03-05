@@ -40,7 +40,8 @@ class ApplicationController < ActionController::Base
   end
 
   def current_account
-    @current_account ||= Account.find_by(subdomain: request.subdomain)
+    subdoma = request.subdomain.sub! '.unicooprj', ''
+    @current_account ||= Account.find_by(subdomain: subdoma)
   end
   helper_method :current_account
 
