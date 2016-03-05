@@ -27,8 +27,8 @@ test:
   smtp_port: 587
   smtp_user: "app32689271@heroku.com"
   smtp_password: "TYuxdvFhNFGKyP7tleF8vg"  
-  host: 'kurumin.xyz'
-  port: '3001'
+  host: 'unicooprj.com.br'
+  port: '80'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
   theme: 'unicoop'
   title: 'Unicoop'

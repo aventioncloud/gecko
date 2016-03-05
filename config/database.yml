@@ -3,7 +3,7 @@ development:
   port: 5432
   adapter: postgresql
   encoding: unicode
-  database: unicoop_dev
+  database: unicoop_prd
   pool: 5
   username: postgres
   password: 123456
@@ -13,7 +13,7 @@ test:
   port: 49158
   adapter: postgresql
   encoding: unicode
-  database: unicoop_dev
+  database: unicoop_prd
   pool: 5
   username: postgres
   password: 123456
@@ -23,7 +23,7 @@ production:
   port: 5432
   adapter: postgresql
   encoding: unicode
-  database: unicoop_dev
+  database: unicoop_prd
   pool: 5
   username: postgres
   password: 123456
