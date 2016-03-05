@@ -7,7 +7,7 @@ module JsEnv
   def js_env
     app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../../config/application.yml', __FILE__)).read).result)[Rails.env]
     domain = request.host
-    #binding.pry
+    binding.pry
     subdomain = domain.sub!(".#{app_config['host']}", "")
     uri = "http://#{subdomain}.#{app_config['host']}:#{app_config['port']}/"
     Apartment::Database.switch!("public")
