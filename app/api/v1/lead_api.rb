@@ -204,7 +204,7 @@ module V1
           isemail = leaditem[0].isemail
           groupid = leaditem[0].groups_id
         end
-        contact = Contact.create(name: params[:nome], email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], contacttype: params[:tipo])
+        contact = Contact.create(name: params[:nome], email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], typecontact: params[:tipo])
         if contact.save
             lead = Lead.create(user_id: user, leadstatus_id: startstatus, contact_id: contact.id, title: params[:titulo], description: params[:descricao], numberproduct: params[:numberproduct])
             if lead.save
@@ -224,9 +224,9 @@ module V1
               
               #envia o e-mail para o supervisor.
               group = Group.find(groupid) rescue nil
-              if !group.nil
+              if !group.nil?
                 usersuper = User.find(group.ownerid) rescue nil
-                if !usersuper.nil
+                if !usersuper.nil?
                     LeadMailer.created_super(usersuper.email, name).deliver
                 end
               end
@@ -240,6 +240,73 @@ module V1
         { :sucess => 'ok', :lead => lead}
         
         #Adiciona o Lead para um consultor disponivel.
+      end
+      
+      desc "Queue Lead"
+      get '/queue' do
+        date = DateTime.now + 30.minutes
+        ary = Array.new
+        apartment!
+        lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.groups_id, users.isemail, users.email as usermail, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.leadstatus_id = 1 and leads.updated_at < ?', date).limit(1)
+        lead.find_each do |array|
+          ary << array
+          PaperTrail.whodunnit = 'job_fila'
+          if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 20
+             usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", array[:tipo], array[:tipo], array[:tipo], array[:productcollection])  
+          else
+             usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'false' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", array[:tipo], array[:tipo], array[:tipo], array[:productcollection])  
+          end
+          leaditem = User.joins("LEFT JOIN leads ON leads.user_id = users.id and leads.leadstatus_id = 1").select("users.*, count(leads.id) as lead_count").where("users.id IN(?)", usersflags).group("users.id").order("lead_count asc").limit(1)
+          if leaditem.exists?
+            user = leaditem[0].id
+            name = leaditem[0].name
+            email = leaditem[0].email
+            isemail = leaditem[0].isemail
+            groupid = leaditem[0].groups_id
+          
+            lead = Lead.find(array[:id]).update(user_id: user)
+            LeadHistory.create(leadstatus_id: 1, user_id: user, lead_id: array[:id]).save
+            LeadProduct.create(product_id: array[:productcollection], lead_id: array[:id]).save
+            
+            #Push
+            Pusher.trigger('lead_channel', 'created', {
+              message: 'Novo Lead cadastrado para você',
+              user: user,
+              lead: array[:id]
+            })
+            
+            if isemail == 'true'
+              LeadMailer.created(email).deliver
+            end
+            
+            if array[:isemail] == 'true'
+              LeadMailer.updated(array[:usermail], 'Nova Cotação Cadastrada').deliver
+            end
+            
+            #envia o e-mail para o supervisor.
+            group = Group.find(groupid) rescue nil
+            if !group.nil?
+              usersuper = User.find(group.ownerid) rescue nil
+              if !usersuper.nil?
+                if usersuper.isemail == 'true'
+                  LeadMailer.created_super(usersuper.email, name).deliver
+                end
+              end
+            end
+            
+            #envia o e-mail para perdida o supervisor.
+            grouplast = Group.find(array[:groups_id]) rescue nil
+            if !grouplast.nil?
+              usersuperlast = User.find(group.ownerid) rescue nil
+              if !usersuperlast.nil?
+                if usersuperlast.isemail == 'true'
+                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Nova Cotação Cadastrada').deliver
+                end
+              end
+            end
+          end
+        end
+        { :sucess => 'ok', :lead => ary}
       end
       
       desc "Delete a Lead Status."
@@ -284,7 +351,7 @@ module V1
         if @user["roles"] == 1 or @user["roles"] == 2
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).count(filter)
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY HH:mm') as data, '"+pages.to_s+"' as pages").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YY HH:mm') as data, '"+pages.to_s+"' as pages").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
@@ -357,11 +424,12 @@ module V1
         options = {:col_sep => ";", :row_sep => "\n", :file_encoding => 'ISO-8859-1'}
         ary = Array.new
         SmarterCSV.process(filename, options) do |array|
+          dtacreated =  DateTime.strptime(array.first[:dtacreated], "%d/%m/%Y %H:%M")
           if !Lead.where(:code => array.first[:code]).exists?
             ownercheck = User.where('code = ? and code is not  null',array.first[:owner]).first rescue nil
             contactcheck = Contact.where('code = ? and code is not  null',array.first[:contact]).first rescue nil
             if !contactcheck.nil? and !ownercheck.nil?
-              lead = Lead.create(user_id: ownercheck.id, contact_id: contactcheck.id, leadstatus_id: array.first[:status], title: array.first[:title], description: array.first[:description], code: array.first[:code])
+              lead = Lead.create(user_id: ownercheck.id, contact_id: contactcheck.id, leadstatus_id: array.first[:status], title: array.first[:title], description: array.first[:description], code: array.first[:code], created_at: dtacreated, updated_at: dtacreated)
               if lead.save
                 ary << {code: '1', message: 'sucesse', lead: array.first[:code]}
               else
@@ -374,7 +442,7 @@ module V1
             ownercheck = User.where('code = ? and code is not  null',array.first[:owner]).first rescue nil
             contactcheck = Contact.where('code = ? and code is not  null',array.first[:contact]).first rescue nil
             if !contactcheck.nil? and !ownercheck.nil?
-              lead = Lead.where(:code => array.first[:code]).first.update(user_id: ownercheck.id, contact_id: contactcheck.id, leadstatus_id: array.first[:status], title: array.first[:title], description: array.first[:description])
+              lead = Lead.where(:code => array.first[:code]).first.update(user_id: ownercheck.id, contact_id: contactcheck.id, leadstatus_id: array.first[:status], title: array.first[:title], description: array.first[:description], created_at: dtacreated, updated_at: dtacreated)
               ary << {code: '1', message: 'sucesse', lead: array.first[:code]}
             else
               ary << {code: '13', message: 'error', lead: array.first[:code], error: 'Responsável ou Contato não encontrado.'}

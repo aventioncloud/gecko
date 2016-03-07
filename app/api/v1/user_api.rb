@@ -128,8 +128,10 @@ module V1
         requires :products, type: String
       end
       post 'linkproduct', authorize: ['read', 'User']  do
+        Apartment::Database.switch!("public")
         @user = User.find(params[:user_id]) rescue { :error => "Usuário não encontrado." }
         if defined?(@user.id)
+          apartment!
           UsersProducts.where(:user_id => @user.id).destroy_all
           result = params[:products].split(/,/)
           result.each do |item|
@@ -204,7 +206,7 @@ module V1
         @atendimentolist = Atendimento.all()
         @grouplist = Group.all()
         
-        if 1 != @user["roles"]
+        if 1 != @user["roles"] and 2 != @user["roles"]
           User.where("accounts_id = ? and roles != ? and active = 'S' and (? = '' or name like '%?%')", current_user["accounts_id"],  @role[0][:id], @search, @search).find_each do |item|
               @role = @rolelist.detect{|w| w.id == item[:roles]}
               apartment!

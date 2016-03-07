@@ -107,7 +107,7 @@ module APIGuard
 
         when Oauth2::AccessTokenValidationService::VALID
           @current_user = find_byid(access_token.resource_owner_id)
-          PaperTrail.whodunnit = @current_user["id"]
+          PaperTrail.whodunnit = @current_user["name"]
         end
       end
     end

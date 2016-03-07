@@ -9,7 +9,7 @@ module V1
         @user = current_user
         apartment!
         ary = Array.new
-        if 1 != @user["roles"]
+        if 1 != @user["roles"] and 2 != @user["roles"]
           Group.where("active = 'S'").find_each do |item|
               ary << {:id => item[:id],:name => item[:name], :owner => User.find(item[:users_id]), :dadgroup => Group.find(item[:dadgroup]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M") }
           end
@@ -33,7 +33,7 @@ module V1
       route_param :id do
         get '', authorize: ['read', 'Group'] do
           apartment!
-          Group.find(params[:id])
+          Group.joins(:user).select('users.name as usuario, groups.*').find(params[:id])
         end
       end
       

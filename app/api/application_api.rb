@@ -6,7 +6,7 @@ class ApplicationAPI < Grape::API
   helpers do
     def apartment!
         domain = request.host
-        hosts = domain.sub!(".kurumin.xyz", "")
+        hosts = domain.sub!(".unicooprj.com.br", "")
         Apartment::Tenant.switch!(hosts)
         PaperTrail.controller_info = { ip: request.env["REMOTE_HOST"] }
     end

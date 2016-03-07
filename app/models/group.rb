@@ -1,5 +1,5 @@
 class Group < ActiveRecord::Base
-  belongs_to :users
+  belongs_to :user, foreign_key: :users_id, primary_key: :id
   
   before_create :record_active
   

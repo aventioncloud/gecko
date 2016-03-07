@@ -39,6 +39,7 @@ module Oauth2ApiSample
     config.assets.paths += Dir["#{Rails.root}/vendor/assets/bower_components/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/app/assets/lib/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/app/assets/theme/*"].sort_by { |dir| -dir.size }
+    config.time_zone = 'Brasilia'
     
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.perform_deliveries = true

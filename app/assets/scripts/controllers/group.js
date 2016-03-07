@@ -221,6 +221,7 @@ angular.module('geckoCliApp')
     if(Id){
       Group.get(Id).then(function(data){
         $scope.model = data.data;
+        $scope.fields[1].templateOptions.placeholder = data.data.usuario;
       });
     }
     

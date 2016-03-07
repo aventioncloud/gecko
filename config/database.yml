@@ -10,7 +10,7 @@ development:
 
 test:
   host: 191.101.2.6
-  port: 49158
+  port: 5432
   adapter: postgresql
   encoding: unicode
   database: unicoop_prd
