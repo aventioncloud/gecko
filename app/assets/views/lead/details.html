@@ -99,7 +99,7 @@
             <div class="col-md-9 col-sm-height sm-no-padding">
               <br><div class="thumbnail-wrapper" ng-repeat="dataproduct in leadproduct"><span class="label label-danger">{{dataproduct.product.name}}</span></div>
               <br><br><h5 class="semi-bold m-t-0">Descrição da Indicação</h5>
-              <div ng-bind-html="item.description">{{item.description}}</div>
+              <div ng-bind-html="item.description|htmlcoder"></div>
             </div>
           </div>
         </div>

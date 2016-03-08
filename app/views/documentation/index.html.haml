@@ -4,7 +4,7 @@
     %title Grape-Doorkeeper documentation
     %link{:href => "//fonts.googleapis.com/css?family=Droid+Sans:400,700", :rel => "stylesheet", :type => "text/css"}/
     = stylesheet_link_tag "documentation", media: "all"
-    <script type="text/javascript">window.base_url = "http://rio.unicooprj.com.br/";</script>
+    <script type="text/javascript">window.base_url = "#{@uri}";</script>
     = javascript_include_tag "documentation"
     %body.swagger-section
       %header#header.content-header

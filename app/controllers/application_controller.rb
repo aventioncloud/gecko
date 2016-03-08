@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     redirect_to admin_organizations_path, :alert => exception.message
   end
 
-  before_filter :load_schema, :set_mailer_host, :load_init
+  before_filter :load_schema, :set_mailer_host, :load_init, :set_timezone
   before_filter :configure_permitted_parameters, if: :devise_controller?
 
   protected
@@ -20,6 +20,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  
+  def set_timezone
+    Time.zone = 'Brasilia'
+  end
   
   def load_init
     app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../config/application.yml', __FILE__)).read).result)[Rails.env]

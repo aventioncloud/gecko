@@ -936,8 +936,9 @@ angular.module('geckoCliApp')
         confirmButtonColor: '#89cb4e'
       }, function (isConfirm) {
         if (isConfirm) {
-          Lead.delete(itemId).then(function(data){
+          Lead.delete($stateParams.id).then(function(data){
             toaster.success({title: "Indicação", body:"Indicação removida com sucesso."});
+            $state.go('app.lead.list');
           });
         }
       });

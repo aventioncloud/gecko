@@ -22,6 +22,11 @@ module V1
         end
       end
       
+      desc "Return all Time."
+      get 'time', authorize: ['read', 'Lead'] do
+        Time.zone.now 
+      end
+      
       desc "Return all Lead."
       get 'status', authorize: ['read', 'Lead'] do
         apartment!
@@ -193,10 +198,10 @@ module V1
         if params[:numberproduct] != nil and params[:numberproduct] != 0 and params[:numberproduct] >= 20
            usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])  
         else
-           usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'false' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])  
+           usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])  
         end
         
-        leaditem = User.joins("LEFT JOIN leads ON leads.user_id = users.id and leads.leadstatus_id = 1").select("users.*, count(leads.id) as lead_count").where("users.id IN(?)", usersflags).group("users.id").order("lead_count asc").limit(1)
+        leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1)
         if leaditem.exists?
           user = leaditem[0].id
           name = leaditem[0].name
@@ -204,10 +209,16 @@ module V1
           isemail = leaditem[0].isemail
           groupid = leaditem[0].groups_id
         end
-        contact = Contact.create(name: params[:nome], email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], typecontact: params[:tipo])
+        contact = Contact.create(name: CGI.unescapeHTML(params[:nome]), email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], typecontact: params[:tipo])
         if contact.save
-            lead = Lead.create(user_id: user, leadstatus_id: startstatus, contact_id: contact.id, title: params[:titulo], description: params[:descricao], numberproduct: params[:numberproduct])
+            lead = Lead.create(user_id: user, leadstatus_id: startstatus, contact_id: contact.id, title: CGI.unescapeHTML(params[:titulo]), description: CGI.unescapeHTML(params[:descricao]).html_safe, numberproduct: params[:numberproduct])
             if lead.save
+              totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
+              if !totallead.nil?
+                puts 'entro aqui'
+                totallead = totallead + 1
+                atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+              end
               LeadHistory.create(leadstatus_id: startstatus, user_id: user, lead_id: lead.id).save
               LeadProduct.create(product_id: params[:productcollection], lead_id: lead.id).save
               
@@ -256,7 +267,7 @@ module V1
           else
              usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'false' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", array[:tipo], array[:tipo], array[:tipo], array[:productcollection])  
           end
-          leaditem = User.joins("LEFT JOIN leads ON leads.user_id = users.id and leads.leadstatus_id = 1").select("users.*, count(leads.id) as lead_count").where("users.id IN(?)", usersflags).group("users.id").order("lead_count asc").limit(1)
+          leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1)
           if leaditem.exists?
             user = leaditem[0].id
             name = leaditem[0].name
@@ -351,19 +362,19 @@ module V1
         if @user["roles"] == 1 or @user["roles"] == 2
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).count(filter)
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YY HH:mm') as data, '"+pages.to_s+"' as pages").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '2 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
           leads_group = Group.all_children(ary, @user["groups_id"])
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("users.groups_id IN (?) and ?", leads_group, filter).count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY HH:mm') as data, '"+pages.to_s+"' as pages").where("users.groups_id IN (?) and ?", leads_group, filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '2 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where("users.groups_id IN (?) and ?", leads_group, filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna os Leads para usuário
         else
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("leads.user_id = ? and ?",@user["id"], filter).count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY HH:mm') as data, '"+pages.to_s+"' as pages").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '2 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         end
         #@lead
       end

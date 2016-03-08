@@ -39,7 +39,8 @@ module Oauth2ApiSample
     config.assets.paths += Dir["#{Rails.root}/vendor/assets/bower_components/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/app/assets/lib/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/app/assets/theme/*"].sort_by { |dir| -dir.size }
-    config.time_zone = 'Brasilia'
+    config.time_zone = 'Brasilia' # altera o time zone para a aplicação
+    config.active_record.default_timezone = :local # altera o ActiveRecord pra gravar os campos mágicos com o mesmo time zone da aplicação
     
     config.action_mailer.raise_delivery_errors = true
     config.action_mailer.perform_deliveries = true

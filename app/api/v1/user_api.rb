@@ -177,11 +177,11 @@ module V1
         end
         
         if params[:atendimento] == 'C'
-          Atendimento.find(id).update(ischat: ativostatus)
+          Atendimento.find(id).update(ischat: ativostatus, leadnumber: 0)
         elsif params[:atendimento] == 'F'
-          Atendimento.find(id).update(ispf: ativostatus)
+          Atendimento.find(id).update(ispf: ativostatus, leadnumber: 0)
         elsif params[:atendimento] == 'J'
-          Atendimento.find(id).update(ispj: ativostatus)
+          Atendimento.find(id).update(ispj: ativostatus, leadnumber: 0)
         else
           { :error => "Tipo de atendimento não encontrado." }
         end
@@ -219,6 +219,18 @@ module V1
                       :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
                       :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:groups_id]).first, :group => @group }
           end
+        elsif 2 == @user["roles"]
+          User.where("accounts_id = ? and active = 'S' and (? = '' or upper(name) like upper(?))" , current_user["accounts_id"], @search, '%'+@search+'%').find_each do |item|
+              @role = @rolelist.detect{|w| w.id == item[:roles]}
+             apartment!
+              @atendimentos = @atendimentolist.detect{|w| w.users_id == item[:id]}
+              @groups = @grouplist.detect{|w| w.id == item[:groups_id]}
+               #@products = UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id])
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], 
+                    :roles => @role, :products => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), 
+                    :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
+                    :group_id => item[:groups_id], :atendimento => @atendimentos, :group => @groups }
+          end    
         else
           User.where("accounts_id = ? and (? = '' or upper(name) like upper(?))" , current_user["accounts_id"], @search, '%'+@search+'%').find_each do |item|
               @role = @rolelist.detect{|w| w.id == item[:roles]}

@@ -52,7 +52,7 @@ module V1
         importfile = ImportFile.create(docfile: ActionDispatch::Http::UploadedFile.new(attachment), status: 'Group')
         filename = Rails.root.join("public", "importtmp/"+importfile.docfile_file_name)
         
-        options = {:col_sep => ";", :row_sep => "\n"}
+        options = {:col_sep => ";", :row_sep => "\n", :file_encoding => 'ISO-8859-1'}
         ary = Array.new
         teste = ""
         SmarterCSV.process(filename, options) do |array|

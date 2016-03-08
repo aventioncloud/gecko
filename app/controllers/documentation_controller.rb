@@ -1,6 +1,10 @@
 class DocumentationController < ApplicationController
 
   def index
+    app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../config/application.yml', __FILE__)).read).result)[Rails.env]
+    domain = request.host
+    subdomain = domain.sub!(".#{app_config['host']}", "")
+    @uri = "http://#{subdomain}.#{app_config['host']}:#{app_config['port']}/"
     @applications = Doorkeeper::Application.all
     render layout: false
   end
