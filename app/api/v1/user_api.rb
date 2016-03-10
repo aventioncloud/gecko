@@ -20,7 +20,7 @@ module V1
         ary = Array.new
         User.where("id = ?", @user['id']).find_each do |item|
             #apartment!
-            ary << {:id => item[:id],:name => item[:name], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id] }
+            ary << {:id => item[:id],:name => item[:name], :email => item[:email], :roles => Role.find(item[:roles]), :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], :group_id => item[:groups_id], :accounts => item[:accounts_id] }
         end
         ary
       end

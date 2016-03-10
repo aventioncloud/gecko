@@ -345,7 +345,8 @@ angular.module('geckoCliApp')
     });
     var channel = pusher.subscribe('lead_channel');
     channel.bind('created', function(data) {
-      if($scope.notify && (data.user == $scope.usuario.id || permissions.hasPermission('{"action": "changelead", "subject_class": "Lead"}')))
+      if($scope.usuario.accounts == data.account_id && ($scope.notify && (data.user == $scope.usuario.id || 
+        permissions.hasPermission('{"action": "changelead", "subject_class": "Lead"}'))) && $scope.leadnotify != data.lead)
       {
         $scope.leadnotify = data.lead;
         toaster.success({title: 'Lead', body: data.message, sound: true});

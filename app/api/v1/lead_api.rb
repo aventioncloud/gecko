@@ -56,7 +56,32 @@ module V1
         end
       end
       
-      desc "Compare Version Audit."
+      desc "Audit all Atendimento."
+      params do
+        optional :id, type: String, desc: "ID do User."
+        optional :date_sta, type: String, desc: "Date Start."
+        optional :date_end, type: String, desc: "Date End."
+      end
+      get 'audit_atendimento', authorize: ['all', 'Super Admin'] do
+        apartment!
+        if params[:id] != nil and params[:id] != 0
+          PaperTrail::Version
+              .where("item_type = 'Atendimento' and whodunnit = ?",params[:id])
+              .order('id DESC')
+              .limit(10)
+        else
+          data_start = Date.parse(params[:date_sta])
+          data_end = Date.parse(params[:date_end])
+          #         filter += " and leads.created_at::timestamp::date between '"+params[:data]+"' and '"+params[:data_end]+"'"
+          PaperTrail::Version
+              .where("item_type = 'Atendimento' and created_at::timestamp::date between ? and ?",data_start,data_end)
+              .order('id DESC')
+              .limit(10)
+          #Lead.versions.between(data_start, data_end)
+        end
+      end
+      
+      desc "Compare Version Audit Lead."
       params do
         optional :id, type: Integer, desc: "ID do Lead."
         requires :version_id, type: Integer, desc: "Version ID"
@@ -64,6 +89,23 @@ module V1
       get 'compare', authorize: ['all', 'Super Admin'] do
         apartment!
         content_1 = Lead.find(params[:id])
+        content_2 = content_1.versions.find(params[:version_id]).reify
+        
+        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
+                                     include_plus_and_minus_in_html: true, 
+                                     include_diff_info: false)
+        changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
+        
+      end
+      
+      desc "Compare Version Audit Atendimento."
+      params do
+        optional :id, type: Integer, desc: "ID do Lead."
+        requires :version_id, type: Integer, desc: "Version ID"
+      end
+      get 'compare_atendimento', authorize: ['all', 'Super Admin'] do
+        apartment!
+        content_1 = Atendimento.find(params[:id])
         content_2 = content_1.versions.find(params[:version_id]).reify
         
         changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
@@ -222,11 +264,17 @@ module V1
               LeadHistory.create(leadstatus_id: startstatus, user_id: user, lead_id: lead.id).save
               LeadProduct.create(product_id: params[:productcollection], lead_id: lead.id).save
               
+              
+              domain = request.host
+              hosts = domain.sub!(".unicooprj.com.br", "")
+              account = Account.where(:subdomain => domain).first rescue nil;
+              
               #Push
               Pusher.trigger('lead_channel', 'created', {
                 message: 'Novo Lead cadastrado para você',
                 user: user,
-                lead: lead.id
+                lead: lead.id,
+                account_id: account.id
               })
               
               if isemail == 'true'
@@ -279,11 +327,14 @@ module V1
             LeadHistory.create(leadstatus_id: 1, user_id: user, lead_id: array[:id]).save
             LeadProduct.create(product_id: array[:productcollection], lead_id: array[:id]).save
             
+            account_id = Account.where(:subdomain => 'dev').first rescue nil;
+            
             #Push
             Pusher.trigger('lead_channel', 'created', {
               message: 'Novo Lead cadastrado para você',
               user: user,
-              lead: array[:id]
+              lead: array[:id],
+              account_id: account_id
             })
             
             if isemail == 'true'
