@@ -52,6 +52,8 @@
       <div class="sender inline m-l-10">
         <p class="name no-margin bold">{{item.title}}</p>
         <p class="datetime no-margin">{{item.data}}</p>
+        <p class="datetime no-margin" ng-show="item.typecontact == 'F'">Pessoa Física</p>
+        <p class="datetime no-margin" ng-show="item.typecontact == 'J'">Pessoa Juridica</p>
       </div>
       <div class="clearfix"></div>
       <!--<div class="subject m-t-20 m-b-20 semi-bold">Your site has some very imaginative animation /movement, especially the Sluggo! </div>-->

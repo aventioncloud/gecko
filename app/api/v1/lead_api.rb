@@ -418,19 +418,19 @@ module V1
         if @user["roles"] == 1 or @user["roles"] == 2
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).count(filter)
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '2 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
           leads_group = Group.all_children(ary, @user["groups_id"])
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("users.groups_id IN (?) and ?", leads_group, filter).count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '2 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where("users.groups_id IN (?) and ?", leads_group, filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where("users.groups_id IN (?) and ?", leads_group, filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna os Leads para usuário
         else
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("leads.user_id = ? and ?",@user["id"], filter).count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '2 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         end
         #@lead
       end
