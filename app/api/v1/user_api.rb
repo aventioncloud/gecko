@@ -160,7 +160,9 @@ module V1
         requires :active, type: String, desc: "User ID."
       end
       post 'atendimento', authorize: ['create', 'User']  do
+        @user = current_user rescue nil
         apartment!
+        PaperTrail.whodunnit = @user["email"]
         @atendimento = Atendimento.where(:users_id => params[:user_id]).first
         id = 0
         if @atendimento == nil
@@ -273,7 +275,8 @@ module V1
         optional :celular, type: String, desc: "User Phone."
       end
       post '', authorize: ['create', 'User'] do
-        
+        @user = current_user rescue nil
+        PaperTrail.whodunnit = @user["email"]
         user = User.new(
               :email                 => params[:email],
               :password              => params[:password],
@@ -307,7 +310,8 @@ module V1
         optional :celular, type: String, desc: "User Phone."
       end
       put ':id', authorize: ['create', 'User']  do
-       
+        @user = current_user rescue nil
+        PaperTrail.whodunnit = @user["email"]
        if params[:password] != nil and params[:password] != ''
         User.find(params[:id]).update({
           name: params[:name],
@@ -338,6 +342,8 @@ module V1
         requires :id, type: String, desc: "User ID."
       end
       delete ':id', authorize: ['delete', 'User']  do
+        @user = current_user rescue nil
+        PaperTrail.whodunnit = @user["email"]
         User.find(params[:id]).update(active: 'N')
       end
       
@@ -346,6 +352,8 @@ module V1
         requires :id, type: String, desc: "User ID."
       end
       post ':id', authorize: ['create', 'User']  do
+        @user = current_user rescue nil
+        PaperTrail.whodunnit = @user["email"]
         User.find(params[:id]).update(active: 'S')
       end
   end

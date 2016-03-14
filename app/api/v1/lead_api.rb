@@ -123,7 +123,9 @@ module V1
         optional :file_id, type: String, desc: "File do Lead."
       end
       post 'changestatus', authorize: ['read', 'Lead'] do
+        @user = current_user rescue nil
         apartment!
+        PaperTrail.whodunnit = @user["email"]
         @lead = Lead.joins(:contact).joins(:user).select("leads.*, contacts.email, users.email as user_email").find(params[:id]) rescue nil
         #binding.pry
         if @lead != nil
@@ -236,7 +238,7 @@ module V1
         email = ""
         isemail = "N"
         #binding.pry
-        
+        PaperTrail.whodunnit = 'job_cad'
         if params[:numberproduct] != nil and params[:numberproduct] != 0 and params[:numberproduct] >= 20
            usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])  
         else
