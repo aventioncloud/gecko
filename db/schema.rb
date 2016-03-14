@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160307192850) do
+ActiveRecord::Schema.define(version: 20160314125648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -215,6 +215,7 @@ ActiveRecord::Schema.define(version: 20160307192850) do
     t.string   "docfile_file_name"
     t.integer  "numberproduct"
     t.string   "code"
+    t.datetime "queue_at"
   end
 
   add_index "leads", ["contact_id"], name: "index_leads_on_contact_id", using: :btree

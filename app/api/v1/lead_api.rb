@@ -303,13 +303,14 @@ module V1
       
       desc "Queue Lead"
       get '/queue' do
-        date = DateTime.now + 30.minutes
-        ary = Array.new
+        date = Time.zone.now + 30.minutes
+        leadary = Array.new
         apartment!
-        lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.groups_id, users.isemail, users.email as usermail, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.leadstatus_id = 1 and leads.updated_at < ?', date).limit(1)
+        lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.groups_id, users.isemail, users.email as usermail, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.leadstatus_id = 1 and leads.queue_at < ?', Time.zone.now)
         lead.find_each do |array|
-          ary << array
+          leadary << array
           PaperTrail.whodunnit = 'job_fila'
+          Lead.find(array[:id]).update(queue_at: date)
           if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 20
              usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", array[:tipo], array[:tipo], array[:tipo], array[:productcollection])  
           else
@@ -367,8 +368,9 @@ module V1
               end
             end
           end
+          break
         end
-        { :sucess => 'ok', :lead => ary}
+        { :sucess => 'ok', :lead => leadary}
       end
       
       desc "Delete a Lead Status."

@@ -8,6 +8,7 @@ class Lead < ActiveRecord::Base
   validates_attachment_file_name :docfile, :matches => [/doc\Z/, /pdf\Z/, /docx\Z/]
   
   after_destroy :clear_detroy
+  before_create :record_active
   
   
   private
@@ -15,5 +16,9 @@ class Lead < ActiveRecord::Base
     LeadProduct.where(:lead_id => self.id).destroy_all
     #LeadFile.where(:lead_id => self.id).destroy_all
     LeadHistory.where(:lead_id => self.id).destroy_all
+  end
+  
+  def record_active
+    self.active = 'S'
   end
 end

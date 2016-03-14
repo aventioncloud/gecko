@@ -31,6 +31,6 @@ class User < ActiveRecord::Base
   
   private
     def record_active
-      self.active = 'S'
+      self.queue_at = Time.zone.now + 30.minutes
     end
 end
