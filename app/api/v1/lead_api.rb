@@ -306,6 +306,7 @@ module V1
       desc "Queue Lead"
       get '/queue' do
         date = Time.zone.now + 30.minutes
+        #binding.pry
         leadary = Array.new
         apartment!
         lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.id as usuario_id, users.groups_id, users.isemail, users.email as usermail, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.leadstatus_id = 1 and leads.queue_at < ?', Time.zone.now)
@@ -313,11 +314,14 @@ module V1
           #leadary << array
           PaperTrail.whodunnit = 'job_fila'
           Lead.find(array[:id]).update(queue_at: date)
+          islead = "(islead = 'false' or islead is null)"
           if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 20
-             usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id])  
-          else
-             usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id])  
+             islead = "islead = 'true'"
+          #else
+          #   usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id])  
           end
+          usersflags = User.joins(:atendimento).joins(:users_products).where("active = 'S' and "+islead+" and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id]).select("users.id").distinct
+          
           leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1)
           leadary << array
           if leaditem.exists?
