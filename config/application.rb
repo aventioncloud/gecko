@@ -49,8 +49,8 @@ module Oauth2ApiSample
     config.action_mailer.smtp_settings = {
      :address              => 'smtp.mandrillapp.com',
      :port                 => 587,
-     :user_name            => 'app32689271@heroku.com',
-     :password             => 'TYuxdvFhNFGKyP7tleF8vg',
+     :user_name            => 'naoresponda@unicooprj.com.br',
+     :password             => 'AU1YVKG_lOfpde9a1UMi_w',
      :authentication       => "plain",
     :enable_starttls_auto => true
     }
