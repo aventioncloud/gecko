@@ -54,7 +54,7 @@ angular.module('geckoCliApp')
     });
     
     $scope.isfilter = false;
-    $scope.modelsearch = {data : null, users_id: null, orderby: 'leads.id desc', awesome: false}
+    $scope.modelsearch = {data : null, users_id: null, orderby: 'leads.updated_at desc', awesome: false}
     $scope.optionssearch = {}
     
     var filter_list = [

@@ -14,6 +14,7 @@ module V1
           leadary << array
           PaperTrail.whodunnit = 'job_fila'
           Lead.find(array[:id]).update(queue_at: date)
+          Lead.find(array[:id]).update(updated_at: Time.zone.now)
           islead = "(islead = 'false' or islead is null)"
           if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 20
              islead = "islead = 'true'"
@@ -51,7 +52,7 @@ module V1
             end
             
             if array[:isemail] == 'true'
-              LeadMailer.updated(array[:usermail], 'Nova Cotação Cadastrada').deliver
+              LeadMailer.updated(array[:usermail], 'Indicação Perdida no Sistema').deliver
             end
             
             #envia o e-mail para o supervisor.
@@ -73,7 +74,7 @@ module V1
               usersuperlast = User.find(group.users_id) rescue nil
               if !usersuperlast.nil?
                 if usersuperlast.isemail == 'true'
-                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Nova Cotação Cadastrada').deliver
+                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Indicação Perdida no Sistema').deliver
                 end
               end
             end
