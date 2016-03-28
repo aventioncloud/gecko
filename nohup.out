@@ -1,0 +1,26 @@
+=> Booting WEBrick
+=> Rails 4.0.0 application starting in development on http://0.0.0.0:80
+=> Run `rails server -h` for more startup options
+=> Ctrl-C to shutdown server
+[2016-03-15 21:29:10] INFO  WEBrick 1.3.1
+[2016-03-15 21:29:10] INFO  ruby 2.1.8 (2015-12-16) [x86_64-linux-gnu]
+Exiting
+/usr/lib/ruby/2.1.0/socket.rb:206:in `bind': Address already in use - bind(2) for 0.0.0.0:80 (Errno::EADDRINUSE)
+	from /usr/lib/ruby/2.1.0/socket.rb:206:in `listen'
+	from /usr/lib/ruby/2.1.0/socket.rb:461:in `block in tcp_server_sockets'
+	from /usr/lib/ruby/2.1.0/socket.rb:232:in `each'
+	from /usr/lib/ruby/2.1.0/socket.rb:232:in `foreach'
+	from /usr/lib/ruby/2.1.0/socket.rb:459:in `tcp_server_sockets'
+	from /usr/lib/ruby/2.1.0/webrick/utils.rb:75:in `create_listeners'
+	from /usr/lib/ruby/2.1.0/webrick/server.rb:132:in `listen'
+	from /usr/lib/ruby/2.1.0/webrick/server.rb:113:in `initialize'
+	from /usr/lib/ruby/2.1.0/webrick/httpserver.rb:45:in `initialize'
+	from /var/lib/gems/2.1.0/gems/rack-1.5.5/lib/rack/handler/webrick.rb:11:in `new'
+	from /var/lib/gems/2.1.0/gems/rack-1.5.5/lib/rack/handler/webrick.rb:11:in `run'
+	from /var/lib/gems/2.1.0/gems/rack-1.5.5/lib/rack/server.rb:264:in `start'
+	from /var/lib/gems/2.1.0/gems/railties-4.0.0/lib/rails/commands/server.rb:84:in `start'
+	from /var/lib/gems/2.1.0/gems/railties-4.0.0/lib/rails/commands.rb:78:in `block in <top (required)>'
+	from /var/lib/gems/2.1.0/gems/railties-4.0.0/lib/rails/commands.rb:73:in `tap'
+	from /var/lib/gems/2.1.0/gems/railties-4.0.0/lib/rails/commands.rb:73:in `<top (required)>'
+	from bin/rails:4:in `require'
+	from bin/rails:4:in `<main>'

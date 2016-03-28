@@ -1,5 +1,5 @@
 class LeadMailer < ActionMailer::Base
-  default from: "noreply@unicoop.com.br"
+  default from: "naoresponda@unicooprj.com.br"
   
   def created(email)
     #@email = user
