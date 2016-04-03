@@ -118,3 +118,7 @@ gem 'smarter_csv'
 #gem "passenger", ">= 5.0.25", require: "phusion_passenger/rack_handler"
 
 #gem 'dumper'
+
+gem 'mobu'
+
+gem 'browser', '~> 2.0', '>= 2.0.3'

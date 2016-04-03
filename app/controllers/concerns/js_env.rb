@@ -17,12 +17,21 @@ module JsEnv
       host: uri,
       application_id: app.uid
     }
-
-    <<-EOS.html_safe
-      <script type="text/javascript">
-        shared = angular.module('geckoCliApp')
-        shared.constant('Rails', #{data.to_json})
-      </script>
-    EOS
+    
+    if browser.device.mobile? 
+      <<-EOS.html_safe
+        <script type="text/javascript">
+          shared = angular.module('starter')
+          shared.constant('Rails', #{data.to_json})
+        </script>
+      EOS
+    else
+      <<-EOS.html_safe
+        <script type="text/javascript">
+          shared = angular.module('geckoCliApp')
+          shared.constant('Rails', #{data.to_json})
+        </script>
+      EOS
+    end
   end
 end

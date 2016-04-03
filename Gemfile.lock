@@ -46,6 +46,7 @@ GEM
     bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    browser (2.0.3)
     builder (3.1.4)
     byebug (8.2.1)
     cancan (1.6.10)
@@ -141,6 +142,10 @@ GEM
     mimemagic (0.3.0)
     mini_portile2 (2.0.0)
     minitest (4.7.5)
+    mobu (0.0.3)
+      actionpack (>= 3.2)
+      activesupport (>= 3.2)
+      rack (~> 1.4)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     net-http-persistent (1.9)
@@ -291,6 +296,7 @@ DEPENDENCIES
   apartment
   api-pagination
   bootstrap-sass
+  browser (~> 2.0, >= 2.0.3)
   cancan (~> 1.6)
   coffee-rails (~> 4.0.0)
   dalli
@@ -310,6 +316,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   kramdown
+  mobu
   paper_trail (~> 4.0.0)
   paperclip
   paperclip-dropbox (>= 1.1.7)
