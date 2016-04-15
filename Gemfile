@@ -122,3 +122,5 @@ gem 'smarter_csv'
 gem 'mobu'
 
 gem 'browser', '~> 2.0', '>= 2.0.3'
+
+gem 'dumper'

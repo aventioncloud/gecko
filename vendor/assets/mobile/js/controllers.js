@@ -19,6 +19,7 @@ angular.module('starter.controllers', [])
   
   $scope.doRefresh = function(){
     $scope.modelsearch.page = 1;
+    $scope.leads = [];
     Lead.all($scope.modelsearch).then(function(data){
       for(i = 0; i < data.data.length; i++)
       {
@@ -29,7 +30,8 @@ angular.module('starter.controllers', [])
   }
   
   $scope.loadMore = function() {
-    $scope.modelsearch.page += 1;
+    $scope.modelsearch.page = 1;
+    $scope.leads = [];
     Lead.all($scope.modelsearch).then(function(data){
       for(i = 0; i < data.data.length; i++)
       {
@@ -38,6 +40,8 @@ angular.module('starter.controllers', [])
       $scope.$broadcast('scroll.infiniteScrollComplete');
     });
   };
+  
+  $scope.loadMore();
   
   $scope.remove = function(chat) {
     Chats.remove(chat);

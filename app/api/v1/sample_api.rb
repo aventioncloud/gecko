@@ -14,7 +14,6 @@ module V1
           leadary << array
           PaperTrail.whodunnit = 'job_fila'
           Lead.find(array[:id]).update(queue_at: date)
-          Lead.find(array[:id]).update(updated_at: Time.zone.now)
           islead = "(islead = 'false' or islead is null)"
           if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 20
              islead = "islead = 'true'"
@@ -27,6 +26,7 @@ module V1
           leadary << leaditem
           
           if !leaditem[0].nil? && !usersflags.nil?
+            Lead.find(array[:id]).update(updated_at: Time.zone.now)
             user = leaditem[0].id
             name = leaditem[0].name
             email = leaditem[0].email

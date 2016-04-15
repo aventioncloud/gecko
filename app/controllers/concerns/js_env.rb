@@ -18,7 +18,7 @@ module JsEnv
       application_id: app.uid
     }
     
-    if browser.device.mobile? 
+    if browser.device.mobile? or browser.device.tablet?
       <<-EOS.html_safe
         <script type="text/javascript">
           shared = angular.module('starter')
