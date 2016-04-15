@@ -1,0 +1,5 @@
+<label for="{{id}}">
+  {{options.templateOptions.label || 'Text'}}
+  {{options.templateOptions.required ? '*' : ''}}
+</label><br>
+<textarea kendo-editor k-ng-model="model[options.key]"></textarea>

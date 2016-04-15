@@ -59,6 +59,10 @@ angular.module('geckoCliApp')
     
     var filter_list = [
       {
+        "name": "Indicações Desc.",
+        "abbr": "leads.id desc"
+      },
+      {
         "name": "Consultor Cresc.",
         "abbr": "users.name asc"
       },
@@ -74,12 +78,28 @@ angular.module('geckoCliApp')
         "abbr": "contacts.name desc"
       }]
       
+    var type_people = [
+       {
+        "name": "Todos",
+        "abbr": "0"
+      },     
+      {
+        "name": "P. Física",
+        "abbr": "F"
+      },
+      {
+        "name": "P. Juridica",
+        "abbr": "J"
+      }
+      ]
+      
     
     $scope.fieldsssearch = [
       {
         // this field's ng-model will be bound to vm.model.username
         key: 'data',
         type: 'input',
+        className: 'col-xs-7',
         templateOptions: {
           type: 'date',
           required: false,
@@ -90,6 +110,7 @@ angular.module('geckoCliApp')
         // this field's ng-model will be bound to vm.model.username
         key: 'data_end',
         type: 'input',
+        className: 'col-xs-7',
         templateOptions: {
           type: 'date',
           required: false,
@@ -98,6 +119,7 @@ angular.module('geckoCliApp')
       },
       {
         key: 'users_id',
+        className: 'col-xs-7',
         templateUrl: 'assets/partials/customautocomplete.html',
         hide: !permissions.hasPermission('{"action": "searchconsult", "subject_class": "Lead"}'),
         templateOptions: {
@@ -131,8 +153,59 @@ angular.module('geckoCliApp')
         }
       },
       {
+        key: 'groups_id',
+        className: 'col-xs-7',
+        templateUrl: 'assets/partials/customselect.html',
+        hide: !permissions.hasPermission('{"action": "searchconsult", "subject_class": "Lead"}'),
+        templateOptions: {
+          label: 'Grupo',
+          placeholder: 'Selecione um grupo',
+          required: true,
+          "options": { 
+            type: "json",
+            serverFiltering: true,
+            transport: {
+              read: {
+                url: "http://"+Rails.host + "/api/v1/group?access_token="+$localStorage.token
+              }
+            }
+          }
+        }
+      },
+      {
+        key: 'product_id',
+        className: 'col-xs-7',
+        templateUrl: 'assets/partials/customselect.html',
+        templateOptions: {
+          label: 'Produto',
+          placeholder: 'Selecione um produto',
+          required: true,
+          "options": { 
+            type: "json",
+            serverFiltering: true,
+            transport: {
+              read: {
+                url: "http://"+Rails.host + "/api/v1/product?access_token="+$localStorage.token
+              }
+            }
+          }
+        }
+      },
+      {
+        key: 'type_people',
+        type: 'ui-select',
+        className: 'col-xs-7',
+        templateOptions: {
+          label: 'Tipo',
+          valueProp: 'abbr',
+          labelProp: 'name',
+          options: type_people
+        }
+      },
+      {
         key: 'orderby',
         type: 'ui-select',
+        className: 'col-xs-7',
         templateOptions: {
           label: 'Filtro',
           valueProp: 'abbr',
@@ -182,6 +255,15 @@ angular.module('geckoCliApp')
     
     $scope.submitfilter = function()
     {
+      if($scope.modelsearch.groups_id != undefined && $scope.modelsearch.groups_id == '')
+      {
+        $scope.modelsearch.groups_id = 0;
+      }
+      if($scope.modelsearch.product_id != undefined && $scope.modelsearch.product_id == '')
+      {
+        $scope.modelsearch.product_id = 0;
+      }
+      
       var listView = $("#listView").data("kendoListView");
       listView.dataSource.read();   // added line
       listView.refresh();
@@ -370,7 +452,17 @@ angular.module('geckoCliApp')
                     else
                       $scope.disabledback = true;
                  }
-                    
+                 $scope.isfilter = false;
+                 
+                 if(list.data != null && list.data != undefined && list.data.length > 0)
+                 {
+                   $scope.balistviewitem["groupitem"][0].name = list.data[0].qtd_row+" Indicações";
+                   //load(list.data[0].qtd_row);
+                 }
+                 else{
+                   $scope.balistviewitem["groupitem"][0].name = "0 Indicações";
+                 }
+                 
                  e.success(list.data); 
               });
           }
@@ -429,9 +521,8 @@ angular.module('geckoCliApp')
       var iten = {};
       var contactiten = {};
       var contactitems = [];
-
-      iten['name'] = "Minhas Indicações";
-      iten['items'] = [];
+      iten['name'] = "Indicações";
+      //iten['items'] = [];
       $scope.balistviewitem["groupitem"].push(iten);
     }
 
@@ -479,6 +570,8 @@ angular.module('geckoCliApp')
     $scope.mobileviews = false;
     
     $scope.isdelete = false;
+    
+    $scope.isedit = false;
     
     $scope.usuarioitem = null;
     
@@ -547,6 +640,11 @@ angular.module('geckoCliApp')
           // Verifica a permissão de changestatus, e altera o status do Lead
           if(permissions.hasPermission('{"action": "send", "subject_class": "Lead"}') || $scope.usuario.id == data.data[0].user_id)
             $scope.crud = true;
+            
+          if(permissions.hasPermission('{"action": "create", "subject_class": "Lead"}'))
+          {
+            $scope.crud
+          }
             
           loadoportuidade(Id, data.data);
         }
@@ -883,6 +981,59 @@ angular.module('geckoCliApp')
         listView.refresh();
         $scope.item.usuario = data.data.user.id;
         $scope.showModal = !$scope.showModal;
+        setTimeout(function(){ $scope.notify = true; }, 30000);
+      });
+    }
+    
+    $scope.modelchangelead = {description: null, numberproduct: null}
+    $scope.optionschangelead = {}
+    
+    
+    $scope.fieldchangelead = [{
+        // this field's ng-model will be bound to vm.model.username
+        key: 'numberproduct',
+        type: 'input',
+        className: 'col-xs-10',
+        templateOptions: {
+          type: 'text',
+          required: true,
+          label: 'Quant. Produtos'
+        }
+      },
+      {
+      key: 'description',
+      templateUrl: '/assets/partials/customtext.html',
+      className: 'col-xs-10',
+      templateOptions: {
+        required: true,
+        label: 'Descrição'
+      },
+      "modelOptions": {
+        "getterSetter": true,
+        "allowInvalid": true
+      }
+    }]
+    
+    $scope.showChangeIndicacao = false;
+    $scope.changelead = function(item){
+      $scope.modelchangelead.description = item.description;
+      $scope.modelchangelead.numberproduct = item.numberproduct;
+      $scope.showChangeIndicacao = !$scope.showChangeIndicacao;
+    }
+    
+    $scope.submitchangelead = function(Id)
+    {
+      var models = $scope.modelchangelead;
+      models.id = $stateParams.id;
+      $scope.notify = false;
+      Lead.put(models).then(function(data){
+        toaster.success({title: "Indicação", body:"Indicação alterada com sucesso."});
+        var listView = $("#listView").data("kendoListView");
+        listView.dataSource.read();   // added line
+        listView.refresh();
+        $scope.item.description = $scope.modelchangelead.description;
+        $scope.item.numberproduct = $scope.modelchangelead.numberproduct;
+        $scope.showChangeIndicacao = !$scope.showChangeIndicacao;
         setTimeout(function(){ $scope.notify = true; }, 30000);
       });
     }

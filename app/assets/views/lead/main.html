@@ -1,9 +1,14 @@
+<style type="text/css">
+  .formly-field{
+    margin-bottom: 1px !important;
+  }
+</style>
 <div class="email-wrapper" style="position: absolute !important;height: calc(100% - 60px);">
 
   <div class="email-list b-r b-grey" ng-hide="mobileviews" id="mobileviews">
     <!--<div class="email-refresh">{{balistviewitem.groupitem.quantidade}} indicações(s) <i class="fa fa-refresh fs-24" style="margin-left: 10px;cursor:pointer;" kendo-tooltip k-content="'Atualizar registros'" ng-click="refresh()"></i><i class="fa pg-arrow_left fs-24" style="margin-left: 10px;cursor:pointer;" kendo-tooltip k-content="'Voltar'" ng-click="back()"></i><i class="fa pg-arrow_right fs-24" style="margin-left: 5px;cursor:pointer;" kendo-tooltip k-content="'Próximo'" ng-click="next()"></i></div>-->
     <div class="list-view" ng-hide="!isfilter" class="cssSlideUp ng-scope">
-      <div style="height:320px; background: #f0f0f0;">
+      <div style="height:520px; background: #f0f0f0;">
         <form name="searchForm" id="groupForm" ng-submit="submitfilter()" novalidate> 
             <formly-form model="modelsearch" fields="fieldsssearch" options="optionssearch" form="groupForm">
                 <button class="btn btn-primary btn-sm pull-left bottomsmall" style="margin-left: 9px;" type="submit" ng-disabled="searchForm.$invalid" style="margin-right: 10px;" has-visible='!user'>Pesquisar</button>

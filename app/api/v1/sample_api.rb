@@ -48,11 +48,11 @@ module V1
             #})
             
             if isemail == 'true'
-              LeadMailer.created(email).deliver
+              LeadMailer.created(email, lead.id).deliver
             end
             
             if array[:isemail] == 'true'
-              LeadMailer.updated(array[:usermail], 'Indicação Perdida no Sistema').deliver
+              LeadMailer.updated(array[:usermail], 'Indicação Perdida no Sistema', lead.id).deliver
             end
             
             #envia o e-mail para o supervisor.
@@ -63,7 +63,7 @@ module V1
               usersuper = User.find(group.users_id) rescue nil
               if !usersuper.nil?
                 if usersuper.isemail == 'true'
-                  LeadMailer.created_super(usersuper.email, name).deliver
+                  LeadMailer.created_super(usersuper.email, name, lead.id).deliver
                 end
               end
             end
@@ -74,7 +74,7 @@ module V1
               usersuperlast = User.find(group.users_id) rescue nil
               if !usersuperlast.nil?
                 if usersuperlast.isemail == 'true'
-                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Indicação Perdida no Sistema').deliver
+                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Indicação Perdida no Sistema', lead.id).deliver
                 end
               end
             end

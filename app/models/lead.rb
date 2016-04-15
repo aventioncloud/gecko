@@ -3,6 +3,8 @@ class Lead < ActiveRecord::Base
   belongs_to :user, foreign_key: :user_id, primary_key: :id
   belongs_to :leadstatus, :class_name => 'LeadStatus', foreign_key: :leadstatus_id, primary_key: :id
   belongs_to :contact, foreign_key: :contact_id, primary_key: :id
+  has_many :leadproduct, class_name: "LeadProduct",
+                            foreign_key: "lead_id"
   
   has_attached_file :docfile, :path => ":rails_root/public/docfile/:filename"
   validates_attachment_file_name :docfile, :matches => [/doc\Z/, /pdf\Z/, /docx\Z/]

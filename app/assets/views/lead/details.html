@@ -5,7 +5,9 @@
       </button>-->
       <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Enviar'" ng-show="Id && crud" ng-click="concluir(item.id);"><i class="fa fa-send"></i>
       </button>
-      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Alterar consultor'" ng-hide="item.usuario" ng-click="changeconsult(item.id);"><i class="fa fa-user"></i>
+      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Alterar consultor'" has-permission='{"subject_class":"Lead","action":"create"}' ng-click="changeconsult(item.id);"><i class="fa fa-user"></i>
+      </button>
+      <button type="button" class="btn btn-default"  kendo-tooltip k-content="'Alterar Indicação'" has-permission='{"subject_class":"Lead","action":"create"}' ng-click="changelead(item);"><i class="fa fa-pencil"></i>
       </button>
       <button type="button" class="btn btn-default" kendo-tooltip k-content="'Remover'" has-permission='{"subject_class":"Lead","action":"delete"}' ng-click="ondelete(item.id);"><i class="fa fa-close"></i>
       </button>
@@ -253,6 +255,14 @@
     <form name="changeconsultForm" id="gchangeForm" ng-submit="submitchange(item.id)" novalidate> 
       <formly-form model="modelchange" fields="fieldchange" options="optionschange" form="gchangeForm">
           <button class="btn btn-default" style="margin-left: 9px;" type="submit" ng-disabled="changeconsultForm.$invalid" style="margin-right: 10px;">Alterar</button>
+      </formly-form>
+    </form>
+  </modal>
+  
+  <modal title="Alterar indicação" visible="showChangeIndicacao">
+    <form name="changeleadForm" id="gchangeLeadForm" ng-submit="submitchangelead(item.id)" novalidate style="height:450px;width:350px;"> 
+      <formly-form model="modelchangelead" fields="fieldchangelead" options="optionschangelead" form="gchangeLeadForm">
+          <button class="btn btn-default" style="margin-top: 10px;" type="submit" ng-disabled="changeleadForm.$invalid">Alterar</button>
       </formly-form>
     </form>
   </modal>
