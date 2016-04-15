@@ -17,7 +17,7 @@
    <!-- build:css app/css/application.css-->
    <%= stylesheet_link_tag    "bootstrap", media: "all", "data-turbolinks-track" => true %>
    <%= stylesheet_link_tag    "main", media: "all", "data-turbolinks-track" => true %>
-   <% if browser.device.mobile? %>
+   <% if browser.device.mobile? or browser.device.tablet? %>
     <link href="/assets/lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="/assets/mobile.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -33,6 +33,7 @@
     <script src="/assets/js/services.js"></script>
     <script src="/assets/js/lead.js"></script>
     <script src="/assets/js/user.js"></script>
+    <script src="/assets/js/htmlcoder.js"></script>
    <% else %>
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
    <link rel="stylesheet" href="/assets/ng-table/dist/ng-table.min.css">

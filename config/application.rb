@@ -32,7 +32,7 @@ module Oauth2ApiSample
     config.paths.add "app/services", glob: "**/*.rb"
     config.autoload_paths += Dir["#{Rails.root}/app/api/*"]
     config.autoload_paths += Dir["#{Rails.root}/app/services/*"]
-    config.cache_store = :redis_store, 'redis://127.0.0.1:6379/0/cache', { expires_in: 90.minutes }
+    #config.cache_store = :redis_store, 'redis://127.0.0.1:6379/0/cache', { expires_in: 90.minutes }
     
     config.assets.paths += Dir["#{Rails.root}/vendor/views/*"].sort_by { |dir| -dir.size }
     config.assets.paths += Dir["#{Rails.root}/vendor/img/*"].sort_by { |dir| -dir.size }
@@ -49,12 +49,12 @@ module Oauth2ApiSample
     config.middleware.delete "ActiveRecord::QueryCache"
     # SMTP settings for gmail
     config.action_mailer.smtp_settings = {
-     :address              => 'smtp.mandrillapp.com',
+     :address              => 'mail.unicooprj.com.br',
      :port                 => 587,
      :user_name            => 'naoresponda@unicooprj.com.br',
-     :password             => 'AU1YVKG_lOfpde9a1UMi_w',
+     :password             => 'mudar123*',
      :authentication       => "plain",
-    :enable_starttls_auto => true
+     :enable_starttls_auto => false
     }
   end
 end
