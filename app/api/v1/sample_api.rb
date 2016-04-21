@@ -20,7 +20,7 @@ module V1
           #else
           #   usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id])  
           end
-          usersflags = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").joins(:users_products).where("active = 'S' and "+islead+" and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id]).select("users.id").all
+          usersflags = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").joins(:users_products).where("active = 'S' and "+islead+" and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:usuario_id]).select("users.id").all
           
           leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1).all
           leadary << leaditem
@@ -48,11 +48,11 @@ module V1
             #})
             
             if isemail == 'true'
-              LeadMailer.created(email, lead.id).deliver
+              LeadMailer.created(email, array[:id]).deliver
             end
             
             if array[:isemail] == 'true'
-              LeadMailer.updated(array[:usermail], 'Indicação Perdida no Sistema', lead.id).deliver
+              LeadMailer.updated(array[:usermail], 'Indicação Perdida no Sistema', array[:id]).deliver
             end
             
             #envia o e-mail para o supervisor.
@@ -63,7 +63,7 @@ module V1
               usersuper = User.find(group.users_id) rescue nil
               if !usersuper.nil?
                 if usersuper.isemail == 'true'
-                  LeadMailer.created_super(usersuper.email, name, lead.id).deliver
+                  LeadMailer.created_super(usersuper.email, name, array[:id]).deliver
                 end
               end
             end
@@ -74,7 +74,7 @@ module V1
               usersuperlast = User.find(group.users_id) rescue nil
               if !usersuperlast.nil?
                 if usersuperlast.isemail == 'true'
-                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Indicação Perdida no Sistema', lead.id).deliver
+                  LeadMailer.updated_super(usersuper.email, name, array[:name], 'Indicação Perdida no Sistema', array[:id]).deliver
                 end
               end
             end

@@ -1,0 +1,7 @@
+2016-04-19 17:47:12,666 INFO  io.prediction.tools.console.App$ [main] -                 Name |   ID |                                                       Access Key | Allowed Event(s)
+2016-04-19 17:47:12,676 INFO  io.prediction.tools.console.App$ [main] -            MyTextApp |    1 | 20hI55eTjviDwCEOJsdc7u2AvxET24MBTQfMHO9iLbrHt1Wq5c2Ueiv2vxnmzkSF | (all)
+2016-04-19 17:47:12,680 INFO  io.prediction.tools.console.App$ [main] -             forecast |    2 | aUf00jSssD5GJQoSApeT0AwayRqURWHYlL65ZSsOCNv0iTDvhwFcXO2j4YPFTApW | (all)
+2016-04-19 17:47:12,684 INFO  io.prediction.tools.console.App$ [main] -               linear |    5 | hsNGuyuC4raGeZL4nxXTN10Kg5rd4oBB0zL01rFvSzDCOSlOAlgPpmVzT8wNJHC6 | (all)
+2016-04-19 17:47:12,688 INFO  io.prediction.tools.console.App$ [main] -                 tree |    3 | gKWEVf82rSTAavu2Avy1DqN9Vn7R8LqGr7GK5VrNBwvExIcSkGOCweciNiArDUan | (all)
+2016-04-19 17:47:12,691 INFO  io.prediction.tools.console.App$ [main] -                water |    4 | y2iRUKFVW4v3Dxg9xBTTBdZ3IANX2GuZUULtvbNEyQTvO9s1nJc15CNaoPyqHUCJ | (all)
+2016-04-19 17:47:12,692 INFO  io.prediction.tools.console.App$ [main] - Finished listing 5 app(s).

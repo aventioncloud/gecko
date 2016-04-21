@@ -85,15 +85,23 @@ module V1
       params do
         optional :id, type: Integer, desc: "ID do Lead."
         requires :version_id, type: Integer, desc: "Version ID"
+        optional :version2_id, type: Integer, desc: "Version 2 ID"
       end
       get 'compare', authorize: ['all', 'Super Admin'] do
         apartment!
         content_1 = Lead.find(params[:id])
         content_2 = content_1.versions.find(params[:version_id]).reify
         
-        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
-                                     include_plus_and_minus_in_html: true, 
-                                     include_diff_info: false)
+        if params[:version2_id] != nil
+           content_3 = content_1.versions.find(params[:version2_id]).reify
+           changes = Diffy::Diff.new(content_2.to_json, content_3.to_json, 
+                                       include_plus_and_minus_in_html: true, 
+                                       include_diff_info: false)         
+        else
+           changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
+                                       include_plus_and_minus_in_html: true, 
+                                       include_diff_info: false)
+        end
         changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
         
       end
@@ -149,6 +157,8 @@ module V1
         requires :user_id, type: Integer, desc: "ID User from Lead."
       end
       post 'changesconsult', authorize: ['create', 'Lead'] do
+        @user = current_user rescue nil
+        PaperTrail.whodunnit = @user["email"]
         @user = User.find(params[:user_id]) rescue nil
         apartment!
         @lead = Lead.joins(:contact).select("leads.*, contacts.email").find(params[:id]) rescue nil
@@ -365,10 +375,10 @@ module V1
         
         #Retorna todos os leads para Super Admin ou Administrador
         if @user["roles"] == 1 or @user["roles"] == 2
-          leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).where(filter)
+          leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).where(filter).distinct
           leadcount = leaditem.count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
@@ -476,6 +486,8 @@ module V1
         requires :numberproduct, type: Integer, desc: "Number to Lead."
       end
       put ':id', authorize: ['create', 'Lead'] do
+        @user = current_user rescue nil
+        PaperTrail.whodunnit = @user["email"]
         apartment!
         Lead.find(params[:id]).update(description: params[:description], numberproduct: params[:numberproduct])
         #lead = LeadProduct.where("lead_id = ?", params[:id]).first
