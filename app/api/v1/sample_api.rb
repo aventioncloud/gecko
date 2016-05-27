@@ -34,6 +34,12 @@ module V1
             groupid = leaditem[0].groups_id
           
             lead = Lead.find(array[:id]).update(user_id: user)
+            
+            totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
+            if !totallead.nil?
+              totallead = totallead + 1
+              atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+            end
             LeadHistory.create(leadstatus_id: 1, user_id: user, lead_id: array[:id]).save
             LeadProduct.create(product_id: array[:productcollection], lead_id: array[:id]).save
             

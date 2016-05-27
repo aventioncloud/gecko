@@ -52,7 +52,7 @@ app.service('Lead', function($http, Rails) {
       _value = {id: _id, status: _status, comment: _comment, file_id: _file_id};
       return $http({
                     method  : 'POST',
-                    url     : base + '/changestatus',
+                    url     : base + '/changestatus?access_token='+access_token,
                     data    : $.param(_value),  // pass in data as strings
                     headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
              });

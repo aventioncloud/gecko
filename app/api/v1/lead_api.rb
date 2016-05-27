@@ -66,17 +66,17 @@ module V1
         apartment!
         if params[:id] != nil and params[:id] != 0
           PaperTrail::Version
-              .where("item_type = 'Atendimento' and whodunnit = ?",params[:id])
+              .where("item_type = 'Atendimento' and item_id = ?",params[:id])
               .order('id DESC')
-              .limit(10)
+              .limit(300)
         else
           data_start = Date.parse(params[:date_sta])
           data_end = Date.parse(params[:date_end])
           #         filter += " and leads.created_at::timestamp::date between '"+params[:data]+"' and '"+params[:data_end]+"'"
           PaperTrail::Version
-              .where("item_type = 'Atendimento' and created_at::timestamp::date between ? and ?",data_start,data_end)
-              .order('id DESC')
-              .limit(10)
+              .where("whodunnit != 'job_cad' and item_type = 'Atendimento' and created_at::timestamp::date between ? and ?",data_start,data_end)
+              .order('id ASC')
+              .limit(300)
           #Lead.versions.between(data_start, data_end)
         end
       end
@@ -136,7 +136,14 @@ module V1
         PaperTrail.whodunnit = @user["email"]
         @lead = Lead.joins(:contact).joins(:user).select("leads.*, contacts.email, users.email as user_email").find(params[:id]) rescue nil
         #binding.pry
+        
         if @lead != nil
+          #Verfica se o Lead é do usuario que quer alterar
+          if @lead.user_id != @user["id"]
+            { code: 401, mensage: 'sem permissão'}
+            return
+          end
+          
           @comment = CGI.unescapeHTML(params[:comment]).html_safe
           LeadHistory.create(leadstatus_id: params[:status], user_id: @lead.user_id, lead_id: params[:id], comment: @comment, lead_file_id: params[:file_id]).save
           Lead.find(params[:id]).update(:leadstatus_id => params[:status])
@@ -212,6 +219,13 @@ module V1
         else
             lead.errors.full_messages
         end
+      end
+      
+      desc "List all Atendimento."
+      get 'all_atendimento' do
+          apartment!
+          atendimento = Atendimento.where("ispf = 'S' or ispj = 'S'")
+          atendimento
       end
       
       desc "Download Lead File."

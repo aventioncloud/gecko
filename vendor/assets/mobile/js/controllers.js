@@ -2,7 +2,7 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
 
-.controller('ChatsCtrl', function($scope, Chats, Lead) {
+.controller('ChatsCtrl', function($scope, $rootScope, Chats, Lead) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -16,6 +16,11 @@ angular.module('starter.controllers', [])
   $scope.modelsearch = {orderby: 'leads.updated_at desc', awesome: false};
   $scope.leads = [];
   $scope.modelsearch.page = 0;
+  
+  $rootScope.$on("CallParentMethod", function(){
+    console.log("teste")
+    $scope.loadMore();
+  });
   
   $scope.doRefresh = function(){
     $scope.modelsearch.page = 1;
@@ -48,8 +53,10 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats, Lead) {
+.controller('ChatDetailCtrl', function($scope, $stateParams, Chats, Lead, $rootScope) {
+  Lead.changelead($stateParams.chatId, 2);
   Lead.get($stateParams.chatId).then(function(data){
+      $rootScope.$emit("CallParentMethod", {});
       $scope.chat = data.data[0];
   });
 })

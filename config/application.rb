@@ -49,10 +49,10 @@ module Oauth2ApiSample
     config.middleware.delete "ActiveRecord::QueryCache"
     # SMTP settings for gmail
     config.action_mailer.smtp_settings = {
-     :address              => 'mail.unicooprj.com.br',
+     :address              => 'smtp.postmarkapp.com',
      :port                 => 587,
-     :user_name            => 'naoresponda@unicooprj.com.br',
-     :password             => 'mudar123*',
+     :user_name            => 'c6626b57-2452-4e65-9fa5-7d197b83f586',
+     :password             => 'c6626b57-2452-4e65-9fa5-7d197b83f586',
      :authentication       => "plain",
      :enable_starttls_auto => false
     }
