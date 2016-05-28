@@ -78,10 +78,10 @@ gem 'pry-byebug'
 # gem 'debugger', group: [:development, :test]
 
 #regis
-gem 'redis'
-gem 'redis-namespace'
-gem 'redis-rails'
-gem 'redis-rack-cache'
+#gem 'redis'
+#gem 'redis-namespace'
+#gem 'redis-rails'
+#gem 'redis-rack-cache'
 
 #memcached
 gem 'dalli'
