@@ -120,7 +120,20 @@ module V1
                                      include_plus_and_minus_in_html: true, 
                                      include_diff_info: false)
         changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
-        
+      end
+      
+      desc "Roll Back"
+      params do
+        requires :id, type: Integer, desc: "LEAD ID"
+        requires :version_id, type: Integer, desc: "Version ID"
+      end
+      get 'rollback', authorize: ['read', 'Lead'] do
+        apartment!
+        @version = PaperTrail::Version.find(params["version_id"])
+        if @version.reify
+          @version.reify.save!
+        end
+        @version.reify
       end
       
       desc "Change Status Lead."
@@ -157,6 +170,8 @@ module V1
           { code: 400, mensage: 'sucesso'}
         end
       end
+      
+      
       
       desc "Change Consult Lead."
       params do
@@ -514,6 +529,7 @@ module V1
       end
       delete ':id', authorize: ['delete', 'Lead'] do
         apartment!
+        PaperTrail.whodunnit = @user["email"]
         Lead.find(params[:id]).destroy
       end
   end
