@@ -528,6 +528,7 @@ module V1
         requires :id, type: String, desc: "Lead ID."
       end
       delete ':id', authorize: ['delete', 'Lead'] do
+        @user = current_user rescue nil
         apartment!
         PaperTrail.whodunnit = @user["email"]
         Lead.find(params[:id]).destroy
