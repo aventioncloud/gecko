@@ -7,12 +7,14 @@ module V1
     
       desc "Create Status Lead."
       params do
+        requires :id, type: String, desc: "ID Status."
         requires :name, type: String, desc: "Name Status."
         requires :color, type: String, desc: "Color Status."
       end
       post "status", authorize: ['all', 'Super Admin'] do
         apartment!
         status = LeadStatus.new(
+          :id => params[:id],
           :name => params[:name],
           :color => params[:name])
         if status.save
@@ -141,6 +143,7 @@ module V1
         requires :id, type: Integer, desc: "ID do Lead."
         requires :status, type: Integer, desc: "ID do Status do Lead."
         optional :comment, type: String, desc: "String do Lead."
+        optional :other, type: String, desc: "Other do Lead."
         optional :file_id, type: String, desc: "File do Lead."
       end
       post 'changestatus', authorize: ['read', 'Lead'] do
@@ -156,16 +159,19 @@ module V1
             { code: 401, mensage: 'sem permissão'}
             return
           end
-          
-          @comment = CGI.unescapeHTML(params[:comment]).html_safe
+          if @comment != nil and !@comment.empty?
+            @comment = CGI.unescapeHTML(params[:comment]).html_safe
+          elsif params[:other] != nil and !params[:other].empty?
+            @comment = CGI.unescapeHTML(params[:other]).html_safe
+          end
           LeadHistory.create(leadstatus_id: params[:status], user_id: @lead.user_id, lead_id: params[:id], comment: @comment, lead_file_id: params[:file_id]).save
           Lead.find(params[:id]).update(:leadstatus_id => params[:status])
           filename = nil
           if params[:file_id] != nil and !params[:file_id].empty?
             filename = LeadFile.find(params[:file_id]).docfile_file_name rescue nil
           end
-          if @comment != nil and !@comment.empty?
-            LeadMailer.prospect(@lead.email, @lead.user_email, filename, @comment).deliver
+          if @comment != nil and !@comment.empty? and params[:other].empty?
+            #LeadMailer.prospect(@lead.email, @lead.user_email, filename, @comment).deliver
           end
           { code: 400, mensage: 'sucesso'}
         end
@@ -186,10 +192,12 @@ module V1
         @lead = Lead.joins(:contact).select("leads.*, contacts.email").find(params[:id]) rescue nil
         #binding.pry
         if @lead != nil and @user != nil
-          Lead.find(params[:id]).update(:user_id => @user.id)
+          #Adiciona mais 30 min a fila do lead
+          date = Time.zone.now + 30.minutes
+          Lead.find(params[:id]).update(:user_id => @user.id, :queue_at => date)
           LeadHistory.create(leadstatus_id: 1, user_id: params[:user_id], lead_id: params[:id]).save
-          #Push
           
+          #Push
           Pusher.trigger('lead_channel', 'created', {
             message: 'Novo Lead cadastrado para você',
             user: @user.id,
@@ -212,7 +220,14 @@ module V1
       end
       get 'history', authorize: ['read', 'Lead'] do
         apartment!
-        LeadHistory.where(:lead_id => params[:id]).joins("LEFT JOIN lead_files ON lead_histories.lead_file_id = lead_files.id").select("lead_histories.*, lead_files.id as file_id, lead_files.docfile_file_name, to_char(lead_histories.created_at, 'DD/MM/YYYY HH:mm') as data").where("? = 0 or lead_histories.leadstatus_id = ?", params[:status_id], params[:status_id])
+        filter = nil
+        if params[:status_id] == 3
+          filter = [3, 5, 6, 7, 8]
+          LeadHistory.where(:lead_id => params[:id]).joins("LEFT JOIN lead_files ON lead_histories.lead_file_id = lead_files.id").joins("LEFT JOIN lead_statuses ON lead_histories.leadstatus_id = lead_statuses.id").select("lead_histories.*, lead_files.id as file_id, lead_files.docfile_file_name, to_char(lead_histories.created_at, 'DD/MM/YYYY HH:mm') as data, lead_statuses.name").where("lead_histories.leadstatus_id in (?)", filter)
+        else
+          LeadHistory.where(:lead_id => params[:id]).joins("LEFT JOIN lead_files ON lead_histories.lead_file_id = lead_files.id").select("lead_histories.*, lead_files.id as file_id, lead_files.docfile_file_name, to_char(lead_histories.created_at, 'DD/MM/YYYY HH:mm') as data")
+        end
+        
       end
       
       desc "Upload Lead."
@@ -298,7 +313,6 @@ module V1
             if lead.save
               totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
               if !totallead.nil?
-                puts 'entro aqui'
                 totallead = totallead + 1
                 atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
               end
@@ -330,6 +344,18 @@ module V1
                     LeadMailer.created_super(usersuper.email, name, lead.id).deliver
                 end
               end
+              
+              #Envia e-mail para o dono do grupo Master
+              groupdad = Group.where(:dadgroup => nil).first rescue nil
+              if !groupdad.nil?
+                userdadlast = User.find(groupdad.users_id) rescue nil
+                if !userdadlast.nil?
+                  if userdadlast.isemail == 'true'
+                    LeadMailer.created_super(userdadlast.email, name, lead.id).deliver
+                  end
+                end
+              end
+              
               lead
             else
               contact.errors.full_messages
@@ -367,6 +393,7 @@ module V1
         optional :users_id, type: Integer, desc: "Filter from Users."
         optional :groups_id, type: Integer, desc: "Filter from Group."
         optional :product_id, type: Integer, desc: "Filter from Product."
+        optional :status_id, type: String, desc: "Filter from Status."
         optional :type_people, type: String, desc: "F - Fisica or J - Juridica."
       end
       get '/', authorize: ['read', 'Lead'] do
@@ -384,6 +411,10 @@ module V1
         
         if params[:users_id] != nil and params[:users_id] != 0
           filter += " and leads.user_id ="+params[:users_id].to_s
+        end
+        
+        if params[:status_id] != nil and params[:status_id] != ''
+          filter += " and leads.leadstatus_id ="+params[:status_id].to_s
         end
         
         if params[:groups_id] != nil and params[:groups_id] != 0

@@ -84,6 +84,17 @@ module V1
                 end
               end
             end
+            
+            #Envia e-mail para o dono do grupo Master
+            groupdad = Group.where(:dadgroup => nil).first rescue nil
+            if !groupdad.nil?
+              userdadlast = User.find(groupdad.users_id) rescue nil
+              if !userdadlast.nil?
+                if userdadlast.isemail == 'true'
+                  LeadMailer.updated_super(userdadlast.email, name, array[:name], 'Indicação Perdida no Sistema', array[:id]).deliver
+                end
+              end
+            end
           end
           
           break

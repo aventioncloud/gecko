@@ -29,6 +29,13 @@ class LeadMailer < ActionMailer::Base
     mail(to: email, subject: _subject)
   end
   
+  def updated_dad(email, name, contato, _subject, id)
+    #@email = user
+    @name = name
+    @id = id
+    mail(to: email, subject: _subject)
+  end
+  
   def prospect(email, frommail,  filename, comment, id)
     #@email = user
     @url  = 'http://example.com/login'

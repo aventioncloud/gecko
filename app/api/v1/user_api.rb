@@ -80,6 +80,23 @@ module V1
         
       end
       
+      desc "Return all Version User Atendimento."
+      params do
+        optional :id, type: Integer, desc: "ID do User."
+      end
+      get 'history', authorize: ['read', 'User'] do
+        apartment!
+        item = Atendimento.where(:users_id => params[:id]).first rescue nil
+        if !item.nil?
+          #atendimento = PaperTrail::Version
+          #    .where("item_type = 'Atendimento' and item_id = ?",params[:id])
+          #    .order('id DESC')
+          #    .limit(10)
+          #atendimento
+          Atendimento.find(item.id).versions
+        end
+      end
+      
       desc "Import a User."
       post 'import', authorize: ['create', 'User'] do
         apartment!

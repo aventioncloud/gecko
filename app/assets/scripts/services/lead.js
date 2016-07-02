@@ -41,8 +41,8 @@ app.service('Lead', function($http, Rails) {
     active: function(id) {
       return $http["post"](base + '/' + id);
     },
-    changelead: function(_id, _status, _comment, _file_id) {
-      _value = {id: _id, status: _status, comment: _comment, file_id: _file_id};
+    changelead: function(_id, _status, _comment, _file_id, _other) {
+      _value = {id: _id, status: _status, comment: _comment, file_id: _file_id, other: _other};
       return $http({
                     method  : 'POST',
                     url     : base + '/changestatus',

@@ -59,6 +59,10 @@ angular.module('geckoCliApp')
     
     var filter_list = [
       {
+        "name": "Indicações Asc.",
+        "abbr": "leads.id asc"
+      },
+      {
         "name": "Indicações Desc.",
         "abbr": "leads.id desc"
       },
@@ -94,12 +98,14 @@ angular.module('geckoCliApp')
       ]
       
     
-    $scope.fieldsssearch = [
+    $scope.fieldsssearch = [{
+      className: 'row',
+      fieldGroup: [
       {
         // this field's ng-model will be bound to vm.model.username
         key: 'data',
         type: 'input',
-        className: 'col-xs-7',
+        className: 'col-xs-3',
         templateOptions: {
           type: 'date',
           required: false,
@@ -110,13 +116,75 @@ angular.module('geckoCliApp')
         // this field's ng-model will be bound to vm.model.username
         key: 'data_end',
         type: 'input',
-        className: 'col-xs-7',
+        className: 'col-xs-3',
         templateOptions: {
           type: 'date',
           required: false,
           label: 'Data Fim'
         }
+      }]},
+      {
+      className: 'row',
+      fieldGroup: [{
+        key: 'type_people',
+        type: 'ui-select',
+        className: 'col-xs-3',
+        templateOptions: {
+          label: 'Tipo',
+          valueProp: 'abbr',
+          labelProp: 'name',
+          options: type_people
+        }
       },
+      {
+        key: 'orderby',
+        type: 'ui-select',
+        className: 'col-xs-3',
+        templateOptions: {
+          label: 'Ordenação',
+          valueProp: 'abbr',
+          labelProp: 'name',
+          options: filter_list
+        }
+      }]},
+      {
+        className: 'row',
+        fieldGroup: [{
+          key: 'product_id',
+          className: 'col-xs-3',
+          templateUrl: 'assets/partials/customselect_small.html',
+          templateOptions: {
+            label: 'Produto',
+            placeholder: 'Selecione um produto',
+            "options": { 
+              type: "json",
+              serverFiltering: true,
+              transport: {
+                read: {
+                  url: "http://"+Rails.host + "/api/v1/product?access_token="+$localStorage.token
+                }
+              }
+            }
+          }
+        },
+        {
+          key: 'status_id',
+          className: 'col-xs-3',
+          templateUrl: 'assets/partials/customselect_small.html',
+          templateOptions: {
+            label: 'Status',
+            placeholder: 'Selecione um status',
+            "options": { 
+              type: "json",
+              serverFiltering: true,
+              transport: {
+                read: {
+                  url: "http://"+Rails.host + "/api/v1/lead/status?access_token="+$localStorage.token
+                }
+              }
+            }
+          }
+        }]},
       {
         key: 'users_id',
         className: 'col-xs-7',
@@ -160,7 +228,6 @@ angular.module('geckoCliApp')
         templateOptions: {
           label: 'Grupo',
           placeholder: 'Selecione um grupo',
-          required: true,
           "options": { 
             type: "json",
             serverFiltering: true,
@@ -170,47 +237,6 @@ angular.module('geckoCliApp')
               }
             }
           }
-        }
-      },
-      {
-        key: 'product_id',
-        className: 'col-xs-7',
-        templateUrl: 'assets/partials/customselect.html',
-        templateOptions: {
-          label: 'Produto',
-          placeholder: 'Selecione um produto',
-          required: true,
-          "options": { 
-            type: "json",
-            serverFiltering: true,
-            transport: {
-              read: {
-                url: "http://"+Rails.host + "/api/v1/product?access_token="+$localStorage.token
-              }
-            }
-          }
-        }
-      },
-      {
-        key: 'type_people',
-        type: 'ui-select',
-        className: 'col-xs-7',
-        templateOptions: {
-          label: 'Tipo',
-          valueProp: 'abbr',
-          labelProp: 'name',
-          options: type_people
-        }
-      },
-      {
-        key: 'orderby',
-        type: 'ui-select',
-        className: 'col-xs-7',
-        templateOptions: {
-          label: 'Filtro',
-          valueProp: 'abbr',
-          labelProp: 'name',
-          options: filter_list
         }
       }
     ];
@@ -1078,7 +1104,7 @@ angular.module('geckoCliApp')
       });
     }
 
-//Remove
+    //Remove
     $scope.ondelete = function (itemId) {
       SweetAlert.swal({
         title: 'Deseja excluir esta indicação?',
@@ -1095,4 +1121,47 @@ angular.module('geckoCliApp')
         }
       });
     };
+    
+    $scope.status_id = 0;
+    $scope.status_text = '';
+    
+    $scope.onmodalstatus = function (status_id, status_text)
+    {
+      $scope.status_id = status_id;
+      $scope.status_text = status_text;
+      $scope.showChangeStatus = true;
+    }
+    
+    $scope.onstatus = function (){
+      debugger;
+        Lead.changelead($stateParams.id, $scope.status_id, null, null, $scope.modelstatuslead.description).then(function(data){
+            toaster.success({title: "Indicação", body:"Indicação alterada com sucesso."});
+            loadhistory($stateParams.id);
+            var listView = $("#listView").data("kendoListView");
+            listView.dataSource.read();   // added line
+            listView.refresh();
+            $scope.item.status_id = $scope.status_id;
+            $scope.item.status = $scope.status_text;
+            $scope.modelstatuslead.description = '';
+            $scope.showChangeStatus = false;
+        });
+    }
+    
+    $scope.modelstatuslead = {description: null}
+    $scope.optionsstatuslead = {}
+    
+    
+    $scope.fieldstatuslead = [
+      {
+      key: 'description',
+      templateUrl: '/assets/partials/customtext.html',
+      className: 'col-xs-10',
+      templateOptions: {
+        label: 'Observação'
+      },
+      "modelOptions": {
+        "getterSetter": true,
+        "allowInvalid": true
+      }
+    }]
   });
