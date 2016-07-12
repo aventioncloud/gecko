@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  atendimentos_id: 
+  users_id: 
+
+two:
+  atendimentos_id: 
+  users_id: 

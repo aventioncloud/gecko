@@ -1,10 +1,10 @@
 module V1
   class LeadAPI < Base
       namespace "lead"
-      
+
       require 'pusher'
       Pusher.url = "https://63230285f168f50e6200:55828354e0f70f99e33f@api.pusherapp.com/apps/183185"
-    
+
       desc "Create Status Lead."
       params do
         requires :id, type: String, desc: "ID Status."
@@ -23,19 +23,19 @@ module V1
             status.errors.full_messages
         end
       end
-      
+
       desc "Return all Time."
       get 'time', authorize: ['read', 'Lead'] do
-        Time.zone.now 
+        Time.zone.now
       end
-      
+
       desc "Return all Lead."
       get 'status', authorize: ['read', 'Lead'] do
         apartment!
-        
+
         LeadStatus.all
       end
-      
+
       desc "Audit all Lead."
       params do
         optional :id, type: Integer, desc: "ID do Lead."
@@ -57,7 +57,7 @@ module V1
           #Lead.versions.between(data_start, data_end)
         end
       end
-      
+
       desc "Audit all Atendimento."
       params do
         optional :id, type: String, desc: "ID do User."
@@ -82,7 +82,7 @@ module V1
           #Lead.versions.between(data_start, data_end)
         end
       end
-      
+
       desc "Compare Version Audit Lead."
       params do
         optional :id, type: Integer, desc: "ID do Lead."
@@ -93,21 +93,21 @@ module V1
         apartment!
         content_1 = Lead.find(params[:id])
         content_2 = content_1.versions.find(params[:version_id]).reify
-        
+
         if params[:version2_id] != nil
            content_3 = content_1.versions.find(params[:version2_id]).reify
-           changes = Diffy::Diff.new(content_2.to_json, content_3.to_json, 
-                                       include_plus_and_minus_in_html: true, 
-                                       include_diff_info: false)         
+           changes = Diffy::Diff.new(content_2.to_json, content_3.to_json,
+                                       include_plus_and_minus_in_html: true,
+                                       include_diff_info: false)
         else
-           changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
-                                       include_plus_and_minus_in_html: true, 
+           changes = Diffy::Diff.new(content_2.to_json, content_1.to_json,
+                                       include_plus_and_minus_in_html: true,
                                        include_diff_info: false)
         end
         changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
-        
+
       end
-      
+
       desc "Compare Version Audit Atendimento."
       params do
         optional :id, type: Integer, desc: "ID do Lead."
@@ -117,13 +117,13 @@ module V1
         apartment!
         content_1 = Atendimento.find(params[:id])
         content_2 = content_1.versions.find(params[:version_id]).reify
-        
-        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
-                                     include_plus_and_minus_in_html: true, 
+
+        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json,
+                                     include_plus_and_minus_in_html: true,
                                      include_diff_info: false)
         changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
       end
-      
+
       desc "Roll Back"
       params do
         requires :id, type: Integer, desc: "LEAD ID"
@@ -137,7 +137,7 @@ module V1
         end
         @version.reify
       end
-      
+
       desc "Change Status Lead."
       params do
         requires :id, type: Integer, desc: "ID do Lead."
@@ -152,7 +152,7 @@ module V1
         PaperTrail.whodunnit = @user["email"]
         @lead = Lead.joins(:contact).joins(:user).select("leads.*, contacts.email, users.email as user_email").find(params[:id]) rescue nil
         #binding.pry
-        
+
         if @lead != nil
           #Verfica se o Lead é do usuario que quer alterar
           if @lead.user_id != @user["id"]
@@ -176,9 +176,9 @@ module V1
           { code: 400, mensage: 'sucesso'}
         end
       end
-      
-      
-      
+
+
+
       desc "Change Consult Lead."
       params do
         requires :id, type: Integer, desc: "ID Lead."
@@ -196,14 +196,14 @@ module V1
           date = Time.zone.now + 30.minutes
           Lead.find(params[:id]).update(:user_id => @user.id, :queue_at => date)
           LeadHistory.create(leadstatus_id: 1, user_id: params[:user_id], lead_id: params[:id]).save
-          
+
           #Push
           Pusher.trigger('lead_channel', 'created', {
             message: 'Novo Lead cadastrado para você',
             user: @user.id,
             lead: @lead.id
           })
-          
+
           if @user.isemail == 'true'
             LeadMailer.created(@user.email).deliver
           end
@@ -212,7 +212,7 @@ module V1
           { code: 500, mensage: 'Lead or User not found.'}
         end
       end
-      
+
       desc "History Lead."
       params do
         requires :id, type: Integer, desc: "ID do Lead."
@@ -227,37 +227,37 @@ module V1
         else
           LeadHistory.where(:lead_id => params[:id]).joins("LEFT JOIN lead_files ON lead_histories.lead_file_id = lead_files.id").select("lead_histories.*, lead_files.id as file_id, lead_files.docfile_file_name, to_char(lead_histories.created_at, 'DD/MM/YYYY HH:mm') as data")
         end
-        
+
       end
-      
+
       desc "Upload Lead."
       post 'upload' do
         apartment!
         docfile = params[:file]
-        
+
         attachment = {
             :filename => docfile[:filename],
             :type => docfile[:type],
             :headers => docfile[:head],
             :tempfile => docfile[:tempfile]
         }
-        
+
         lead = LeadFile.create(docfile: ActionDispatch::Http::UploadedFile.new(attachment))
-        
+
         if lead.save
             lead
         else
             lead.errors.full_messages
         end
       end
-      
+
       desc "List all Atendimento."
       get 'all_atendimento' do
           apartment!
           atendimento = Atendimento.where("ispf = 'S' or ispj = 'S'")
           atendimento
       end
-      
+
       desc "Download Lead File."
       params do
         requires :id, type: Integer, desc: "ID File Lead."
@@ -269,7 +269,7 @@ module V1
           header['Content-Disposition'] = "attachment; filename="+file.docfile_file_name
           File.open(Rails.root.join("public", "docfile/"+file.docfile_file_name)).read
       end
-      
+
       desc "Job Create Lead."
       params do
         requires :tipo, type: String, desc: "Tipo Client(F => Pessoa Fisica, J => Pessoa Juridica, C => Chat)."
@@ -294,11 +294,11 @@ module V1
         #binding.pry
         PaperTrail.whodunnit = 'job_cad'
         if params[:numberproduct] != nil and params[:numberproduct] != 0 and params[:numberproduct] >= 20
-           usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])  
+           usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])
         else
-           usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])  
+           usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])
         end
-        
+
         leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1)
         if leaditem.exists?
           user = leaditem[0].id
@@ -318,12 +318,12 @@ module V1
               end
               LeadHistory.create(leadstatus_id: startstatus, user_id: user, lead_id: lead.id).save
               LeadProduct.create(product_id: params[:productcollection], lead_id: lead.id).save
-              
-              
+
+
               domain = request.host
               hosts = domain.sub!(".unicooprj.com.br", "")
               account = Account.where(:subdomain => domain).first rescue nil;
-              
+
               #Push
               Pusher.trigger('lead_channel', 'created', {
                 message: 'Novo Lead cadastrado para você',
@@ -331,11 +331,11 @@ module V1
                 lead: lead.id,
                 account_id: account.id
               })
-              
+
               if isemail == 'true'
                 LeadMailer.created(email, lead.id).deliver
               end
-              
+
               #envia o e-mail para o supervisor.
               group = Group.find(groupid) rescue nil
               if !group.nil?
@@ -344,7 +344,7 @@ module V1
                     LeadMailer.created_super(usersuper.email, name, lead.id).deliver
                 end
               end
-              
+
               #Envia e-mail para o dono do grupo Master
               groupdad = Group.where(:dadgroup => nil).first rescue nil
               if !groupdad.nil?
@@ -355,7 +355,7 @@ module V1
                   end
                 end
               end
-              
+
               lead
             else
               contact.errors.full_messages
@@ -364,17 +364,17 @@ module V1
             contact.errors.full_messages
         end
         { :sucess => 'ok', :lead => lead}
-        
+
         #Adiciona o Lead para um consultor disponivel.
       end
-      
+
       desc "Leads Não Lido com mais de 30 mins."
       get 'pedentes', authorize: ['read', 'Lead'] do
         apartment!
         lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.id as usuario_id, users.groups_id, users.isemail, users.email as usermail, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.leadstatus_id = 1 and leads.queue_at < ?', Time.zone.now)
-        lead        
+        lead
       end
-      
+
       desc "Delete a Lead Status."
       params do
         requires :id, type: String, desc: "Lead Status ID."
@@ -383,7 +383,7 @@ module V1
         apartment!
         LeadStatus.find(params[:id]).destroy
       end
-    
+
       desc "Return all Lead."
       params do
         requires :page, type: Integer, desc: "Number Page."
@@ -400,39 +400,39 @@ module V1
         @user = current_user
         apartment!
         #binding.pry
-        
+
         per_page = 30.0
-        
+
         filter = 'true'
-        
+
         if params[:orderby] == nil or params[:orderby] == ''
           params[:orderby] = "leads.updated_at desc"
         end
-        
+
         if params[:users_id] != nil and params[:users_id] != 0
           filter += " and leads.user_id ="+params[:users_id].to_s
         end
-        
+
         if params[:status_id] != nil and params[:status_id] != ''
           filter += " and leads.leadstatus_id ="+params[:status_id].to_s
         end
-        
+
         if params[:groups_id] != nil and params[:groups_id] != 0
           filter += " and users.groups_id ="+params[:groups_id].to_s
         end
-        
+
         if params[:type_people] != nil and params[:type_people] != "0"
           filter += " and contacts.typecontact ='"+params[:type_people].to_s+"'"
         end
-        
+
         if params[:product_id] != nil and params[:product_id] != 0
           filter += " and lead_products.product_id ="+params[:product_id].to_s
         end
-        
+
         if params[:data] != nil and params[:data] != ''
           filter += " and leads.created_at::timestamp::date between '"+params[:data]+"' and '"+params[:data_end]+"'"
         end
-        
+
         #Retorna todos os leads para Super Admin ou Administrador
         if @user["roles"] == 1 or @user["roles"] == 2
           leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).where(filter).distinct
@@ -454,7 +454,7 @@ module V1
         end
         #@lead
       end
-      
+
       desc "Return one Lead."
       params do
         requires :id, type: Integer
@@ -464,15 +464,15 @@ module V1
           @user = current_user
           apartment!
           @lead = Lead.find(params[:id])
-          
-          if @lead.user_id == @user['id'] or (@user["roles"] == 1 or @user["roles"] == 2)
+
+          if @lead.user_id == @user['id'] or (@user["roles"] == 1 or @user["roles"] == 2 or @user["roles"] == 3)
             Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.*, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY') as data, leads.docfile_file_name").where("leads.id = ?", params[:id])
           else
             { :error => 'Sem permissão de acesso', :code => 2002}
           end
         end
       end
-      
+
       desc "Create a Lead."
       params do
         requires :owner, type: String, desc: "User ID Owner."
@@ -483,31 +483,31 @@ module V1
       end
       post '', authorize: ['create', 'Lead'] do
         apartment!
-        
+
         lead = Lead.create(user_id: params[:owner], leadstatus_id: params[:status], contact_id: params[:contact], title: params[:title], description: params[:description])
-        
+
         if lead.save
             lead
         else
             lead.errors.full_messages
         end
       end
-      
+
       desc "Import a Lead."
       post 'import', authorize: ['create', 'Lead'] do
         apartment!
         docfile = params[:file]
-        
+
         attachment = {
             :filename => docfile[:filename],
             :type => docfile[:type],
             :headers => docfile[:head],
             :tempfile => docfile[:tempfile]
         }
-        
+
         importfile = ImportFile.create(docfile: ActionDispatch::Http::UploadedFile.new(attachment), status: 'Lead')
         filename = Rails.root.join("public", "importtmp/"+importfile.docfile_file_name)
-        
+
         options = {:col_sep => ";", :row_sep => "\n", :file_encoding => 'ISO-8859-1'}
         ary = Array.new
         SmarterCSV.process(filename, options) do |array|
@@ -538,7 +538,7 @@ module V1
         end
         ary
       end
-      
+
       desc "Update a Lead."
       params do
         requires :id, type: Integer, desc: "Lead ID."
@@ -553,7 +553,7 @@ module V1
         #lead = LeadProduct.where("lead_id = ?", params[:id]).first
         #LeadProduct.find(lead.id).update(product_id: params[:product_id])
       end
-      
+
       desc "Delete a Lead."
       params do
         requires :id, type: String, desc: "Lead ID."

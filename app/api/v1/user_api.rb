@@ -3,7 +3,7 @@ module V1
     require_relative '../../lib/api/validations/email_value'
     namespace "user"
     authorizes_routes!
-    
+
       helpers do
         def current_token; env['api.token']; end
         def warden; env['warden']; end
@@ -12,7 +12,7 @@ module V1
           User.find(current_token.resource_owner_id) if current_token
         end
       end
-    
+
       desc 'Return current user, requires authentication'
       get 'me' do
         guard!
@@ -24,7 +24,7 @@ module V1
         end
         ary
       end
-      
+
       desc 'Return current user, requires authentication'
       params do
         requires :email, type: String
@@ -37,7 +37,7 @@ module V1
           User.where("id != ? and email = ? and active = 'S'", params[:id], params[:email]).exists? ? 1 : 0
         end
       end
-      
+
       desc "Audit all User."
       params do
         optional :id, type: Integer, desc: "ID do User."
@@ -59,7 +59,7 @@ module V1
           #Lead.versions.between(data_start, data_end)
         end
       end
-      
+
       desc "Compare Version Audit."
       params do
         optional :id, type: Integer, desc: "ID do User."
@@ -72,14 +72,14 @@ module V1
         #changes = Diffy::SplitDiff.new(content_1.to_json, content_2.to_json, :format => :html)
         #changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
         #content_1.to_json
-        
-        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json, 
-                                     include_plus_and_minus_in_html: true, 
+
+        changes = Diffy::Diff.new(content_2.to_json, content_1.to_json,
+                                     include_plus_and_minus_in_html: true,
                                      include_diff_info: false)
         changes.to_s.present? ? changes.to_s(:html).html_safe : 'No Changes'
-        
+
       end
-      
+
       desc "Return all Version User Atendimento."
       params do
         optional :id, type: Integer, desc: "ID do User."
@@ -96,12 +96,22 @@ module V1
           Atendimento.find(item.id).versions
         end
       end
-      
+
+      desc "Return all Active History."
+      params do
+        requires :id, type: Integer, desc: "ID do User."
+      end
+      get 'historyatendimento', authorize: ['read', 'User'] do
+        apartment!
+        @atendimento = Atendimento.where(:users_id => params[:user_id]).first
+        AtendimentoActive.where(atendimentos_id: @atendimento.id).limit(10)
+      end
+
       desc "Import a User."
       post 'import', authorize: ['create', 'User'] do
         apartment!
         docfile = params[:file]
-        
+
         attachment = {
             :filename => docfile[:filename],
             :type => docfile[:type],
@@ -111,12 +121,12 @@ module V1
         @user = current_user
         importfile = ImportFile.create(docfile: ActionDispatch::Http::UploadedFile.new(attachment), status: 'User')
         filename = Rails.root.join("public", "importtmp/"+importfile.docfile_file_name)
-        
+
         options = {:col_sep => ";", :row_sep => "\n", :file_encoding => 'ISO-8859-1'}
         ary = Array.new
         senha = "trocar12!"
         role = 4 #usuario
-        
+
         SmarterCSV.process(filename, options) do |array|
           apartment!
           groupcheck = Group.where('code = ? and code is not null',array.first[:groupid]).first rescue nil
@@ -138,7 +148,7 @@ module V1
         end
         ary
       end
-      
+
       desc 'Link user product'
       params do
         requires :user_id, type: Integer
@@ -169,7 +179,7 @@ module V1
           @user
         end
       end
-      
+
       desc "Active atendimento a User."
       params do
         requires :user_id, type: String, desc: "User ID."
@@ -189,23 +199,26 @@ module V1
         else
           id = @atendimento.id
         end
-        
+
         ativostatus = nil
         if params[:active] == 'S'
           ativostatus = 'S'
         end
-        
+
         if params[:atendimento] == 'C'
+          AtendimentoActive.create(tipo: 'C', users_id: @user["id"], atendimentos_id: id, status: ativostatus).save
           Atendimento.find(id).update(ischat: ativostatus, leadnumber: 0)
         elsif params[:atendimento] == 'F'
+          AtendimentoActive.create(tipo: 'F', users_id: @user["id"], atendimentos_id: id, status: ativostatus).save
           Atendimento.find(id).update(ispf: ativostatus, leadnumber: 0)
         elsif params[:atendimento] == 'J'
+          AtendimentoActive.create(tipo: 'J', users_id: @user["id"], atendimentos_id: id, status: ativostatus).save
           Atendimento.find(id).update(ispj: ativostatus, leadnumber: 0)
         else
           { :error => "Tipo de atendimento não encontrado." }
         end
       end
-    
+
       desc "Return all Users."
       params do
         optional :name, type: String
@@ -220,11 +233,11 @@ module V1
         if params[:name] != nil
           @search = params[:name]
         end
-        
+
         apartment!
         @atendimentolist = Atendimento.all()
         @grouplist = Group.all()
-        
+
         if 1 != @user["roles"] and 2 != @user["roles"]
           User.where("accounts_id = ? and roles != ? and active = 'S' and (? = '' or name like '%?%')", current_user["accounts_id"],  @role[0][:id], @search, @search).find_each do |item|
               @role = @rolelist.detect{|w| w.id == item[:roles]}
@@ -232,10 +245,10 @@ module V1
               @atendimento = @atendimentolist.detect{|w| w.users_id == item[:id]}
               @group = @grouplist.detect{|w| w.id == item[:groups_id]}
               #@products = UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id])
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], 
-                      :email => item[:email], :roles => @role, :products => nil, 
-                      :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), 
-                      :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active],
+                      :email => item[:email], :roles => @role, :products => nil,
+                      :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"),
+                      :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular],
                       :group_id => item[:groups_id], :atendimento => Atendimento.where(:users_id => item[:groups_id]).first, :group => @group }
           end
         elsif 2 == @user["roles"]
@@ -245,11 +258,11 @@ module V1
               @atendimentos = @atendimentolist.detect{|w| w.users_id == item[:id]}
               @groups = @grouplist.detect{|w| w.id == item[:groups_id]}
                #@products = UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id])
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], 
-                    :roles => @role, :products => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), 
-                    :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email],
+                    :roles => @role, :products => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"),
+                    :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular],
                     :group_id => item[:groups_id], :atendimento => @atendimentos, :group => @groups }
-          end    
+          end
         else
           User.where("accounts_id = ? and (? = '' or upper(name) like upper(?))" , current_user["accounts_id"], @search, '%'+@search+'%').find_each do |item|
               @role = @rolelist.detect{|w| w.id == item[:roles]}
@@ -257,15 +270,15 @@ module V1
               @atendimentos = @atendimentolist.detect{|w| w.users_id == item[:id]}
               @groups = @grouplist.detect{|w| w.id == item[:groups_id]}
                #@products = UsersProducts.joins(:products).select("products.name, products.id, users_products.id as up").where(:user_id => item[:id])
-              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email], 
-                    :roles => @role, :products => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"), 
-                    :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular], 
+              ary << {:id => item[:id],:name => item[:name], :active => item[:active], :email => item[:email],
+                    :roles => @role, :products => nil, :created_at => item[:created_at].strftime("%b, %m %Y - %H:%M"),
+                    :isemail => item[:isemail], :islead => item[:islead], :celular => item[:celular],
                     :group_id => item[:groups_id], :atendimento => @atendimentos, :group => @groups }
           end
         end
         ary
       end
-      
+
       desc "Return one user."
       params do
         requires :id, type: Integer
@@ -279,7 +292,7 @@ module V1
           @user
         end
       end
-      
+
       desc "Create a user."
       params do
         requires :name, type: String, desc: "User name."
@@ -306,14 +319,14 @@ module V1
               :celular => params[:celular],
               :accounts_id => current_user["accounts_id"]
         )
-        
+
         if user.save
             user
         else
             user.errors.full_messages
         end
       end
-      
+
       desc "Update a User."
       params do
         requires :id, type: String, desc: "User ID."
@@ -353,7 +366,7 @@ module V1
         })
        end
       end
-      
+
       desc "Delete a User."
       params do
         requires :id, type: String, desc: "User ID."
@@ -363,7 +376,7 @@ module V1
         PaperTrail.whodunnit = @user["email"]
         User.find(params[:id]).update(active: 'N')
       end
-      
+
       desc "Active a User."
       params do
         requires :id, type: String, desc: "User ID."
