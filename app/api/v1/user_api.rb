@@ -103,8 +103,8 @@ module V1
       end
       get 'historyatendimento', authorize: ['read', 'User'] do
         apartment!
-        @atendimento = Atendimento.where(:users_id => params[:user_id]).first
-        AtendimentoActive.where(atendimentos_id: @atendimento.id).limit(10)
+        @atendimento = Atendimento.where(:users_id => params[:id]).first
+        AtendimentoActive.joins(:user).joins(:atendimento => [:user]).select("atendimento_actives.*, users.name as owner, users_atendimentos.name as users, to_char(atendimento_actives.created_at, 'DD/MM/YYYY HH:mm') as data").limit(10)
       end
 
       desc "Import a User."
