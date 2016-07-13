@@ -25,10 +25,30 @@
                   </span>
                 </div>
             </form>
-
           </div>
         </div>
-    </div>
+        <div class="panel-body" ng-show="goGraph">
+            <div class="row">
+                <div class="widget-pie-chart panel panel-condensed  no-margin no-border widget-loader-circle">
+                    <div class="panel-body">
+                        <div id="nvd3-pie" class="text-center m-b-30">
+                            <div id="chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body" ng-show="goGraphpj">
+            <div class="row">
+                <div class="widget-pie-chart panel panel-condensed  no-margin no-border widget-loader-circle col-md-6">
+                    <div class="panel-body">
+                        <div class="text-center m-b-30">
+                            <div id="chart2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 <div class="row">
     <table ng-table="tableParams" class="table table-hover table-condensed table-detailed no-footer" role="grid" export-csv="csv" separator=";">
         <tr ng-repeat-start="user in $data" class="odd" ng-class="user.expanded ? 'odd shown' : 'odd'" role="row" ng-click="user.expanded = !user.expanded">
@@ -49,23 +69,52 @@
         </tr>
         <tr ng-if="user.expanded" ng-repeat-end="" class="row-details">
           <td colspan="3">
-            <table class="table table-inline">
-              <tbody>
-                <tr>
-                  <td>Criado em
-                  </td>
-                  <td>{{user.created_at}}</td>
-                </tr>
-                <tr>
-                  <td>Perfil</td>
-                  <td>{{user.roles.name}}</td>
-                </tr>
-                <tr ng-show="issuper">
-                  <td>Ativo</td>
-                  <td>{{user.active == 'S' ? 'Sim' : 'Não'}}</td>
-                </tr>
-              </tbody>
-            </table>
+              <div class="panel panel-transparent " ng-init="tab1 = true">
+                  <ul class="nav nav-tabs nav-tabs-fillup hidden-sm hidden-xs" data-init-reponsive-tabs="dropdownfx">
+                      <li ng-class="tab1 ? 'active' : ''">
+                          <a data-toggle="tab" ng-click="tab1=true;tab2=false;tab3=false;"><span>Dados do Usuário</span></a>
+                      </li>
+                      <li ng-class="tab2 ? 'active' : ''">
+                          <a data-toggle="tab" ng-click="tab1=false;tab2=true;tab3=false;onloadgraphuser(user.id)"><span>Gráfico Peformace</span></a>
+                      </li>
+                      <li ng-class="tab3 ? 'active' : ''">
+                          <a data-toggle="tab" ng-click="tab1=false;tab2=false;tab3=true"><span>Hist. Ativações</span></a>
+                      </li>
+                  </ul>
+                  <div class="tab-content">
+                      <div ng-class="tab1 ? 'tab-pane slide-left active' : 'tab-pane slide-left'" ng-show="tab1">
+                          <div class="row column-seperation">
+                              <table class="table table-inline">
+                                  <tbody>
+                                  <tr>
+                                      <td>Criado em
+                                      </td>
+                                      <td>{{user.created_at}}</td>
+                                  </tr>
+                                  <tr>
+                                      <td>Perfil</td>
+                                      <td>{{user.roles.name}}</td>
+                                  </tr>
+                                  <tr ng-show="issuper">
+                                      <td>Ativo</td>
+                                      <td>{{user.active == 'S' ? 'Sim' : 'Não'}}</td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      <div ng-class="tab2 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab2">
+                          <div class="row">
+                            <div class="graphuser_{{user.id}}"></div>
+                          </div>
+                      </div>
+                      <div ng-class="tab3 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab3">
+                          <div class="row">
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
           </td>
         </tr>
     </table>

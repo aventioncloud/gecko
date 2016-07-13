@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="1476574794">
+  <component name="DataSourceManagerImpl" format="xml" hash="3498370858">
     <data-source source="LOCAL" name="Rails gecko: development" uuid="ed4e2340-01b4-422c-b66b-d81ad13297ac">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>

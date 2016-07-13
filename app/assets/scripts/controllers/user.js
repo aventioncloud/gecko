@@ -24,7 +24,7 @@ angular.module('geckoCliApp')
       url: '/add',
       templateUrl: 'assets/user/form.html',
       controller: 'UserCtrl'
-    })      
+    })
     .state('user.edit', {
       url: '/:id/edit',
       templateUrl: 'assets/user/form.html',
@@ -34,25 +34,180 @@ angular.module('geckoCliApp')
 
     var vm = this;
     var Id = $stateParams.id;
-    
+
     $rootScope.$broadcast('disablefilterChanged');
-    
+
     //Toolbar
     //Alterar para o parametro do crud
     $scope.toolbar = {
       controller: "user",
       add: "user.add",
       list: "user.list",
+      graph: true,
       permissioncreate: "{'subject_class':'User','action':'create'}"
     };
-    
+
+    $scope.onvisiblesearch = function()
+    {
+        $scope.goGraph = false;
+        $scope.goGraphpj = false;
+        $scope.goSearch = !$scope.goSearch;
+    }
+    $scope.onvisiblegraph = function()
+    {
+        $scope.goGraph = !$scope.goGraph;
+        $scope.goGraphpj = false;
+        $scope.goSearch = false;
+    }
+
+    $scope.onvisiblegraphpj = function()
+    {
+        $scope.goGraph = false;
+        $scope.goGraphpj = !$scope.goGraphpj;
+        $scope.goSearch = false;
+    }
+
+    $scope.creategraphqueue = function() {
+
+        $("#chart").kendoChart({
+            chartArea: {
+                width: 800,
+                height: 400
+            },
+            title: {
+                text: "Fila Pessoa Física"
+            },
+            legend: {
+                position: "top"
+            },
+            seriesDefaults: {
+                labels: {
+                    template: "Leads: #= dataItem.leadnumber #",
+                    position: "outsideEnd",
+                    visible: true,
+                    background: "transparent"
+                }
+            },
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "http://" + Rails.host + "/api/v1/user/graphqueue?tipo=PF&access_token=" + $localStorage.token,
+                        dataType: "json"
+                    }
+                }
+            },
+            series: [{
+                type: "column",
+                field: "leadnumber",
+                categoryField: "name",
+                explodeField: "explode"
+            }],
+            tooltip: {
+                visible: true,
+                template: "#= dataItem.name # : #= dataItem.leadnumber #"
+            }
+        });
+
+        $("#chart2").kendoChart({
+            chartArea: {
+                width: 800,
+                height: 400
+            },
+            title: {
+                text: "Fila Pessoa Juridíca"
+            },
+            legend: {
+                position: "top"
+            },
+            seriesDefaults: {
+                labels: {
+                    template: "Leads: #= dataItem.leadnumber #",
+                    position: "outsideEnd",
+                    visible: true,
+                    background: "transparent"
+                }
+            },
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "http://" + Rails.host + "/api/v1/user/graphqueue?tipo=PJ&access_token=" + $localStorage.token,
+                        dataType: "json"
+                    }
+                }
+            },
+            series: [{
+                type: "column",
+                field: "leadnumber",
+                categoryField: "name",
+                explodeField: "explode"
+            }],
+            tooltip: {
+                visible: true,
+                template: "#= dataItem.name # : #= dataItem.leadnumber #"
+            }
+        });
+    }
+
+    $scope.onloadgraphuser = function(id){
+        //debugger;
+        var classgraph = ".graphuser_"+id.toString();
+        $(classgraph).kendoChart({
+            chartArea: {
+                width: 500,
+                height: 400
+            },
+            title: {
+                text: "Qtd. Leads por Status"
+            },
+            legend: {
+                position: "top"
+            },
+            seriesDefaults: {
+                labels: {
+                    template: "#= dataItem.item #: #= dataItem.value #",
+                    position: "outsideEnd",
+                    visible: true,
+                    background: "transparent"
+                }
+            },
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "http://" + Rails.host + "/api/v1/user/graphstatus?user_id="+id.toString()+"&access_token=" + $localStorage.token,
+                        dataType: "json"
+                    }
+                }
+            },
+            series: [{
+                type: "donut",
+                field: "value",
+                categoryField: "item",
+                explodeField: "explode"
+            }],
+            tooltip: {
+                visible: true,
+                template: "#= dataItem.item # : #= dataItem.value #"
+            }
+        });
+    }
+
+    $scope.onloadhistuser = function(id){
+
+    }
+
+    $scope.onloaddadosuser = function(id){
+
+    }
+
+    //$scope.creategraphqueue();
+
     //Super Admin
     $scope.issuper = false;
     if($localStorage.user.roles.name == "Super Admin")
       $scope.issuper = true;
-      
+
     $scope.userid = $localStorage.user.id;
-    
+
 
     //Valida se tem autorização para estar nesta funcionalidade.
     $scope.$on('$routeChangeStart', function(scope, next, current) {
@@ -61,21 +216,21 @@ angular.module('geckoCliApp')
         $location.path('/unauthorized');
       }
     });
-    
-    
+
+
     //Methodo e variavel para Filtro.
     $scope.closesearch = function(){
       //Alterar para o parametro do crud
       $scope.filter.name = undefined;
       $scope.filter.email = undefined;
       $scope.globalSearchTerm = undefined;
-      $scope.filter.group_id = undefined; 
+      $scope.filter.group_id = undefined;
     };
-    
+
     $scope.optionsselect = function(item){
       $scope.optionsselectitem = item;
     };
-    
+
     //Alterar para o parametro do crud
     if(!$scope.issuper){
       $scope.filter = {
@@ -103,15 +258,16 @@ angular.module('geckoCliApp')
           {name: 'group', value: 'Grupo'}
       ];
     }
-    
+
     $scope.optionsselectitem = $scope.filteroptions[0];
-    
+
     //Get Users All
     $scope.loadgrid = function()
     {
       User.all()
         .then(function(data) {
           $scope.data = data.data;
+            $scope.creategraphqueue();
           $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
                 count: 100,          // count per page
@@ -126,56 +282,56 @@ angular.module('geckoCliApp')
                     var orderedData = params.sorting() ?
                                         $filter('orderBy')($scope.data, params.orderBy()) :
                                         $scope.data;
-                                        
+
                     orderedData	= $filter('filter')(orderedData, params.filter());
-            
+
                     $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                 }
               });
       });
     }
     $scope.loadgrid();
-    
+
     $scope.applyGlobalSearch = applyGlobalSearch;
-    
+
     function applyGlobalSearch(){
       var term = $scope.globalSearchTerm;
       if ($scope.isInvertedSearch){
         term = "!" + term;
       }
-      
+
       //Alterar para o parametro do crud
       if($scope.optionsselectitem.name === 'name')
       {
-          $scope.filter.name = term; 
-          $scope.filter.email = undefined; 
+          $scope.filter.name = term;
+          $scope.filter.email = undefined;
           $scope.filter.active = undefined;
-          $scope.filter.group_id = undefined; 
+          $scope.filter.group_id = undefined;
       }
       else if($scope.optionsselectitem.name === 'active'){
-          
-          $scope.filter.active = $scope.isInvertedSearch ? 'S' : 'N'; 
-          $scope.filter.name = undefined; 
+
+          $scope.filter.active = $scope.isInvertedSearch ? 'S' : 'N';
+          $scope.filter.name = undefined;
           $scope.filter.email = undefined;
-          $scope.filter.group_id = undefined; 
+          $scope.filter.group_id = undefined;
       }
       else if($scope.optionsselectitem.name === 'group')
       {
-          $scope.filter.group_id = term; 
-          $scope.filter.name = undefined; 
-          $scope.filter.email = undefined; 
+          $scope.filter.group_id = term;
+          $scope.filter.name = undefined;
+          $scope.filter.email = undefined;
           $scope.filter.active = undefined;
       }
       else
       {
-          $scope.filter.email = term; 
-          $scope.filter.name = undefined; 
+          $scope.filter.email = term;
+          $scope.filter.name = undefined;
           $scope.filter.active = undefined;
-          $scope.filter.group_id = undefined; 
+          $scope.filter.group_id = undefined;
       }
     }
-    
-    
+
+
     //Create model form
     $scope.model = {};
     $scope.options = {};
@@ -219,11 +375,11 @@ angular.module('geckoCliApp')
                   if($scope.model.id != undefined)
                     idedit = $scope.model.id
                   return User.validemail($viewValue, idedit).then(function(data) {
-                    scope.options.templateOptions.loading = false; 
+                    scope.options.templateOptions.loading = false;
                     if (data.data === "1") {
                       throw new Error('taken');
                     }
-                  }, 1000); 
+                  }, 1000);
                 },
                 message: '"Este e-mail já está cadastrado."'
               }
@@ -244,7 +400,7 @@ angular.module('geckoCliApp')
             label: 'Perfil',
             placeholder: 'Selecione um perfil',
             required: true,
-            "options": { 
+            "options": {
               type: "json",
               serverFiltering: true,
               transport: {
@@ -263,7 +419,7 @@ angular.module('geckoCliApp')
             label: 'Grupo',
             placeholder: 'Selecione um grupo',
             required: true,
-            "options": { 
+            "options": {
               type: "json",
               serverFiltering: true,
               transport: {
@@ -351,7 +507,7 @@ angular.module('geckoCliApp')
           }
         },
     ];
-    
+
     //Edit form
     if(Id){
       User.get(Id).then(function(data){
@@ -366,7 +522,7 @@ angular.module('geckoCliApp')
         $scope.model = data.data;
       });
     }
-    
+
     //Submit form
     //Alterar para o parametro do crud
     $scope.handleSubmit = function()
@@ -425,7 +581,7 @@ angular.module('geckoCliApp')
           }
         });
      };
-     
+
      //Active
     $scope.actived = function(id) {
         User.active(id).then(function(data) {
@@ -437,20 +593,20 @@ angular.module('geckoCliApp')
     $scope.change = function () {
         alert($scope.newItemType);
     };
-    
+
     //Atendimento
     $scope.atendimento = function(id, tipo, ativa) {
        var itemativo = 'N';
        if(ativa == undefined || ativa == null || ativa == 'N')
         itemativo = 'S';
-        
+
         var _value = { user_id: id, atendimento: tipo, active: itemativo};
         User.atendimento(_value).then(function(data) {
           toaster.success({title: 'Atendimento', body: 'Atendimento alterado com sucesso.!', sound: false});
           $scope.loadgrid();
         });
     };
-     
+
      //Delete
     $scope.delete = function(id) {
       SweetAlert.swal({
@@ -472,5 +628,5 @@ angular.module('geckoCliApp')
         }
       });
     };
-     
+
   });

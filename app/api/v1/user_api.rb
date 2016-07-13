@@ -80,6 +80,37 @@ module V1
 
       end
 
+      desc "Build Graph Queue."
+      params do
+        requires :tipo, type: String, desc: "PJ or PF."
+      end
+      get 'graphqueue', authorize: ['read', 'User'] do
+        apartment!
+        if params[:tipo] == 'PJ'
+         Atendimento.where(:ispj => 'S').joins(:user).select("name, leadnumber")
+        else
+          Atendimento.where(:ispf => 'S').joins(:user).select("name, leadnumber")
+        end
+      end
+
+      desc "Build Graph Status."
+      params do
+        requires :user_id, type: Integer, desc: "ID User"
+      end
+      get 'graphstatus', authorize: ['read', 'User'] do
+        apartment!
+        user = User.find(params[:user_id]) rescue nil
+        if !user.nil?
+          items = Array.new
+          leads = Lead.where(:user_id => params[:user_id]).joins(:leadstatus).group('leadstatus_id').count('id')
+          items << {:item => 'Perdas', :value => user.totalperda}
+          leads.each do |item|
+            items << {:item => LeadStatus.find(item[0]).name, :value => item[1]}
+          end
+          items
+        end
+      end
+
       desc "Return all Version User Atendimento."
       params do
         optional :id, type: Integer, desc: "ID do User."
