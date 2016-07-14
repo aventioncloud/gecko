@@ -82,7 +82,7 @@ angular.module('geckoCliApp')
             },
             seriesDefaults: {
                 labels: {
-                    template: "Leads: #= dataItem.leadnumber #",
+                    template: "Indicações: #= dataItem.leadnumber #",
                     position: "outsideEnd",
                     visible: true,
                     background: "transparent"
@@ -121,7 +121,7 @@ angular.module('geckoCliApp')
             },
             seriesDefaults: {
                 labels: {
-                    template: "Leads: #= dataItem.leadnumber #",
+                    template: "Indicações: #= dataItem.leadnumber #",
                     position: "outsideEnd",
                     visible: true,
                     background: "transparent"
