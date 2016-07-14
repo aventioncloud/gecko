@@ -49,6 +49,7 @@
                 </div>
             </div>
         </div>
+</div>
 <div class="row">
     <table ng-table="tableParams" class="table table-hover table-condensed table-detailed no-footer" role="grid" export-csv="csv" separator=";">
         <tr ng-repeat-start="user in $data" class="odd" ng-class="user.expanded ? 'odd shown' : 'odd'" role="row" ng-click="user.expanded = !user.expanded">
@@ -61,9 +62,9 @@
                   <a class="btn btn-warning" ng-class="{active:user.atendimento.ispf}" ng-click="atendimento(user.id, 'F', user.atendimento.ispf);user.expanded = !user.expanded"><span class="glyphicon glyphicon-remove-circle" ng-class="{'glyphicon-ok-circle':user.atendimento.ispf}"></span><span class="bold">Física</span></a>
                   <a class="btn btn-warning" ng-class="{active:user.atendimento.ispj}" ng-click="atendimento(user.id, 'J', user.atendimento.ispj);user.expanded = !user.expanded"><span class="glyphicon glyphicon-remove-circle" ng-class="{'glyphicon-ok-circle':user.atendimento.ispj}"></span><span class="bold">Juridica</span></a>
                 </div>
-                <a ui-sref="user.edit({id: user.id})" class="btn btn-complete btn-sm" has-permission='{"subject_class":"User","action":"create"}'><span class="glyphicon glyphicon-pencil"></span><span class="bold">Editar</span></a>
-                <a ng-click="delete(user.id);user.expanded = !user.expanded" class="btn btn-danger btn-sm" ng-show="user.active === 'S' && user.id !== userid ? true : false" has-permission='{"subject_class":"User","action":"delete"}'><span class="glyphicon glyphicon-trash"></span><span class="bold">Remover</span></a>
-                <a ng-click="actived(user.id);user.expanded = !user.expanded" class="btn btn-success btn-sm" ng-show="user.active == 'N' ? true : false" has-permission='{"subject_class":"Super Admin","action":"all"}'><span class="glyphicon glyphicon-ok"></span><span class="bold">Ativar</span></a>
+                <a ui-sref="user.edit({id: user.id})" class="btn btn-complete btn-sm" has-permission='{"subject_class":"User","action":"create"}'><span class="glyphicon glyphicon-pencil"></span><span class="bold"></span></a>
+                <a ng-click="delete(user.id);user.expanded = !user.expanded" class="btn btn-danger btn-sm" ng-show="user.active === 'S' && user.id !== userid ? true : false" has-permission='{"subject_class":"User","action":"delete"}'><span class="glyphicon glyphicon-trash"></span><span class="bold"></span></a>
+                <a ng-click="actived(user.id);user.expanded = !user.expanded" class="btn btn-success btn-sm" ng-show="user.active == 'N' ? true : false" has-permission='{"subject_class":"Super Admin","action":"all"}'><span class="glyphicon glyphicon-ok"></span><span class="bold"></span></a>
             </div>
           </td>
         </tr>
@@ -78,7 +79,7 @@
                           <a data-toggle="tab" ng-click="tab1=false;tab2=true;tab3=false;onloadgraphuser(user.id)"><span>Gráfico Peformace</span></a>
                       </li>
                       <li ng-class="tab3 ? 'active' : ''">
-                          <a data-toggle="tab" ng-click="tab1=false;tab2=false;tab3=true"><span>Hist. Ativações</span></a>
+                          <a data-toggle="tab" ng-click="tab1=false;tab2=false;tab3=true;onloadhistuser(user.id)"><span>Hist. Ativações</span></a>
                       </li>
                   </ul>
                   <div class="tab-content">
@@ -110,7 +111,18 @@
                       </div>
                       <div ng-class="tab3 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab3">
                           <div class="row">
-
+                            <table class="table no-footer">
+                                <tr>
+                                    <td>Data</td>
+                                    <td>Tipo</td>
+                                    <td>Responsável</td>
+                                </tr>
+                                <tr ng-repeat="hist in histlist">
+                                    <td>{{hist.data}}</td>
+                                    <td>{{hist.tipo_flag}}</td>
+                                    <td>{{hist.owner}}</td>
+                                </tr>
+                            </table>
                           </div>
                       </div>
                   </div>

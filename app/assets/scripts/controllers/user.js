@@ -191,8 +191,13 @@ angular.module('geckoCliApp')
         });
     }
 
-    $scope.onloadhistuser = function(id){
+    $scope.histlist = [];
 
+    $scope.onloadhistuser = function(id){
+        $scope.histlist = [];
+        User.histactive(id).then(function(data){
+            $scope.histlist = data.data;
+        })
     }
 
     $scope.onloaddadosuser = function(id){

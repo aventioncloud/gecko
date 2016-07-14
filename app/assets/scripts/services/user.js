@@ -58,6 +58,13 @@ app.service('User', function($http, Rails) {
                     headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
              });
     },
+    histactive: function(_id) {
+      return $http({
+          method  : 'GET',
+          url     : base + '/historyatendimento'+ '?id=' + _id,
+          headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+      });
+    },
     delete: function(id) {
       return $http["delete"](base + '/' + id);
     },
