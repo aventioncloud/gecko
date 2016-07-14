@@ -58,6 +58,10 @@ angular.module('geckoCliApp')
         $scope.goGraph = !$scope.goGraph;
         $scope.goGraphpj = false;
         $scope.goSearch = false;
+        if($scope.goGraph)
+        {
+            $scope.creategraphpfqueue();
+        }
     }
 
     $scope.onvisiblegraphpj = function()
@@ -65,9 +69,13 @@ angular.module('geckoCliApp')
         $scope.goGraph = false;
         $scope.goGraphpj = !$scope.goGraphpj;
         $scope.goSearch = false;
+        if($scope.goGraphpj)
+        {
+            $scope.creategraphpjqueue();
+        }
     }
 
-    $scope.creategraphqueue = function() {
+    $scope.creategraphpfqueue = function() {
 
         $("#chart").kendoChart({
             chartArea: {
@@ -107,7 +115,9 @@ angular.module('geckoCliApp')
                 template: "#= dataItem.name # : #= dataItem.leadnumber #"
             }
         });
+    }
 
+        $scope.creategraphpjqueue = function() {
         $("#chart2").kendoChart({
             chartArea: {
                 width: 800,
@@ -204,8 +214,6 @@ angular.module('geckoCliApp')
 
     }
 
-    //$scope.creategraphqueue();
-
     //Super Admin
     $scope.issuper = false;
     if($localStorage.user.roles.name == "Super Admin")
@@ -272,7 +280,6 @@ angular.module('geckoCliApp')
       User.all()
         .then(function(data) {
           $scope.data = data.data;
-            $scope.creategraphqueue();
           $scope.tableParams = new ngTableParams({
                 page: 1,            // show first page
                 count: 100,          // count per page
