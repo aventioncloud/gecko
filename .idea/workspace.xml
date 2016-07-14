@@ -138,8 +138,8 @@
       <file leaf-file-name="lead_api.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/api/v1/lead_api.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6451613">
-              <caret line="447" column="95" selection-start-line="447" selection-start-column="95" selection-end-line="447" selection-end-column="95" />
+            <state vertical-scroll-proportion="0.53763443">
+              <caret line="443" column="26" selection-start-line="443" selection-start-column="26" selection-end-line="443" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -957,8 +957,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/api/v1/lead_api.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6451613">
-          <caret line="447" column="95" selection-start-line="447" selection-start-column="95" selection-end-line="447" selection-end-column="95" />
+        <state vertical-scroll-proportion="0.53763443">
+          <caret line="443" column="26" selection-start-line="443" selection-start-column="26" selection-end-line="443" selection-end-column="26" />
           <folding />
         </state>
       </provider>
