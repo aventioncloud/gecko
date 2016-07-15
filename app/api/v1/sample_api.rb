@@ -34,7 +34,7 @@ module V1
             groupid = leaditem[0].groups_id
 
             userperda = User.find(array[:user_id])
-            totalperda = userperda.totalperda + 1 rescue 0
+            totalperda = userperda.totalperda + 1 rescue 1
             User.find(array[:user_id]).update(totalperda: totalperda)
 
             lead = Lead.find(array[:id]).update(user_id: user)
