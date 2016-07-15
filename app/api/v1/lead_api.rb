@@ -406,7 +406,7 @@ module V1
         filter = 'true'
 
         if params[:orderby] == nil or params[:orderby] == ''
-          params[:orderby] = "leads.updated_at desc"
+          params[:orderby] = "leads.queue_at desc"
         end
 
         if params[:users_id] != nil and params[:users_id] != 0

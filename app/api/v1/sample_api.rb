@@ -33,8 +33,10 @@ module V1
             isemail = leaditem[0].isemail
             groupid = leaditem[0].groups_id
 
-            totalperda = array[:totalperda].to_i rescue 0
-            User.find(array[:user_id]).update(totalperda: totalperda + 1)
+            userperda = User.find(array[:user_id])
+            totalperda = userperda.totalperda + 1 rescue 0
+            User.find(array[:user_id]).update(totalperda: totalperda)
+
             lead = Lead.find(array[:id]).update(user_id: user)
 
             totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
