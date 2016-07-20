@@ -135,7 +135,7 @@ module V1
       get 'historyatendimento', authorize: ['read', 'User'] do
         apartment!
         @atendimento = Atendimento.where(:users_id => params[:id]).first
-        AtendimentoActive.where(:atendimentos_id => @atendimento.id).joins(:user).joins(:atendimento => [:user]).select("atendimento_actives.*, (case when atendimento_actives.tipo = 'F' then 'Pessoa Física' when atendimento_actives.tipo = 'J' then 'Pessoa Juridica' else 'Chat' END) as tipo_flag  , users.name as owner, users_atendimentos.name as users, to_char(atendimento_actives.created_at, 'DD/MM/YYYY HH:mm') as data").limit(10)
+        AtendimentoActive.where(:atendimentos_id => @atendimento.id).joins(:user).joins(:atendimento => [:user]).select("atendimento_actives.*, (case when atendimento_actives.tipo = 'F' then 'Pessoa Física' when atendimento_actives.tipo = 'J' then 'Pessoa Juridica' else 'Chat' END) as tipo_flag  , users.name as owner, users_atendimentos.name as users, to_char(atendimento_actives.created_at + interval '1 hour', 'DD/MM/YYYY HH:MI') as data").order("id desc").limit(10)
       end
 
       desc "Import a User."
