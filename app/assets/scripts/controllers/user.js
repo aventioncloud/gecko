@@ -30,7 +30,7 @@ angular.module('geckoCliApp')
       templateUrl: 'assets/user/form.html',
       controller: 'UserCtrl'
     });
-  }).controller('UserCtrl', function ($scope, $location, $rootScope, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Product) {
+  }).controller('UserCtrl', function ($scope, $location, $rootScope, permissions, User, $filter, ngTableParams, Role, Rails, $localStorage, toaster, $stateParams, SweetAlert, Product, inputDate, dateFilter) {
 
     var vm = this;
     var Id = $stateParams.id;
@@ -208,6 +208,82 @@ angular.module('geckoCliApp')
         User.histactive(id).then(function(data){
             $scope.histlist = data.data;
         })
+    }
+
+    $scope.handledateSubmit = function(){
+
+    }
+
+    $scope.modeldate = {};
+
+    $scope.formdate = [{
+        className: 'row',
+        fieldGroup: [
+            {
+                // this field's ng-model will be bound to vm.model.username
+                key: 'data',
+                type: 'input',
+                className: 'col-xs-3',
+                templateOptions: {
+                    type: 'date',
+                    required: false,
+                    label: 'Data Inicio'
+                }
+            },
+            {
+                // this field's ng-model will be bound to vm.model.username
+                key: 'data_end',
+                type: 'input',
+                className: 'col-xs-3',
+                templateOptions: {
+                    type: 'date',
+                    required: false,
+                    label: 'Data Fim'
+                }
+            }]}];
+
+
+    $scope.submitfiltergraph = function(id){
+        debugger;
+        var classgraph = ".graphuser_"+id.toString();
+        $(classgraph).kendoChart({
+            chartArea: {
+                width: 500,
+                height: 400
+            },
+            title: {
+                text: "Qtd. Leads por Status"
+            },
+            legend: {
+                position: "top"
+            },
+            seriesDefaults: {
+                labels: {
+                    template: "#= dataItem.item #: #= dataItem.value #",
+                    position: "outsideEnd",
+                    visible: true,
+                    background: "transparent"
+                }
+            },
+            dataSource: {
+                transport: {
+                    read: {
+                        url: "http://" + Rails.host + "/api/v1/user/graphstatus?user_id="+id.toString()+"&data_start="+$scope.modeldate.data.toISOString().slice(0,10).replace(/-/g,"-")+"&data_end="+$scope.modeldate.data_end.toISOString().slice(0,10).replace(/-/g,"-")+"&access_token=" + $localStorage.token,
+                        dataType: "json"
+                    }
+                }
+            },
+            series: [{
+                type: "donut",
+                field: "value",
+                categoryField: "item",
+                explodeField: "explode"
+            }],
+            tooltip: {
+                visible: true,
+                template: "#= dataItem.item # : #= dataItem.value #"
+            }
+        });
     }
 
     $scope.onloaddadosuser = function(id){

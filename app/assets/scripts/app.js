@@ -9,22 +9,23 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.router', 
+    'ui.router',
     'ngStorage',
     'ngProgress',
     'toaster',
     'ngTable',
-    'formly', 
+    'formly',
     'formlyBootstrap',
     'oitozero.ngSweetAlert',
     'kendo.directives',
     'ui.select',
-    'angularFileUpload'
+    'angularFileUpload',
+    'ngInputDate'
   ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider, formlyConfigProvider) {
     $httpProvider.interceptors.push('tokenInterceptor');
     $httpProvider.interceptors.push('unauthorizedInterceptor');
-    
+
     formlyConfigProvider.setWrapper({
       name: 'loader',
       template: [
@@ -32,7 +33,7 @@ angular
         '<span class="glyphicon glyphicon-refresh loader" ng-show="to.loading"></span>'
       ].join(' ')
     });
-    
+
     formlyConfigProvider.setType({
       name: 'ui-select',
       extends: 'select',
@@ -44,7 +45,7 @@ angular
       extends: 'input',
       wrapper: ['loader']
     });
-    
+
     formlyConfigProvider.setType({
       name: 'multiselect',
       extends: 'select',
@@ -61,7 +62,7 @@ angular
       template: '<formly-transclude></formly-transclude><div my-messages="options"></div>',
       types: ['input', 'checkbox', 'select', 'textarea', 'radio', 'input-loader']
     });*/
-    
+
   })
   .run(function (Progress, $rootScope) {
         $rootScope.$on('$locationChangeSuccess', function () {
@@ -99,12 +100,12 @@ angular
       }
     }
   });
-    
-    
-    
-    
+
+
+
+
     /*
-    
+
     return function(promise) {
       var error, success;
       success = function(response) {

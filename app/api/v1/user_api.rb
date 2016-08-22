@@ -96,13 +96,19 @@ module V1
       desc "Build Graph Status."
       params do
         requires :user_id, type: Integer, desc: "ID User"
+        optional :data_start, type: String, desc: "Date Start"
+        optional :data_end, type: String, desc: "Date Ent"
       end
       get 'graphstatus', authorize: ['read', 'User'] do
         apartment!
         user = User.find(params[:user_id]) rescue nil
         if !user.nil?
+          filter = 'user_id = ?'
+          if params[:data_end] != nil and params[:data_end] != ''
+            filter += " and leads.created_at::timestamp::date between '"+params[:data_start]+"' and '"+params[:data_end]+"'"
+          end
           items = Array.new
-          leads = Lead.where(:user_id => params[:user_id]).joins(:leadstatus).group('leadstatus_id').count('id')
+          leads = Lead.where(filter, params[:user_id]).joins(:leadstatus).group('leadstatus_id').count('id')
           items << {:item => 'Perdas', :value => user.totalperda}
           leads.each do |item|
             items << {:item => LeadStatus.find(item[0]).name, :value => item[1]}

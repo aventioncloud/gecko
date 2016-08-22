@@ -106,6 +106,13 @@
                       </div>
                       <div ng-class="tab2 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab2">
                           <div class="row">
+                              <form name="userForm" id="userForm" ng-submit="submitfiltergraph(user.id)" novalidate style="margin-left: 18px !important;">
+                              <formly-form model="modeldate" fields="formdate" form="userForm">
+                                  <button class="btn btn-primary btn-sm  pull-left bottomsmall" type="submit" ng-disabled="userForm.$invalid" style="margin-left: 18px !important;margin-top: -10px;">Filtrar</button>
+                              </formly-form>
+                              </form>
+                          </div>
+                          <div class="row">
                             <div class="graphuser_{{user.id}}"></div>
                           </div>
                       </div>

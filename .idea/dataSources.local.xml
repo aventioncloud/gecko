@@ -2,8 +2,8 @@
 <project version="4">
   <component name="dataSourceStorageLocal">
     <data-source name="Rails gecko: development" uuid="ed4e2340-01b4-422c-b66b-d81ad13297ac">
-      <user-name>noort</user-name>
-      <user-password>dfeddfd2dfe0dfe7dfd2dfe1dfc0df82dff6dff1df99dfe7dfcedf9fdf91dfc3df96df9c</user-password>
+      <user-name>postgres</user-name>
+      <user-password>df9bdf98df99df9edf9fdf9c</user-password>
       <schema-pattern>unicoop_prd.pg_catalog unicoop_prd.public</schema-pattern>
       <default-schemas>unicoop_prd.public</default-schemas>
     </data-source>

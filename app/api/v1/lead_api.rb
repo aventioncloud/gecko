@@ -651,6 +651,7 @@ module V1
                 end
               end
             end
+            p "O limite de resultados por pesquisa é de 500 registros."
           end
         end
 
