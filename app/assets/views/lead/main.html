@@ -11,10 +11,13 @@
   <div class="email-list b-r b-grey" ng-hide="mobileviews" id="mobileviews">
     <!--<div class="email-refresh">{{balistviewitem.groupitem.quantidade}} indicações(s) <i class="fa fa-refresh fs-24" style="margin-left: 10px;cursor:pointer;" kendo-tooltip k-content="'Atualizar registros'" ng-click="refresh()"></i><i class="fa pg-arrow_left fs-24" style="margin-left: 10px;cursor:pointer;" kendo-tooltip k-content="'Voltar'" ng-click="back()"></i><i class="fa pg-arrow_right fs-24" style="margin-left: 5px;cursor:pointer;" kendo-tooltip k-content="'Próximo'" ng-click="next()"></i></div>-->
     <div class="list-view" ng-hide="!isfilter" class="cssSlideUp ng-scope">
-      <div style="height:370px; background: #f0f0f0;">
-        <form name="searchForm" id="groupForm" ng-submit="submitfilter()" novalidate> 
+      <div style="height:390px; background: #f0f0f0;">
+        <form name="searchForm" id="groupForm" ng-submit="submitfilter()" novalidate>
             <formly-form model="modelsearch" fields="fieldsssearch" options="optionssearch" form="groupForm">
-                <button class="btn btn-primary btn-sm pull-left bottomsmall" style="margin-left: 9px;" type="submit" ng-disabled="searchForm.$invalid" style="margin-right: 10px;" has-visible='!user'>Pesquisar</button>
+                <div class="row">
+                    <button class="btn btn-sm pull-left bottomsmall col-xs-3" style="margin-left: 9px;" type="button" ng-disabled="searchForm.$invalid" ng-click="submitexport()" style="margin-right: 10px;" has-visible='!user'>{{exporttitle}}</button>
+                    <button class="btn btn-primary btn-sm pull-left bottomsmall col-xs-3" style="margin-left: 9px;" type="submit" ng-disabled="searchForm.$invalid" style="margin-right: 10px;" has-visible='!user'>Pesquisar</button>
+                </div>
             </formly-form>
         </form>
       </div>

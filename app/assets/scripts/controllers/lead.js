@@ -45,18 +45,18 @@ angular.module('geckoCliApp')
 
     $rootScope.$on('$locationChangeSuccess', function() {
         $rootScope.actualLocation = $location.path();
-    });        
+    });
 
     $rootScope.$watch(function () {return $location.path()}, function (newLocation, oldLocation) {
         if($rootScope.actualLocation === newLocation) {
             $('#mobileviews').show();
         }
     });
-    
+
     $scope.isfilter = false;
     $scope.modelsearch = {data : null, users_id: null, orderby: 'leads.updated_at desc', awesome: false}
     $scope.optionssearch = {}
-    
+
     var filter_list = [
       {
         "name": "Indicações Asc.",
@@ -81,12 +81,12 @@ angular.module('geckoCliApp')
         "name": "Cliente Desc.",
         "abbr": "contacts.name desc"
       }]
-      
+
     var type_people = [
        {
         "name": "Todos",
         "abbr": "0"
-      },     
+      },
       {
         "name": "P. Física",
         "abbr": "F"
@@ -96,8 +96,8 @@ angular.module('geckoCliApp')
         "abbr": "J"
       }
       ]
-      
-    
+
+
     $scope.fieldsssearch = [{
       className: 'row',
       fieldGroup: [
@@ -156,7 +156,7 @@ angular.module('geckoCliApp')
           templateOptions: {
             label: 'Produto',
             placeholder: 'Selecione um produto',
-            "options": { 
+            "options": {
               type: "json",
               serverFiltering: true,
               transport: {
@@ -174,7 +174,7 @@ angular.module('geckoCliApp')
           templateOptions: {
             label: 'Status',
             placeholder: 'Selecione um status',
-            "options": { 
+            "options": {
               type: "json",
               serverFiltering: true,
               transport: {
@@ -194,7 +194,7 @@ angular.module('geckoCliApp')
           label: 'Consultor',
           placeholder: '',
           required: false,
-          options: { 
+          options: {
             type: "json",
             serverFiltering: true,
             transport: {
@@ -228,7 +228,7 @@ angular.module('geckoCliApp')
         templateOptions: {
           label: 'Grupo',
           placeholder: 'Selecione um grupo',
-          "options": { 
+          "options": {
             type: "json",
             serverFiltering: true,
             transport: {
@@ -240,12 +240,12 @@ angular.module('geckoCliApp')
         }
       }
     ];
-    
-    
+
+
     $scope.modelchange = {users_id: null}
     $scope.optionschange = {}
-    
-    
+
+
     $scope.fieldchange = [{
         key: 'users_id',
         templateUrl: 'assets/partials/customautocomplete.html',
@@ -253,7 +253,7 @@ angular.module('geckoCliApp')
           label: 'Consultor',
           placeholder: '',
           required: false,
-          options: { 
+          options: {
             type: "json",
             serverFiltering: true,
             transport: {
@@ -277,8 +277,23 @@ angular.module('geckoCliApp')
           "getterSetter": true,
           "allowInvalid": true
         }
-      }]
-    
+      }];
+
+    $scope.exporttitle = 'Exportar';
+
+    $scope.submitexport = function()
+    {
+        $scope.modelsearch.export = 'S';
+        $scope.modelsearch.page = 1;
+        $scope.exporttitle = 'Aguarde...';
+        Lead.getconsult($scope.modelsearch).then(function(data){
+            if(data != null && data != ''){
+                window.open("http://"+Rails.host +'/docfile/'+data.data.replace("\"", "").replace("\"", ""),'_blank');
+                $scope.exporttitle = 'Exportar';
+            }
+        });
+    }
+
     $scope.submitfilter = function()
     {
       if($scope.modelsearch.groups_id != undefined && $scope.modelsearch.groups_id == '')
@@ -289,21 +304,21 @@ angular.module('geckoCliApp')
       {
         $scope.modelsearch.product_id = 0;
       }
-      
+
       var listView = $("#listView").data("kendoListView");
       listView.dataSource.read();   // added line
       listView.refresh();
     }
-    
+
     function clickfilterChanged(event, args)
     {
         $scope.isfilter = args;
     }
-    
+
     $scope.$on('clickfilterChanged', clickfilterChanged);
-    
+
     $scope.toolbar.length = 0;
-    
+
     $rootScope.$broadcast('enablefilterChanged');
 
     var toolbaritem = {
@@ -338,13 +353,13 @@ angular.module('geckoCliApp')
     $scope.pages = 1;
 
     $scope.crud;
-    
+
     $scope.disabledback = true;
-    
+
     $scope.isupload = false;
     $scope.remover;
     $scope.notify = true;
-    
+
     $scope.leadnotify = 0;
 
     $scope.usuario = $localStorage.user;
@@ -355,14 +370,14 @@ angular.module('geckoCliApp')
     var Id = $stateParams.id;
 
     var model = Lead;
-    
+
     $scope.arquivo = "";
     $scope.arquivo_id = null;
 
 // selected fruits
     $scope.selection = [];
-    
-    
+
+
     var uploader = $scope.uploader = new FileUploader({
       scope: $scope,                          // to automatically update the html. Default: $rootScope
       url: "//" + Rails.host + "api/v1/lead/upload/",
@@ -373,30 +388,30 @@ angular.module('geckoCliApp')
         { key: 'docfile' }
       ]
     });
-    
+
     uploader.filters.push({
             name: 'docfile',
             fn: function(item /*{File|FileLikeObject}*/, options) {
                 return this.queue.length < 10;
             }
         });
-    
+
     uploader.onBeforeUploadItem =  function (item) {
       $scope.isupload = true;
     };
-    
+
     uploader.onAfterAddingFile = function (items) {
       //console.info('After adding all files', items);
       $scope.isupload = true;
     };
-    
+
    uploader.onCompleteItem = function (fileItem, response, status, headers) {
       //console.info('Complete', xhr, item, response);
       $scope.arquivo = response.docfile_file_name;
       $scope.arquivo_id = response.id;
     };
-    
-    
+
+
 
 // toggle selection for a given fruit by name
     $scope.toggleSelection = function toggleSelection(itemName) {
@@ -435,7 +450,7 @@ angular.module('geckoCliApp')
         $scope.reload();
       }
     };
-    
+
     $scope.checklead = function(id, usuario, status)
     {
       if(usuario === null)
@@ -447,13 +462,13 @@ angular.module('geckoCliApp')
       else
         return '';
     }
-    
+
     var pusher = new Pusher('63230285f168f50e6200', {
       encrypted: true
     });
     var channel = pusher.subscribe('lead_channel');
     channel.bind('created', function(data) {
-      if($scope.usuario.accounts == data.account_id && ($scope.notify && (data.user == $scope.usuario.id || 
+      if($scope.usuario.accounts == data.account_id && ($scope.notify && (data.user == $scope.usuario.id ||
         permissions.hasPermission('{"action": "changelead", "subject_class": "Lead"}'))) && $scope.leadnotify != data.lead)
       {
         $scope.leadnotify = data.lead;
@@ -479,7 +494,7 @@ angular.module('geckoCliApp')
                       $scope.disabledback = true;
                  }
                  $scope.isfilter = false;
-                 
+
                  if(list.data != null && list.data != undefined && list.data.length > 0)
                  {
                    $scope.balistviewitem["groupitem"][0].name = list.data[0].qtd_row+" Indicações";
@@ -488,8 +503,8 @@ angular.module('geckoCliApp')
                  else{
                    $scope.balistviewitem["groupitem"][0].name = "0 Indicações";
                  }
-                 
-                 e.success(list.data); 
+
+                 e.success(list.data);
               });
           }
           // on failure
@@ -541,7 +556,7 @@ angular.module('geckoCliApp')
 
     function load() {
       $scope.balistviewitem = {};
-      
+
       $scope.balistviewitem["groupitem"] = [];
 
       var iten = {};
@@ -592,18 +607,18 @@ angular.module('geckoCliApp')
     $scope.leadhistory;
 
     $scope.leadproduct;
-    
+
     $scope.mobileviews = false;
-    
+
     $scope.isdelete = false;
-    
+
     $scope.isedit = false;
-    
+
     $scope.usuarioitem = null;
-    
+
     $('#mobileviews').show();
-    
-    function detectmob() { 
+
+    function detectmob() {
      if( navigator.userAgent.match(/Android/i)
      || navigator.userAgent.match(/webOS/i)
      || navigator.userAgent.match(/iPhone/i)
@@ -618,7 +633,7 @@ angular.module('geckoCliApp')
         return false;
       }
     }
-    
+
     function loadhistory(Id)
     {
       //Carrega proposta
@@ -636,22 +651,22 @@ angular.module('geckoCliApp')
         listView.dataSource.read();   // added line
         listView.refresh();
       }
-            
+
       if(detectmob())
       {
         $('#mobileviews').hide();
       }
-      
+
       $scope.item = {};
       $scope.item = item[0];
       loadhistory(Id);
-      
+
       //$scope.arquivo = data.return[0].file;
     }
 
     if (Id) {
       Lead.get(Id).then(function (data) {
-        if($scope.usuario.id == data.data[0].user_id && data.data[0].status_id === 1)  
+        if($scope.usuario.id == data.data[0].user_id && data.data[0].status_id === 1)
         {
           //Altera o status para Não Lido
           Lead.changelead(Id, 2);
@@ -666,12 +681,12 @@ angular.module('geckoCliApp')
           // Verifica a permissão de changestatus, e altera o status do Lead
           if(permissions.hasPermission('{"action": "send", "subject_class": "Lead"}') || $scope.usuario.id == data.data[0].user_id)
             $scope.crud = true;
-            
+
           if(permissions.hasPermission('{"action": "create", "subject_class": "Lead"}'))
           {
             $scope.crud
           }
-            
+
           loadoportuidade(Id, data.data);
         }
       });
@@ -996,7 +1011,7 @@ angular.module('geckoCliApp')
     $scope.changeconsult = function(Id){
       $scope.showModal = !$scope.showModal;
     }
-    
+
     $scope.submitchange = function(Id)
     {
       $scope.notify = false;
@@ -1010,11 +1025,11 @@ angular.module('geckoCliApp')
         setTimeout(function(){ $scope.notify = true; }, 30000);
       });
     }
-    
+
     $scope.modelchangelead = {description: null, numberproduct: null}
     $scope.optionschangelead = {}
-    
-    
+
+
     $scope.fieldchangelead = [{
         // this field's ng-model will be bound to vm.model.username
         key: 'numberproduct',
@@ -1039,14 +1054,14 @@ angular.module('geckoCliApp')
         "allowInvalid": true
       }
     }]
-    
+
     $scope.showChangeIndicacao = false;
     $scope.changelead = function(item){
       $scope.modelchangelead.description = item.description;
       $scope.modelchangelead.numberproduct = item.numberproduct;
       $scope.showChangeIndicacao = !$scope.showChangeIndicacao;
     }
-    
+
     $scope.submitchangelead = function(Id)
     {
       var models = $scope.modelchangelead;
@@ -1121,17 +1136,17 @@ angular.module('geckoCliApp')
         }
       });
     };
-    
+
     $scope.status_id = 0;
     $scope.status_text = '';
-    
+
     $scope.onmodalstatus = function (status_id, status_text)
     {
       $scope.status_id = status_id;
       $scope.status_text = status_text;
       $scope.showChangeStatus = true;
     }
-    
+
     $scope.onstatus = function (){
       debugger;
         Lead.changelead($stateParams.id, $scope.status_id, null, null, $scope.modelstatuslead.description).then(function(data){
@@ -1146,11 +1161,11 @@ angular.module('geckoCliApp')
             $scope.showChangeStatus = false;
         });
     }
-    
+
     $scope.modelstatuslead = {description: null}
     $scope.optionsstatuslead = {}
-    
-    
+
+
     $scope.fieldstatuslead = [
       {
       key: 'description',

@@ -144,6 +144,8 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    markaby (0.8.0)
+      builder
     method_source (0.8.2)
     mime-types (1.25.1)
     mimemagic (0.3.0)
@@ -173,6 +175,7 @@ GEM
     paperclip-dropbox (1.3.2)
       dropbox-sdk (~> 1.3)
       paperclip (>= 3.1, < 5)
+    pdfkit (0.8.2)
     pg (0.18.4)
     polyglot (0.3.5)
     posix-spawn (0.3.11)
@@ -301,10 +304,12 @@ DEPENDENCIES
   jquery-rails
   kaminari
   kramdown
+  markaby
   mobu
   paper_trail (~> 4.0.0)
   paperclip
   paperclip-dropbox (>= 1.1.7)
+  pdfkit
   pg
   pry-byebug
   pusher
@@ -324,4 +329,4 @@ DEPENDENCIES
   will_paginate (~> 3.0.6)
 
 BUNDLED WITH
-   1.12.3
+   1.12.5

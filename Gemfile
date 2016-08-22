@@ -111,7 +111,7 @@ gem 'pusher'
 
 gem 'htmlascii'
 
-gem 'diffy' 
+gem 'diffy'
 
 gem 'smarter_csv'
 
@@ -123,4 +123,8 @@ gem 'mobu'
 
 gem 'browser', '~> 2.0', '>= 2.0.3'
 
-gem 'dumper'
+gem 'dumper'''
+
+gem 'pdfkit'
+
+gem 'markaby'

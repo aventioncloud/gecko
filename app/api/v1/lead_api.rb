@@ -3,6 +3,7 @@ module V1
       namespace "lead"
 
       require 'pusher'
+      require 'markaby'
       Pusher.url = "https://63230285f168f50e6200:55828354e0f70f99e33f@api.pusherapp.com/apps/183185"
 
       desc "Create Status Lead."
@@ -395,13 +396,21 @@ module V1
         optional :product_id, type: Integer, desc: "Filter from Product."
         optional :status_id, type: String, desc: "Filter from Status."
         optional :type_people, type: String, desc: "F - Fisica or J - Juridica."
+        optional :export, type: String, desc: "Export to PDF"
       end
       get '/', authorize: ['read', 'Lead'] do
         @user = current_user
         apartment!
+
+        filename = 'nil'
+        if params[:orderby] == nil or params[:orderby] == ''
+           api_string = ((('a'..'z').to_a + (0..9).to_a)).shuffle[0,(rand(100).to_i)].join
+           filename = api_string+'_export.pdf'
+        end
+
         #binding.pry
 
-        per_page = 30.0
+        per_page = 100.0
 
         filter = 'true'
 
@@ -438,20 +447,218 @@ module V1
           leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).where(filter).distinct
           leadcount = leaditem.count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
+          lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
           leads_group = Group.all_children(ary, @user["groups_id"])
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("users.groups_id IN (?)", leads_group).where(filter).count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna os Leads para usuário
         else
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("leads.user_id = ?",@user["id"]).count
           pages = (leadcount / per_page).ceil
-          @lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         end
+
+        if params[:orderby] == nil or params[:orderby] == ''
+          mab = Markaby::Builder.new
+          mab.html do
+            head do
+              title "Markaby Cheat Sheet"
+              meta :name => "pdfkit-page_size", :content => "Letter"
+              style :type => "text/css" do
+                %[
+                table, tr, td, th, tbody, thead, tfoot {
+                  page-break-inside: avoid !important;
+                }
+                table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+                th, td {
+                    padding: 5px;
+                    text-align: left;
+                    height: 50px !important;
+                }
+                ]
+              end
+            end
+            body do
+              h1 "Relatório Unicoop"
+              table do
+                tr do
+                  th "Nome"
+                  th "Email"
+                  th "Telefone"
+                  #th "Celular"
+                  th "Bairro"
+                  th "Cidade"
+                  th "Corretor"
+                  th "Operadora"
+                  th "Horario"
+                end
+                  if !lead.nil?
+                    lead.each do |itemlead|
+                      tr do
+                        td itemlead.name
+                        td itemlead.email
+                        td itemlead.phone
+                        #td itemlead.number
+                        td itemlead.address
+                        td itemlead.city
+                        td itemlead.usuario
+                        td itemlead.title
+                        td itemlead.data
+                      end
+                    end
+                  end
+              end
+            end
+        end
+
+        kit = PDFKit.new(mab.to_s, :page_size => 'Letter')
+        # Save the PDF to a file
+        file = kit.to_file(Rails.root.join('public', 'docfile',filename))
+        end
+        lead
+        #@lead
+      end
+
+      desc "Export all Lead."
+      params do
+        optional :orderby, type: String, desc: "Order by."
+        optional :data, type: String, desc: "Filter Data: Init."
+        optional :data_end, type: String, desc: "Filter Data: End."
+        optional :users_id, type: Integer, desc: "Filter from Users."
+        optional :groups_id, type: Integer, desc: "Filter from Group."
+        optional :product_id, type: Integer, desc: "Filter from Product."
+        optional :status_id, type: String, desc: "Filter from Status."
+        optional :type_people, type: String, desc: "F - Fisica or J - Juridica."
+      end
+      post '/export', authorize: ['read', 'Lead'] do
+        @user = current_user
+        apartment!
+
+        filename = 'nil'
+        api_string = ((('a'..'z').to_a + (0..9).to_a)).shuffle[0,(rand(100).to_i)].join
+        filename = api_string+'_export.pdf'
+
+        #binding.pry
+
+        per_page = 500.0
+
+        filter = 'true'
+
+        if params[:orderby] == nil or params[:orderby] == ''
+          params[:orderby] = "leads.queue_at desc"
+        end
+
+        if params[:users_id] != nil and params[:users_id] != 0
+          filter += " and leads.user_id ="+params[:users_id].to_s
+        end
+
+        if params[:status_id] != nil and params[:status_id] != ''
+          filter += " and leads.leadstatus_id ="+params[:status_id].to_s
+        end
+
+        if params[:groups_id] != nil and params[:groups_id] != 0
+          filter += " and users.groups_id ="+params[:groups_id].to_s
+        end
+
+        if params[:type_people] != nil and params[:type_people] != "0"
+          filter += " and contacts.typecontact ='"+params[:type_people].to_s+"'"
+        end
+
+        if params[:product_id] != nil and params[:product_id] != 0
+          filter += " and lead_products.product_id ="+params[:product_id].to_s
+        end
+
+        if params[:data] != nil and params[:data] != ''
+          filter += " and leads.created_at::timestamp::date between '"+params[:data]+"' and '"+params[:data_end]+"'"
+        end
+
+        #Retorna todos os leads para Super Admin ou Administrador
+        if @user["roles"] == 1 or @user["roles"] == 2
+          leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).where(filter).distinct
+          leadcount = leaditem.count
+          pages = (leadcount / per_page).ceil
+          lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
+          #Retorna todos os leads do grupo, para responsável
+        elsif Group.where(:users_id => @user["id"]).exists?
+          ary = Array.new
+          leads_group = Group.all_children(ary, @user["groups_id"])
+          leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("users.groups_id IN (?)", leads_group).where(filter).count
+          pages = (leadcount / per_page).ceil
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          #Retorna os Leads para usuário
+        else
+          leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("leads.user_id = ?",@user["id"]).count
+          pages = (leadcount / per_page).ceil
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+        end
+
+        mab = Markaby::Builder.new
+        mab.html do
+          head do
+            title "Relatório Unicoop"
+            meta :name => "pdfkit-page_size", :content => "Letter"
+            style :type => "text/css" do
+              %[
+              table, tr, td, th, tbody, thead, tfoot {
+                page-break-inside: avoid !important;
+              }
+              table, th, td {
+                  border: 1px solid black;
+                  border-collapse: collapse;
+              }
+              th, td {
+                  padding: 5px;
+                  text-align: left;
+                  height: 50px !important;
+              }
+              ]
+            end
+          end
+          body do
+            h1 "Relatório Unicoop"
+            table do
+              tr do
+                th "Nome"
+                th "Email"
+                th "Telefone"
+                #th "Celular"
+                th "Bairro"
+                th "Cidade"
+                th "Corretor"
+                th "Operadora"
+                th "Horario"
+              end
+              if !lead.nil?
+                lead.each do |itemlead|
+                  tr do
+                    td itemlead.name
+                    td itemlead.email
+                    td itemlead.phone
+                    #td itemlead.number
+                    td itemlead.address
+                    td itemlead.city
+                    td itemlead.usuario
+                    td itemlead.title
+                    td itemlead.data
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        kit = PDFKit.new(mab.to_s, :page_size => 'Letter')
+        # Save the PDF to a file
+        file = kit.to_file(Rails.root.join('public', 'docfile',filename))
+
+        filename
         #@lead
       end
 
