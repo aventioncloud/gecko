@@ -402,12 +402,6 @@ module V1
         @user = current_user
         apartment!
 
-        filename = 'nil'
-        if params[:orderby] == nil or params[:orderby] == ''
-           api_string = ((('a'..'z').to_a + (0..9).to_a)).shuffle[0,(rand(100).to_i)].join
-           filename = api_string+'_export.pdf'
-        end
-
         #binding.pry
 
         per_page = 100.0
@@ -447,80 +441,19 @@ module V1
           leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).where(filter).distinct
           leadcount = leaditem.count
           pages = (leadcount / per_page).ceil
-          lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
+          lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
           leads_group = Group.all_children(ary, @user["groups_id"])
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("users.groups_id IN (?)", leads_group).where(filter).count
           pages = (leadcount / per_page).ceil
-          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna os Leads para usuário
         else
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("leads.user_id = ?",@user["id"]).count
           pages = (leadcount / per_page).ceil
-          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row, '"+filename+"' as file_key, contacts.*").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
-        end
-
-        if params[:orderby] == nil or params[:orderby] == ''
-          mab = Markaby::Builder.new
-          mab.html do
-            head do
-              title "Markaby Cheat Sheet"
-              meta :name => "pdfkit-page_size", :content => "Letter"
-              style :type => "text/css" do
-                %[
-                table, tr, td, th, tbody, thead, tfoot {
-                  page-break-inside: avoid !important;
-                }
-                table, th, td {
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                }
-                th, td {
-                    padding: 5px;
-                    text-align: left;
-                    height: 50px !important;
-                }
-                ]
-              end
-            end
-            body do
-              h1 "Relatório Unicoop"
-              table do
-                tr do
-                  th "Nome"
-                  th "Email"
-                  th "Telefone"
-                  #th "Celular"
-                  th "Bairro"
-                  th "Cidade"
-                  th "Corretor"
-                  th "Operadora"
-                  th "Horario"
-                end
-                  if !lead.nil?
-                    lead.each do |itemlead|
-                      tr do
-                        td itemlead.name
-                        td itemlead.email
-                        td itemlead.phone
-                        #td itemlead.number
-                        td itemlead.address
-                        td itemlead.city
-                        td itemlead.usuario
-                        td itemlead.title
-                        td itemlead.data
-                      end
-                    end
-                  end
-              end
-            end
-        end
-
-        kit = PDFKit.new(mab.to_s, :page_size => 'Letter')
-        # Save the PDF to a file
-        file = kit.to_file(Rails.root.join('public', 'docfile',filename))
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         end
         lead
         #@lead
