@@ -538,6 +538,7 @@ module V1
           head do
             title "Relatório Unicoop"
             meta :name => "pdfkit-page_size", :content => "Letter"
+            meta :name => "pdfkit-orientation", :content => "Landscape"
             style :type => "text/css" do
               %[
               table, tr, td, th, tbody, thead, tfoot {
