@@ -5,21 +5,21 @@ class Lead < ActiveRecord::Base
   belongs_to :contact, foreign_key: :contact_id, primary_key: :id
   has_many :leadproduct, class_name: "LeadProduct",
                             foreign_key: "lead_id"
-  
+
   has_attached_file :docfile, :path => ":rails_root/public/docfile/:filename"
   validates_attachment_file_name :docfile, :matches => [/doc\Z/, /pdf\Z/, /docx\Z/]
-  
+
   after_destroy :clear_detroy
-  before_create :record_active
-  
-  
+  #before_create :record_active
+
+
   private
   def clear_detroy
     LeadProduct.where(:lead_id => self.id).destroy_all
     #LeadFile.where(:lead_id => self.id).destroy_all
     LeadHistory.where(:lead_id => self.id).destroy_all
   end
-  
+
   def record_active
     self.queue_at = Time.zone.now + 30.minutes
   end
