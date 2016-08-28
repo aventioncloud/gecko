@@ -539,6 +539,10 @@ module V1
             title "Relatório Unicoop"
             meta :name => "pdfkit-page_size", :content => "Letter"
             meta :name => "pdfkit-orientation", :content => "Landscape"
+            meta :name => "pdfkit-margin_top", :content => "0.5in"
+            meta :name => "pdfkit-margin_right", :content => "0.5in"
+            meta :name => "pdfkit-margin_bottom", :content => "0.5in"
+            meta :name => "pdfkit-margin_left", :content => "0.5in"
             style :type => "text/css" do
               %[
               table, tr, td, th, tbody, thead, tfoot {
