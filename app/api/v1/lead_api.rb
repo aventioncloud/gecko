@@ -310,6 +310,7 @@ module V1
         end
         contact = Contact.create(name: CGI.unescapeHTML(params[:nome]), email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], typecontact: params[:tipo])
         if contact.save
+            queue_at = Time.zone.now + 30.minutes
             lead = Lead.create(user_id: user, leadstatus_id: startstatus, contact_id: contact.id, title: CGI.unescapeHTML(params[:titulo]), description: CGI.unescapeHTML(params[:descricao]).html_safe, numberproduct: params[:numberproduct])
             if lead.save
               totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
