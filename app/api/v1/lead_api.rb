@@ -471,7 +471,7 @@ module V1
         optional :status_id, type: String, desc: "Filter from Status."
         optional :type_people, type: String, desc: "F - Fisica or J - Juridica."
       end
-      post '/export', authorize: ['read', 'Lead'] do
+      get '/export', authorize: ['read', 'Lead'] do
         @user = current_user
         apartment!
 
