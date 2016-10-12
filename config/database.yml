@@ -1,12 +1,12 @@
 development:
-  host: 191.101.2.6
+  host: noortprd.cncgiigpvfav.us-east-1.rds.amazonaws.com
   port: 5432
   adapter: postgresql
   encoding: unicode
   database: unicoop_prd
   pool: 5
-  username: postgres
-  password: 123456
+  username: noort
+  password: GxJMxKj(\[3Md5;i<6
 
 test:
   host: noort.co3gtrie4qyz.sa-east-1.rds.amazonaws.com
