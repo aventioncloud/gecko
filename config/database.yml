@@ -3,7 +3,7 @@ development:
   port: 5432
   adapter: postgresql
   encoding: unicode
-  database: unicoop_dev
+  database: unicoop_prd
   pool: 5
   username: noort
   password: GxJMxKj(\[3Md5;i<6
