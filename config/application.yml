@@ -11,7 +11,7 @@ development:
   smtp_user: "app32689271@heroku.com"
   smtp_password: "TYuxdvFhNFGKyP7tleF8vg"
   host: 'unicooprj.com.br'
-  port: '3000'
+  port: '80'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
   theme: 'unicoop'
   title: 'Unicoop'
@@ -28,7 +28,7 @@ test:
   smtp_user: "app32689271@heroku.com"
   smtp_password: "TYuxdvFhNFGKyP7tleF8vg"
   host: 'unicooprj.com.br'
-  port: '80'
+  port: '3000'
   application_id: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085'
   theme: 'unicoop'
   title: 'Unicoop'
