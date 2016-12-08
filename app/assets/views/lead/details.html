@@ -11,7 +11,9 @@
       </button>
       <button type="button" class="btn btn-default" kendo-tooltip k-content="'Remover'" has-permission='{"subject_class":"Lead","action":"delete"}' ng-click="ondelete(item.id);"><i class="fa fa-close"></i>
       </button>
-      
+        <button type="button" class="btn btn-default" kendo-tooltip k-content="'Auditoria'" has-permission='{"subject_class":"Lead","action":"delete"}' ng-click="onauditoria(item.id);"><i class="fa fa-eye"></i>
+        </button>
+
     <div class="btn-group" role="group">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Alterar Status
@@ -157,7 +159,7 @@
     <div class="wysiwyg5-wrapper b-a b-grey m-t-30" ng-show="crud">
         Anexar
         <input nv-file-select="" uploader="uploader" type="file"/>
-        
+
         <div ng-show="isupload" ng-repeat="item in uploader.queue">
             <div class="progress" style="margin-bottom: 0;">
             <div class="progress-bar" role="progressbar"
@@ -170,7 +172,7 @@
           <span ng-show="item.isError"><i
                   class="glyphicon glyphicon-remove"></i></span>
         </div>
-        
+
         <div class="col-md-9" style="margin-bottom: 40px" ng-show="false">
 
             <h3>Fila de Arquivos</h3>
@@ -257,7 +259,7 @@
             </div>-->
 
         </div>
-        
+
     </div>
   </div>
   <div kendo-window="win1" k-title="'Compartilhar'" k-ng-model="comment" k-on-open="win1visible = true" k-on-close="win1visible = false" style="display: none;width: 400px; height: 150px;top: 50%;">
@@ -270,21 +272,40 @@
     }
   </style>
   <modal title="Alterar responsável" visible="showModal">
-    <form name="changeconsultForm" id="gchangeForm" ng-submit="submitchange(item.id)" novalidate> 
+    <form name="changeconsultForm" id="gchangeForm" ng-submit="submitchange(item.id)" novalidate>
       <formly-form model="modelchange" fields="fieldchange" options="optionschange" form="gchangeForm">
           <button class="btn btn-default" style="margin-left: 9px;" type="submit" ng-disabled="changeconsultForm.$invalid" style="margin-right: 10px;">Alterar</button>
       </formly-form>
     </form>
   </modal>
-  
+
   <modal title="Alterar indicação" visible="showChangeIndicacao">
-    <form name="changeleadForm" id="gchangeLeadForm" ng-submit="submitchangelead(item.id)" novalidate style="height:450px;width:350px;"> 
+    <form name="changeleadForm" id="gchangeLeadForm" ng-submit="submitchangelead(item.id)" novalidate style="height:450px;width:350px;">
       <formly-form model="modelchangelead" fields="fieldchangelead" options="optionschangelead" form="gchangeLeadForm">
           <button class="btn btn-default" style="margin-top: 10px;" type="submit" ng-disabled="changeleadForm.$invalid">Alterar</button>
       </formly-form>
     </form>
   </modal>
-  
+
+    <modal title="Auditoria" visible="showAuditoria">
+        <!-- view -->
+        <div>
+        <timeline>
+            <timeline-event ng-repeat="event in events" side="">
+                <timeline-badge class="{{event.badgeClass}}">
+                    <i class="glyphicon {{event.badgeIconClass}}"></i>
+                </timeline-badge>
+                <timeline-panel class="{{event.badgeClass}}">
+                    <timeline-heading>
+                        <h4>{{event.title}}</h4>
+                    </timeline-heading>
+                    <p>{{event.content}}</p>
+                </timeline-panel>
+            </timeline-event>
+        </timeline>
+        </div>
+    </modal>
+
   <modal title="Alterar Status" visible="showChangeStatus">
     <div>
       <p style="margin: 30px 0px 0px 21px;">Alterar o status da Indicação para <b>{{status_text}}</b></p>
@@ -292,7 +313,7 @@
     <div>
       <p style="margin: 5px 0px 0px 21px;color:#F00;">Nos casos de fechamento informar a operadora e o número da proposta</b></p>
     </div>
-    <form name="changeleadForm" id="gchangeLeadForm" ng-submit="onstatus()" novalidate style="margin-top: 10px;height:450px;width:350px;"> 
+    <form name="changeleadForm" id="gchangeLeadForm" ng-submit="onstatus()" novalidate style="margin-top: 10px;height:450px;width:350px;">
       <formly-form style="height:450px;width:350px;" model="modelstatuslead" fields="fieldstatuslead" options="optionsstatuslead" form="gchangeLeadForm">
           <button class="btn btn-default" style="margin-top: 10px;" type="submit" ng-disabled="changeleadForm.$invalid">Alterar Status</button>
       </formly-form>

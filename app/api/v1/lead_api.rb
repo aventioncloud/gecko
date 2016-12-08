@@ -39,22 +39,54 @@ module V1
 
       desc "Audit all Lead."
       params do
-        optional :id, type: Integer, desc: "ID do Lead."
-        optional :date_sta, type: String, desc: "Date Start."
-        optional :date_end, type: String, desc: "Date End."
+        requires :id, type: Integer, desc: "ID do Lead."
       end
-      get 'audit', authorize: ['all', 'Super Admin'] do
+      get 'audit/:id', authorize: ['all', 'Super Admin'] do
         apartment!
         if params[:id] != nil and params[:id] != 0
-          Lead.find(params[:id]).versions
+          ary = Array.new
+          #ary << {:badgeClass => "", :badgeIconClass => "", :title => "", :content => "" }
+          i = 0
+          nodo = Lead.find(params[:id])
+          versions = nodo.versions
+          #versions
+          versions.each_with_index do |item, index|
+            if item.whodunnit == "job_cad"
+              content = content_lead! item, versions, index
+              ary << {:badgeClass => "success", :badgeIconClass => "glyphicon-pencil", :title => "Lead Recebido", :content => content}
+            elsif item.whodunnit == "job_fila"
+              #ary << {:badgeClass => "glyphicon-pencil", :badgeIconClass => "info", :title => "Lead Tranferido", :content => nodo.versions[(i * -1)].previous.contact_id, :itens => item}
+              object = item.reify(options = {})
+              content = content_lead! item, versions, index
+              ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-refresh", :title => "Lead Tranferido", :content => content}
+            else
+              object = item.reify(options = {})
+              content = content_lead! item, versions, index
+              ary << {:badgeClass => "warning", :badgeIconClass => "glyphicon-user", :title => "Lead Alterado Manualmente", :content => item.whodunnit + ", Data:"+item.created_at.strftime("%d/%m/%Y %H:%M")}
+            end
+          end
+          ary.uniq
         else
           data_start = Date.parse(params[:date_sta])
           data_end = Date.parse(params[:date_end])
           #         filter += " and leads.created_at::timestamp::date between '"+params[:data]+"' and '"+params[:data_end]+"'"
-          PaperTrail::Version
+          version = PaperTrail::Version
               .where("item_type = 'Lead' and created_at::timestamp::date between ? and ?",data_start,data_end)
               .order('id DESC')
               .limit(10)
+          ary = Array.new
+          ary << {:badgeClass => "", :badgeIconClass => "", :title => "", :content => "" }
+          version.each do |item|
+              if item.whodunnit == "job_cad"
+                ary << {:badgeClass => "glyphicon-pencil", :badgeIconClass => "info", :title => "Lead Recebido", :content => item.object[:contact_id] }
+              elsif item.whodunnit == "job_fila"
+
+              else
+
+              end
+          end
+          #version
+          ary
           #Lead.versions.between(data_start, data_end)
         end
       end
@@ -442,19 +474,19 @@ module V1
           leaditem = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).where(filter).distinct
           leadcount = leaditem.count
           pages = (leadcount / per_page).ceil
-          lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
+          lead = Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadproduct).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at, 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby]).distinct
         #Retorna todos os leads do grupo, para responsável
         elsif Group.where(:users_id => @user["id"]).exists?
           ary = Array.new
           leads_group = Group.all_children(ary, @user["groups_id"])
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("users.groups_id IN (?)", leads_group).where(filter).count
           pages = (leadcount / per_page).ceil
-          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at, 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("users.groups_id IN (?)", leads_group).where(filter).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         #Retorna os Leads para usuário
         else
           leadcount = Lead.joins(:user).joins(:contact).joins(:leadstatus).where("leads.user_id = ?",@user["id"]).count
           pages = (leadcount / per_page).ceil
-          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at + INTERVAL '1 HOURS', 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
+          lead = Lead.joins(:user).joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.updated_at, 'DD/MM/YY HH24:MI') as data, '"+pages.to_s+"' as pages, "+leadcount.to_s+" as qtd_row").where("leads.user_id = ?", @user["id"]).paginate(:page => params[:page], :per_page => per_page).order(params[:orderby])
         end
         lead
         #@lead

@@ -19,6 +19,9 @@ app.service('Lead', function($http, Rails) {
     get: function(id) {
       return $http.get(base + '/' + id);
     },
+      audit: function(id) {
+          return $http.get(base + '/audit/' + id);
+      },
     post: function(_value) {
       return $http({
                     method  : 'POST',

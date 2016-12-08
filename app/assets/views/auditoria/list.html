@@ -1,0 +1,66 @@
+<div class="row">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+             <div toolbar></div>
+          </div>
+          <div class="panel-body" ng-show="goSearch">
+            <form name="searchForm" novalidate ng-submit="applyGlobalSearch()" style="margin-top: 10px;">
+                <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{optionsselectitem.value}}<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                      <li ng-repeat="item in filteroptions"><a ng-click="optionsselect(item);">{{item.value}}</a></li>
+                    </ul>
+                  </div><!-- /btn-group -->
+                  <span class="input-group-addon"><input type="checkbox" name="inverted" ng-model="isInvertedSearch" />
+                  </span>
+                  <input type="text" class="form-control" placeholder="Procurar por" name="searchTerm" ng-model="globalSearchTerm" required />
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-show="globalSearchTerm" ng-click="closesearch()">
+                      <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <button class="btn btn-default" type="submit" ng-disabled="searchForm.$invalid">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                  </span>
+                </div>
+            </form>
+
+          </div>
+        </div>
+    </div>
+<div class="row">
+    <table ng-table="tableParams" class="table table-hover table-condensed table-detailed no-footer" role="grid" export-csv="csv" separator=";">
+        <tr ng-repeat-start="user in $data" class="odd" ng-class="user.expanded ? 'odd shown' : 'odd'" role="row" ng-click="user.expanded = !user.expanded">
+          <td data-title="'Nome'" sortable="'name'">{{user.name}}</td>
+          <td export-csv-ignore="true">
+            <div style="float:right;">
+                <a ui-sref="group.edit({id: user.id})" class="btn btn-complete btn-sm" has-permission='{"subject_class":"Group","action":"create"}'><span class="glyphicon glyphicon-pencil"></span><span class="bold">Editar</span></a>
+                <a ng-click="delete(user.id);user.expanded = !user.expanded" class="btn btn-danger btn-sm" has-permission='{"subject_class":"Group","action":"delete"}'  ng-show="user.active == 'S' ? true : false"><span class="glyphicon glyphicon-trash"></span><span class="bold">Remover</span></a>
+                <a ng-click="actived(user.id);user.expanded = !user.expanded" class="btn btn-success btn-sm" has-permission='{"subject_class":"Group","action":"create"}'  ng-show="user.active == 'N' ? true : false"><span class="glyphicon glyphicon-ok"></span><span class="bold">Ativar</span></a>
+            </div>
+          </td>
+        </tr>
+        <tr ng-if="user.expanded" ng-repeat-end="" class="row-details">
+          <td colspan="3">
+            <table class="table table-inline">
+              <tbody>
+                <tr>
+                  <td>Criado em
+                  </td>
+                  <td>{{user.created_at}}</td>
+                </tr>
+                <tr>
+                  <td>Grupo Pai</td>
+                  <td>{{user.dadgroup.name}}</td>
+                </tr>
+                <tr ng-show="issuper">
+                  <td>Ativo</td>
+                  <td>{{user.active == 'S' ? 'Sim' : 'Não'}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+    </table>
+</div>

@@ -22,3 +22,4 @@
 //= require angular-touch.min
 //= require angular-ui-router
 //= require ngStorage.min
+//= require angular-timeline

@@ -20,7 +20,8 @@ angular
     'kendo.directives',
     'ui.select',
     'angularFileUpload',
-    'ngInputDate'
+    'ngInputDate',
+      'angular-timeline'
   ])
   .config(function ($httpProvider, $stateProvider, $urlRouterProvider, formlyConfigProvider) {
     $httpProvider.interceptors.push('tokenInterceptor');
