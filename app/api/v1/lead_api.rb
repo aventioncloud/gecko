@@ -62,7 +62,11 @@ module V1
             else
               object = item.reify(options = {})
               content = content_lead! item, versions, index
-              ary << {:badgeClass => "warning", :badgeIconClass => "glyphicon-user", :title => "Lead Alterado Manualmente", :content => item.whodunnit + ", Data:"+item.created_at.strftime("%d/%m/%Y %H:%M")}
+              if content == "" or content.nil?
+                ary << {:badgeClass => "warning", :badgeIconClass => "glyphicon-user", :title => "Lead Alterado Manualmente", :content => item.whodunnit + ", Data:"+item.created_at.strftime("%d/%m/%Y %H:%M")}
+              else
+                ary << {:badgeClass => "warning", :badgeIconClass => "glyphicon-user", :title => "Lead Alterado Manualmente", :content => content}
+              end
             end
           end
           ary.uniq
@@ -345,11 +349,27 @@ module V1
             _queue_at = Time.zone.now + 30.minutes
             lead = Lead.create(user_id: user, leadstatus_id: startstatus, contact_id: contact.id, title: CGI.unescapeHTML(params[:titulo]), description: CGI.unescapeHTML(params[:descricao]).html_safe, numberproduct: params[:numberproduct], queue_at: _queue_at)
             if lead.save
-              totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
-              if !totallead.nil?
-                totallead = totallead + 1
-                atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+
+
+              if params[:tipo] == "PF"
+                totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
+                if !totallead.nil?
+                  totallead = totallead + 1
+                  atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+                end
+              else
+                totallead = Atendimento.where(:users_id => user).first.leadnumberpj rescue nil
+                if !totallead.nil?
+                  totallead = totallead + 1
+                  atendimento = Atendimento.where(:users_id => user).first.update(:leadnumberpj => totallead)
+                end
               end
+
+              #totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
+              #if !totallead.nil?
+              #  totallead = totallead + 1
+              #  atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+              #end
               LeadHistory.create(leadstatus_id: startstatus, user_id: user, lead_id: lead.id).save
               LeadProduct.create(product_id: params[:productcollection], lead_id: lead.id).save
 

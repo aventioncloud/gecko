@@ -22,8 +22,13 @@ module V1
           end
           usersflags = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").joins(:users_products).where("active = 'S' and "+islead+" and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:usuario_id]).select("users.id").all
 
-          leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1).all
-          leadary << leaditem
+          if array[:tipo] == "PF"
+            leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1).all
+            leadary << leaditem
+          else
+            leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumberpj asc").limit(1).all
+            leadary << leaditem
+          end
 
           if !leaditem[0].nil? && !usersflags.nil?
             Lead.find(array[:id]).update(updated_at: Time.zone.now)
@@ -39,11 +44,20 @@ module V1
 
             lead = Lead.find(array[:id]).update(user_id: user)
 
-            totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
-            if !totallead.nil?
-              totallead = totallead + 1
-              atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+            if array[:tipo] == "PF"
+              totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
+              if !totallead.nil?
+                totallead = totallead + 1
+                atendimento = Atendimento.where(:users_id => user).first.update(:leadnumber => totallead)
+              end
+            else
+              totallead = Atendimento.where(:users_id => user).first.leadnumberpj rescue nil
+              if !totallead.nil?
+                totallead = totallead + 1
+                atendimento = Atendimento.where(:users_id => user).first.update(:leadnumberpj => totallead)
+              end
             end
+
             LeadHistory.create(leadstatus_id: 1, user_id: user, lead_id: array[:id]).save
             LeadProduct.create(product_id: array[:productcollection], lead_id: array[:id]).save
 

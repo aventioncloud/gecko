@@ -244,13 +244,13 @@ module V1
 
         if params[:atendimento] == 'C'
           AtendimentoActive.create(tipo: 'C', users_id: @user["id"], atendimentos_id: id, status: ativostatus).save
-          Atendimento.find(id).update(ischat: ativostatus, leadnumber: 0)
+          Atendimento.find(id).update(ischat: ativostatus, leadnumber: 0, leadnumberpj: 0)
         elsif params[:atendimento] == 'F'
           AtendimentoActive.create(tipo: 'F', users_id: @user["id"], atendimentos_id: id, status: ativostatus).save
           Atendimento.find(id).update(ispf: ativostatus, leadnumber: 0)
         elsif params[:atendimento] == 'J'
           AtendimentoActive.create(tipo: 'J', users_id: @user["id"], atendimentos_id: id, status: ativostatus).save
-          Atendimento.find(id).update(ispj: ativostatus, leadnumber: 0)
+          Atendimento.find(id).update(ispj: ativostatus, leadnumberpj: 0)
         else
           { :error => "Tipo de atendimento não encontrado." }
         end
