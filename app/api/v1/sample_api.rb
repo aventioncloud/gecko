@@ -22,7 +22,7 @@ module V1
           end
           usersflags = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").joins(:users_products).where("active = 'S' and "+islead+" and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:usuario_id]).select("users.id").all
 
-          if array[:tipo] == "PF"
+          if array[:tipo] == "F"
             leaditem = User.joins("LEFT JOIN atendimentos ON atendimentos.users_id = users.id").select("users.*, atendimentos.leadnumber").where("users.id IN(?)", usersflags).order("leadnumber asc").limit(1).all
             leadary << leaditem
           else

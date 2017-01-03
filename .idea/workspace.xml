@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45cc53c9-71a8-46f7-8a35-c4acf6484609" name="Default" comment="Atendimento Active 100% Backend.">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/api/v1/user_api.rb" afterPath="$PROJECT_DIR$/app/api/v1/user_api.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/api/v1/lead_api.rb" afterPath="$PROJECT_DIR$/app/api/v1/lead_api.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/api/v1/sample_api.rb" afterPath="$PROJECT_DIR$/app/api/v1/sample_api.rb" />
     </list>
     <ignored path="gecko.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,11 +37,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="sample_api.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sample_api.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/api/v1/sample_api.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.2222222">
-              <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.51891893">
+              <caret line="24" column="30" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -69,8 +70,8 @@
       <file leaf-file-name="lead_api.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/api/v1/lead_api.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.62963">
-              <caret line="348" column="42" selection-start-line="348" selection-start-column="42" selection-end-line="348" selection-end-column="42" />
+            <state vertical-scroll-proportion="-8.925926">
+              <caret line="357" column="97" selection-start-line="357" selection-start-column="97" selection-end-line="357" selection-end-column="97" />
               <folding />
             </state>
           </provider>
@@ -101,10 +102,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="user_api.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="user_api.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/api/v1/user_api.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.43423423">
+            <state vertical-scroll-proportion="-8.925926">
               <caret line="89" column="80" selection-start-line="89" selection-start-column="80" selection-end-line="89" selection-end-column="80" />
               <folding />
             </state>
@@ -151,9 +152,9 @@
         <option value="$PROJECT_DIR$/vendor/assets/bower_components/angular/angular.js" />
         <option value="$PROJECT_DIR$/config/database.yml" />
         <option value="$PROJECT_DIR$/config/application.yml" />
-        <option value="$PROJECT_DIR$/app/api/v1/sample_api.rb" />
-        <option value="$PROJECT_DIR$/app/api/v1/lead_api.rb" />
         <option value="$PROJECT_DIR$/app/api/v1/user_api.rb" />
+        <option value="$PROJECT_DIR$/app/api/v1/lead_api.rb" />
+        <option value="$PROJECT_DIR$/app/api/v1/sample_api.rb" />
       </list>
     </option>
   </component>
@@ -1055,26 +1056,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/api/v1/sample_api.rb">
+    <entry file="file://$PROJECT_DIR$/app/api/v1/user_api.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.2222222">
-          <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+        <state vertical-scroll-proportion="-8.925926">
+          <caret line="89" column="80" selection-start-line="89" selection-start-column="80" selection-end-line="89" selection-end-column="80" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/api/v1/lead_api.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.62963">
-          <caret line="348" column="42" selection-start-line="348" selection-start-column="42" selection-end-line="348" selection-end-column="42" />
+        <state vertical-scroll-proportion="-8.925926">
+          <caret line="357" column="97" selection-start-line="357" selection-start-column="97" selection-end-line="357" selection-end-column="97" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/api/v1/user_api.rb">
+    <entry file="file://$PROJECT_DIR$/app/api/v1/sample_api.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43423423">
-          <caret line="89" column="80" selection-start-line="89" selection-start-column="80" selection-end-line="89" selection-end-column="80" />
+        <state vertical-scroll-proportion="0.51891893">
+          <caret line="24" column="30" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="30" />
           <folding />
         </state>
       </provider>

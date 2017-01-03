@@ -351,7 +351,7 @@ module V1
             if lead.save
 
 
-              if params[:tipo] == "PF"
+              if params[:tipo] == "F"
                 totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
                 if !totallead.nil?
                   totallead = totallead + 1
