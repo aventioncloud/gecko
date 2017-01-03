@@ -87,7 +87,7 @@ module V1
       get 'graphqueue', authorize: ['read', 'User'] do
         apartment!
         if params[:tipo] == 'PJ'
-         Atendimento.where(:ispj => 'S').joins(:user).select("name, leadnumber")
+         Atendimento.where(:ispj => 'S').joins(:user).select("name, leadnumberpj")
         else
           Atendimento.where(:ispf => 'S').joins(:user).select("name, leadnumber")
         end
