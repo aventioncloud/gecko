@@ -131,7 +131,7 @@ angular.module('geckoCliApp')
             },
             seriesDefaults: {
                 labels: {
-                    template: "Indicações: #= dataItem.leadnumber #",
+                    template: "Indicações: #= dataItem.leadnumberpj #",
                     position: "outsideEnd",
                     visible: true,
                     background: "transparent"
@@ -147,7 +147,7 @@ angular.module('geckoCliApp')
             },
             series: [{
                 type: "column",
-                field: "leadnumber",
+                field: "leadnumberpj",
                 categoryField: "name",
                 explodeField: "explode"
             }],
