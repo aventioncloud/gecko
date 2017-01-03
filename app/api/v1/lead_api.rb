@@ -60,10 +60,10 @@ module V1
               object = item.reify(options = {})
               content = content_lead! item, versions, index
               if k == 1
-                ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-left", :title => "Lead Perdido", :content => content}
+                ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-right", :title => "Lead Perdido", :content => content}
                 k = 2
               else
-                ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-right", :title => "Lead Recebido", :content => content}
+                ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-left", :title => "Lead Recebido", :content => content}
                 k = 1
               end
             else
