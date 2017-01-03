@@ -59,12 +59,12 @@ module V1
               #ary << {:badgeClass => "glyphicon-pencil", :badgeIconClass => "info", :title => "Lead Tranferido", :content => nodo.versions[(i * -1)].previous.contact_id, :itens => item}
               object = item.reify(options = {})
               content = content_lead! item, versions, index
-              if k = 1
+              if k == 1
                 ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-left", :title => "Lead Perdido", :content => content}
                 k = 2
               else
                 ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-right", :title => "Lead Recebido", :content => content}
-                k = 2
+                k = 1
               end
             else
               object = item.reify(options = {})
