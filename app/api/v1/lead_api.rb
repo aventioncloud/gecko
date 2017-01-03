@@ -47,6 +47,7 @@ module V1
           ary = Array.new
           #ary << {:badgeClass => "", :badgeIconClass => "", :title => "", :content => "" }
           i = 0
+          k = 1
           nodo = Lead.find(params[:id])
           versions = nodo.versions
           #versions
@@ -58,7 +59,13 @@ module V1
               #ary << {:badgeClass => "glyphicon-pencil", :badgeIconClass => "info", :title => "Lead Tranferido", :content => nodo.versions[(i * -1)].previous.contact_id, :itens => item}
               object = item.reify(options = {})
               content = content_lead! item, versions, index
-              ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-refresh", :title => "Lead Tranferido", :content => content}
+              if k = 1
+                ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-left", :title => "Lead Perdido", :content => content}
+                k = 2
+              else
+                ary << {:badgeClass => "info", :badgeIconClass => "glyphicon-arrow-right", :title => "Lead Recebido", :content => content}
+                k = 2
+              end
             else
               object = item.reify(options = {})
               content = content_lead! item, versions, index
