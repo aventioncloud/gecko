@@ -5,7 +5,7 @@ module V1
 
       desc "Queue Lead"
       get '/queue' do
-        date = Time.zone.now + 30.minutes
+        date = Time.zone.now + 15.minutes
         #binding.pry
         leadary = Array.new
         apartment!
