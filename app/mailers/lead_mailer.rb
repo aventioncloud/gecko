@@ -1,41 +1,41 @@
 class LeadMailer < ActionMailer::Base
-  default from: "naoresponda@unicooprj.com.br"
-  
+  default from: "naoresponda@thapymar.com.br"
+
   def created(email, id)
     #@email = user
     @url  = 'http://example.com/login'
     @id = id
     mail(to: email, subject: 'Nova Cotação Cadastrada')
   end
-  
+
   def created_super(email, name, id)
     #@email = user
     @name = name
     @id = id
     mail(to: email, subject: 'Nova Cotação Cadastrada')
   end
-  
+
   def updated(email, _subject, id)
     #@email = user
     @url  = 'http://example.com/login'
     @id = id
     mail(to: email, subject: _subject)
   end
-  
+
   def updated_super(email, name, contato, _subject, id)
     #@email = user
     @name = name
     @id = id
     mail(to: email, subject: _subject)
   end
-  
+
   def updated_dad(email, name, contato, _subject, id)
     #@email = user
     @name = name
     @id = id
     mail(to: email, subject: _subject)
   end
-  
+
   def prospect(email, frommail,  filename, comment, id)
     #@email = user
     @url  = 'http://example.com/login'

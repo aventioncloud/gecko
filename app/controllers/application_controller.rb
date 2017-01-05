@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   include JsEnv
-  
+
   protect_from_forgery
 
   def access_denied(exception)
@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :load_schema, :set_mailer_host, :load_init, :set_timezone
   before_filter :configure_permitted_parameters, if: :devise_controller?
-  
+
   def check_for_mobile
     session[:mobile_override] = params[:mobile] if params[:mobile]
     prepare_for_mobile if mobile_device?
@@ -39,11 +39,11 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  
+
   def set_timezone
     Time.zone = 'Brasilia'
   end
-  
+
   def load_init
     app_config = YAML.load(ERB.new(File.new(File.expand_path('../../../config/application.yml', __FILE__)).read).result)[Rails.env]
     @theme = app_config['theme']
@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_account
-    subdoma = request.subdomain.sub! '.unicooprj', ''
+    subdoma = request.subdomain.sub! '.thapymar', ''
     @current_account ||= Account.find_by(subdomain: subdoma)
   end
   helper_method :current_account

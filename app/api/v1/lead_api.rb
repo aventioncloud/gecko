@@ -380,7 +380,7 @@ module V1
 
 
               domain = request.host
-              hosts = domain.sub!(".unicooprj.com.br", "")
+              hosts = domain.sub!(".thapymar.com.br", "")
               account = Account.where(:subdomain => domain).first rescue nil;
 
               #Push
