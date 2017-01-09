@@ -44,7 +44,7 @@ module V1
 
             lead = Lead.find(array[:id]).update(user_id: user)
 
-            if array[:tipo] == "PF"
+            if array[:tipo] == "F"
               totallead = Atendimento.where(:users_id => user).first.leadnumber rescue nil
               if !totallead.nil?
                 totallead = totallead + 1
