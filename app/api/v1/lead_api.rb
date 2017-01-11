@@ -650,7 +650,9 @@ module V1
             p "O limite de resultados por pesquisa é de 500 registros."
           end
         end
-
+        PDFKit.configure do |config|
+          config.default_options[:load_error_handling] = 'ignore'
+        end
         kit = PDFKit.new(mab.to_s, :page_size => 'Letter')
         # Save the PDF to a file
         file = kit.to_file(Rails.root.join('public', 'docfile',filename))
