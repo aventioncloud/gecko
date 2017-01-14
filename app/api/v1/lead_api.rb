@@ -538,7 +538,7 @@ module V1
 
         #binding.pry
 
-        per_page = 500.0
+        per_page = 2500.0
 
         filter = 'true'
 
@@ -647,7 +647,7 @@ module V1
                 end
               end
             end
-            p "O limite de resultados por pesquisa é de 500 registros."
+            p "O limite de resultados por pesquisa é de 2500 registros."
           end
         end
 
