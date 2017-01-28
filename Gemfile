@@ -128,3 +128,5 @@ gem 'dumper'''
 gem 'pdfkit'
 
 gem 'markaby'
+
+gem 'savon', '~> 2.11.0'

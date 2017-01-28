@@ -1,7 +1,7 @@
 module V1
   class SampleAPI < Base
     namespace "job"
-    authorize_routes!
+    #authorize_routes!
 
       desc "Queue Lead"
       get '/queue' do
@@ -118,6 +118,27 @@ module V1
           break
         end
         { :sucess => 'ok', :lead => leadary}
+      end
+
+      desc "Import Century Link"
+      get '/import' do
+        require 'savon'
+        require 'nori'
+        #binding.pry
+        # create a client for the service
+        client = Savon.client(wsdl: 'http://consulta.confirmeonline.com.br/Integracao/Consulta?wsdl')
+
+        #client.operations
+        # => [:find_user, :list_users]
+
+        # call the 'findUser' operation
+        response = client.call(:telefone, message: { usuario: 'INTUNICO', password: '7xnus2BX', sigla: 'ATURJ', telefone: '31983888585' })
+
+        
+        # => { find_user_response: { id: 42, name: 'Hoff' } }
+        parser = Nori.new
+        my_hash = parser.parse(response.body[:telefone_response][:return])
+        my_hash
       end
   end
 end

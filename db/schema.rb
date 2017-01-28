@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161228134339) do
+ActiveRecord::Schema.define(version: 20170126185831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,22 @@ ActiveRecord::Schema.define(version: 20161228134339) do
   end
 
   add_index "cidades", ["estado_id"], name: "index_cidades_on_estado_id", using: :btree
+
+  create_table "contactjobs", force: true do |t|
+    t.integer  "contact_id"
+    t.string   "nome"
+    t.string   "telefone"
+    t.string   "sexo"
+    t.string   "mae"
+    t.string   "nasc"
+    t.string   "obito"
+    t.string   "veiculo"
+    t.string   "iptu"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "contactjobs", ["contact_id"], name: "index_contactjobs_on_contact_id", using: :btree
 
   create_table "contacts", force: true do |t|
     t.string   "phone"

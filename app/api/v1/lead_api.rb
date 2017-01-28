@@ -4,7 +4,12 @@ module V1
 
       require 'pusher'
       require 'markaby'
-      Pusher.url = "https://63230285f168f50e6200:55828354e0f70f99e33f@api.pusherapp.com/apps/183185"
+      #Pusher.url = "https://63230285f168f50e6200:55828354e0f70f99e33f@api.pusherapp.com/apps/183185"
+      Pusher.host = 'localhost'
+      Pusher.port = 8080
+      Pusher.app_id = 'thapymar'
+      Pusher.key = 'thapymar'
+      Pusher.secret = 'thapymar'
 
       desc "Create Status Lead."
       params do
@@ -384,6 +389,8 @@ module V1
               account = Account.where(:subdomain => domain).first rescue nil;
 
               #Push
+
+
               Pusher.trigger('lead_channel', 'created', {
                 message: 'Novo Lead cadastrado para você',
                 user: user,

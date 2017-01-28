@@ -463,9 +463,18 @@ angular.module('geckoCliApp')
         return '';
     }
 
-    var pusher = new Pusher('63230285f168f50e6200', {
-      encrypted: true
+    var pusher = new Pusher('thapymar', {
+      wsHost: 'localhost',
+      wsPort: 8080,
+      wssPort: 4433,    // Required if encrypted is true
+      encrypted: false, // Optional. the application must use only SSL connections
+      enabledTransports: ["ws", "flash"],
+      disabledTransports: ["flash"]
     });
+
+    //var pusher = new Pusher('63230285f168f50e6200', {
+    //  encrypted: true
+    //});
     var channel = pusher.subscribe('lead_channel');
     channel.bind('created', function(data) {
       if($scope.usuario.accounts == data.account_id && ($scope.notify && (data.user == $scope.usuario.id ||
