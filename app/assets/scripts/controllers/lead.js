@@ -1128,6 +1128,12 @@ angular.module('geckoCliApp')
       });
     }
 
+    $scope.infogerais = function(itemId){
+       Lead.bi().then(function(data){
+
+       });
+    }
+
     $scope.showAuditoria = false;
     //Auditoria
     $scope.onauditoria = function (itemId) {

@@ -269,7 +269,23 @@ module V1
         else
           LeadHistory.where(:lead_id => params[:id]).joins("LEFT JOIN lead_files ON lead_histories.lead_file_id = lead_files.id").select("lead_histories.*, lead_files.id as file_id, lead_files.docfile_file_name, to_char(lead_histories.created_at, 'DD/MM/YYYY HH:mm') as data")
         end
+      end
 
+      desc "BI Lead."
+      params do
+        requires :id, type: Integer, desc: "ID do Lead."
+      end
+      get 'bi/:id', authorize: ['read', 'Lead'] do
+        apartment!
+        xmlpart = Contact.find(params[:id]).xmlpart rescue nil
+        if !xmlpart.nil?
+          require 'nori'
+          parser = Nori.new
+          my_hash = parser.parse(xmlpart)
+          my_hash
+        else
+          {:error => 'Informação não encontrada.'}
+        end
       end
 
       desc "Upload Lead."
@@ -677,7 +693,7 @@ module V1
           @lead = Lead.find(params[:id])
 
           if @lead.user_id == @user['id'] or (@user["roles"] == 1 or @user["roles"] == 2 or @user["roles"] == 3)
-            Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.*, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY') as data, leads.docfile_file_name").where("leads.id = ?", params[:id])
+            Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.typecontact, contacts.city, contacts.email, contacts.address, contacts.number, contacts.zipcode, contacts.cpfcnpj, contacts.phone, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY') as data, leads.docfile_file_name").where("leads.id = ?", params[:id])
           else
             { :error => 'Sem permissão de acesso', :code => 2002}
           end

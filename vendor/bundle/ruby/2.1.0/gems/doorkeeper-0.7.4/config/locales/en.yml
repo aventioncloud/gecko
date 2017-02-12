@@ -54,7 +54,7 @@ en:
         unsupported_grant_type: 'The authorization grant type is not supported by the authorization server.'
 
         # Password Access token errors
-        invalid_resource_owner: 'The provided resource owner credentials are not valid, or resource owner cannot be found'
+        invalid_resource_owner: '2The provided resource owner credentials are not valid, or resource owner cannot be found'
     flash:
       applications:
         create:

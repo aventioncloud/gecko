@@ -132,12 +132,12 @@ module V1
         # => [:find_user, :list_users]
 
         # call the 'findUser' operation
-        response = client.call(:telefone, message: { usuario: 'INTUNICO', password: '7xnus2BX', sigla: 'ATURJ', telefone: '31983888585' })
+        response = client.call(:completo_whatsapp, message: { usuario: 'INTUNICO', senha: '7xnus2BX', sigla: 'ATURJ', cpfcnpj: '', nome: '', telefone: '31991074216' })
 
         
         # => { find_user_response: { id: 42, name: 'Hoff' } }
         parser = Nori.new
-        my_hash = parser.parse(response.body[:telefone_response][:return])
+        my_hash = parser.parse(response.body[:completo_whatsapp_response][:return])
         my_hash
       end
   end

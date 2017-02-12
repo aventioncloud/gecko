@@ -93,31 +93,50 @@
       <div class="panel-body">
         <div class="item-description">
           <div class="container-sm-height">
-            <div class="row-sm-height">
-              <div class="col-md-9 col-sm-height sm-no-padding">
-                <p class="small no-margin">E-mail</p>
-                <h5 class="semi-bold m-t-0">{{item.email}}</h5>
-                <address>
-                  <strong>{{item.city}}</strong>
-                  <br>
-                  {{item.contact.address}}<br>
-                  {{item.contact.number}} {{item.contact.zipcode}}
-                </address>
-              </div>
-              <div class="col-md-3 col-sm-height col-bottom sm-no-padding sm-p-b-20">
-                <br>
-                <div>
-                  <div class="pull-left font-montserrat bold all-caps">CPF/CNPJ :</div>
-                  <div class="pull-right">{{item.cpfcnpj}}</div>
-                  <div class="clearfix"></div>
+            <br />
+            <div class="panel panel-transparent " ng-init="tab1 = true">
+                <ul class="nav nav-tabs nav-tabs-fillup hidden-sm hidden-xs" data-init-reponsive-tabs="dropdownfx">
+                    <li ng-class="tab1 ? 'active' : ''">
+                        <a data-toggle="tab" ng-click="tab1=true;tab2=false;tab3=false;"><span>Dados do Cliente</span></a>
+                    </li>
+                    <li ng-class="tab2 ? 'active' : ''">
+                        <a data-toggle="tab" ng-click="tab1=false;tab2=true;tab3=false;"><span>Informações Complementares</span></a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                  <div ng-class="tab1 ? 'tab-pane slide-left active' : 'tab-pane slide-left'" ng-show="tab1">
+                    <div class="row-sm-height">
+                      <div class="col-md-9 col-sm-height sm-no-padding">
+                        <p class="small no-margin">E-mail</p>
+                        <h5 class="semi-bold m-t-0">{{item.email}}</h5>
+                        <address>
+                          <strong>{{item.city}}</strong>
+                          <br>
+                          {{item.contact.address}}<br>
+                          {{item.contact.number}} {{item.contact.zipcode}}
+                        </address>
+                      </div>
+                      <div class="col-md-3 col-sm-height col-bottom sm-no-padding sm-p-b-20">
+                        <br>
+                        <div>
+                          <div class="pull-left font-montserrat bold all-caps">CPF/CNPJ :</div>
+                          <div class="pull-right">{{item.cpfcnpj}}</div>
+                          <div class="clearfix"></div>
+                        </div>
+                        <div>
+                          <div class="pull-left font-montserrat bold all-caps">Telefone :</div>
+                          <div class="pull-right">{{item.phone}}</div>
+                          <div class="clearfix"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div ng-class="tab2 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab2">
+                    <div class="row">
+                      teste
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <div class="pull-left font-montserrat bold all-caps">Telefone :</div>
-                  <div class="pull-right">{{item.phone}}</div>
-                  <div class="clearfix"></div>
-                </div>
-              </div>
-            </div>
             <div class="col-md-9 col-sm-height sm-no-padding">
               <br><div class="thumbnail-wrapper" ng-repeat="dataproduct in leadproduct"><span class="label label-danger">{{dataproduct.product.name}}</span></div>
               <br><br><h5 class="semi-bold m-t-0">Descrição da Indicação</h5>
