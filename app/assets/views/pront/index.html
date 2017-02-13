@@ -1,3 +1,71 @@
-<div ng-controller="ProntCtrl" class="marginprimeiro">
-teste
+<style>
+@-webkit-keyframes demo {
+    0% {
+        background-color: Yellow;
+        opacity:1;
+    }
+    22% {
+        background-color: Yellow;
+    }
+    77% {
+        background-color: Yellow;
+    }
+    100% {
+        background-color: #FFFFFF;
+    }
+}
+    
+.active{
+  -webkit-animation-name: demo;
+    -webkit-animation-duration: 500ms;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: linear;
+  -moz-animation-name: demo;
+    -moz-animation-duration: 500ms;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: linear;
+}
+</style>
+<div ng-controller="ProntCtrl" class="marginprimeiro" id="imADiv">
+    <div ng-show="islead">
+        <div style="width: 40%; float: left; margin-top: 80px; padding: 5px 0 0 20px; font-size: 40px; font-family: arial;">
+            Indicação de:
+        </div>
+        <div style="width: 55%; float: left; margin-top: 70px; padding: 5px 0 0 20px; font-size: 40px; font-family: arial; text-align: right;">
+            {{item.data}}
+        </div>
+        <div style="width: 100%; float: left; margin-top: 10px; padding: 5px 0 0 20px; font-size: 65px; font-family: arial;">
+            <strong style="color: #828080;">{{item.name}}</strong>
+        </div>
+        <div style="width: 100%; float: left; margin-top: 50px; padding: 5px 0 0 20px; font-size: 60px; font-family: arial;">
+            <span style="font-size: 40px;">Corretor:</span> {{item.usuario}}
+        </div>
+        <div style="width: 100%; float: left; margin-top: 50px; padding: 5px 0 0 20px; font-size: 40px; font-family: arial;">
+            Atenção Corretor: 
+        </div>
+        <div style="width: 100%; float: left; margin-top: 10px; padding: 5px 0 0 20px; font-size: 30px; font-family: arial;">
+            Você tem até às <strong>{{item.queue}}</strong> para ler esta indicação.
+        </div>
+    </div>
+    <div ng-show="isqueue">
+        <div style="width: 100%; float: left; margin-top: 50px; padding: 5px 0 0 20px; font-size: 40px; font-family: arial;">
+            Atenção Corretor: <strong style="color: #828080;">Alexandre Santiago</strong>
+        </div>
+        <div style="width: 100%; float: left; margin-top: 10px; padding: 5px 0 0 20px; font-size: 30px; font-family: arial;">
+            Você tem apenas <strong >5 minutos</strong> para ler esta indicação:
+        </div>
+
+        <div style="width: 40%; float: left; margin-top: 80px; padding: 5px 0 0 20px; font-size: 40px; font-family: arial;">
+            Indicação de:
+        </div>
+        <div style="width: 55%; float: left; margin-top: 70px; padding: 5px 0 0 20px; font-size: 40px; font-family: arial; text-align: right;">
+            08/02/2017 15:45
+        </div>
+        <div style="width: 100%; float: left; margin-top: 10px; padding: 5px 0 0 20px; font-size: 65px; font-family: arial;">
+            <strong style="color: #828080;">GABRIEL BRAGA DE OLIVEIRA MOURA</strong>
+        </div>
+        <div style="width: 100%; float: left; margin-top: 50px; padding: 5px 0 0 20px; font-size: 30px; font-family: arial;">
+            Caso não aproveite esta oportunidade ela será transferida para outro corretor às <strong>16:00</strong>.
+        </div>
+    </div>
 </div>

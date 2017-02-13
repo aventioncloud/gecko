@@ -693,7 +693,7 @@ module V1
           @lead = Lead.find(params[:id])
 
           if @lead.user_id == @user['id'] or (@user["roles"] == 1 or @user["roles"] == 2 or @user["roles"] == 3)
-            Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.typecontact, contacts.city, contacts.email, contacts.address, contacts.number, contacts.zipcode, contacts.cpfcnpj, contacts.phone, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY') as data, leads.docfile_file_name").where("leads.id = ?", params[:id])
+            Lead.joins("LEFT JOIN public.users ON leads.user_id = users.id").joins(:contact).joins(:leadstatus).select("users.groups_id, users.name as usuario, leads.*, contacts.typecontact, contacts.city, contacts.email, contacts.address, contacts.number, contacts.zipcode, contacts.cpfcnpj, contacts.phone, contacts.name, lead_statuses.id as status_id, lead_statuses.name as status, to_char(leads.created_at, 'DD/MM/YYYY HH24:MI') as data, leads.docfile_file_name, to_char(leads.queue_at, 'HH24:MI') as queue").where("leads.id = ?", params[:id])
           else
             { :error => 'Sem permissão de acesso', :code => 2002}
           end
