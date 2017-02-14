@@ -464,7 +464,7 @@ angular.module('geckoCliApp')
     }
 
     var pusher = new Pusher('thapymar', {
-      wsHost: 'localhost',
+      wsHost: 'dev.thapymar.com.br',
       wsPort: 8080,
       wssPort: 4433,    // Required if encrypted is true
       encrypted: false, // Optional. the application must use only SSL connections
