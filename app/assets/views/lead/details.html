@@ -100,7 +100,10 @@
                         <a data-toggle="tab" ng-click="tab1=true;tab2=false;tab3=false;"><span>Dados do Cliente</span></a>
                     </li>
                     <li ng-class="tab2 ? 'active' : ''">
-                        <a data-toggle="tab" ng-click="tab1=false;tab2=true;tab3=false;"><span>Informações Complementares</span></a>
+                        <a data-toggle="tab" ng-click="tab1=false;tab2=true;tab3=false;infogerais(item.contact_id)"><span>Informações Complementares</span></a>
+                    </li>
+                    <li ng-class="tab3 ? 'active' : ''">
+                        <a data-toggle="tab" ng-click="tab1=false;tab2=false;tab3=true;infogerais(item.contact_id)"><span>Telefones Úteis</span></a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -133,7 +136,117 @@
                   </div>
                   <div ng-class="tab2 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab2">
                     <div class="row">
-                      teste
+                      <div class="bg-complete-dark text-white">
+                        <p>As informações abaixo foram enriquecidas pelo sistema, ou seja, não foram informadas diretamente pelo cliente. Tais informações servem apenas como ferramenta de consulta para o corretor. Não está autorizado em nenhum caso a sua divulgação ao cliente ou terceiros.</p>
+                        <p>Fique atento(a) se o nome do cliente informado acima é o mesmo informado nos dados abaixo. Caso não seja, as informações a seguir devem ser desconsideradas. Informamos, ainda, que existe a possibilidade de existirem dados desatualizados.</p>
+                      </div>
+                      <div class="widget-17-weather">
+                          <div class="row">
+                            <div class="col-xs-6 p-r-10">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <p class="pull-left">Nome Completo</p>
+                                  <p class="pull-right bold">{{bi.credilink_webservice.consulta_ccf619.nome_completo}}</p>
+                                </div>
+                              </div>
+                              <div class="row">
+                              <div class="col-md-12">
+                                <p class="pull-left">CPF</p>
+                                <p class="pull-right bold">{{bi.credilink_webservice.consulta_ccf619.cpf}}</p>
+                              </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <p class="pull-left">Endereço</p>
+                                  <p class="pull-right bold">{{bi.credilink_webservice.consulta_telefone_proprietario.telefone[0].endereco}},{{bi.credilink_webservice.consulta_telefone_proprietario.telefone[0].numero}}</p>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <p class="pull-left">CEP</p>
+                                  <p class="pull-right bold">{{bi.credilink_webservice.consulta_telefone_proprietario.telefone[0].cep}}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 p-l-10">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <p class="pull-left">Data de Nascimento</p>
+                                  <p class="pull-right bold">{{bi.credilink_webservice.consulta_ccf619.data_nascimento}}</p>
+                                </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                    <p class="pull-left">Cidade</p>
+                                    <p class="pull-right bold">{{bi.credilink_webservice.consulta_telefone_proprietario.telefone[0].cidade}}</p>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                    <p class="pull-left">Bairro</p>
+                                    <p class="pull-right bold">{{bi.credilink_webservice.consulta_telefone_proprietario.telefone[0].bairro}}</p>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                    <p class="pull-left">E-mail</p>
+                                    <p class="pull-right bold">{{bi.credilink_webservice.consulta_emails_proprietario.emails}}</p>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-xs-6 p-r-10">
+                                  <div class="row">
+
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div ng-class="tab3 ? 'tab-pane slide-left active' : 'tab-pane slide-left'"  ng-show="tab3">
+                    <h3>Residencial/Celular</h3>
+                    <div class="row">
+                      <table class="table table-hover table-condensed dataTable no-footer" id="condensedTable" role="grid">
+                      <thead>
+                          <tr role="row">
+                            <th style="width: 137px" class="sorting_asc" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Title: activate to sort column descending">Telefone</th>
+                            <th style="width: 30%;" class="sorting" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-label="Key: activate to sort column ascending">Nome</th>
+                            <th style="width: 196px;" class="sorting" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-label="Condensed: activate to sort column ascending">Operadora</th>
+                            <th style="width: 196px;" class="sorting" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-label="Condensed: activate to sort column ascending">WhatsApp</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr role="row" class="odd" data-ng-repeat="telefoneitem in bi.credilink_webservice.consulta_telefone_proprietario.telefone">
+                            <td class="v-align-middle semi-bold">{{telefoneitem.telefone}}</td>
+                            <td class="v-align-middle">{{telefoneitem.nome}}</td>
+                            <td class="v-align-middle semi-bold">{{telefoneitem.operadora}}</td>
+                            <td class="v-align-middle semi-bold">{{telefoneitem.whatsapp}}</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                    </div>
+                    <h3>Comercial</h3>
+                    <div class="row">
+                      <table class="table table-hover table-condensed dataTable no-footer" id="condensedTable" role="grid">
+                      <thead>
+                          <tr role="row">
+                            <th style="width: 137px" class="sorting_asc" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Title: activate to sort column descending">Telefone</th>
+                            <th style="width: 30%;" class="sorting" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-label="Key: activate to sort column ascending">Nome</th>
+                            <th style="width: 196px;" class="sorting" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-label="Condensed: activate to sort column ascending">Operadora</th>
+                            <th style="width: 196px;" class="sorting" tabindex="0" aria-controls="condensedTable" rowspan="1" colspan="1" aria-label="Condensed: activate to sort column ascending">WhatsApp</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr role="row" class="odd" data-ng-repeat="telefoneitem in bi.credilink_webservice.comercial.telefone">
+                            <td class="v-align-middle semi-bold">{{telefoneitem.telefone}}</td>
+                            <td class="v-align-middle">{{telefoneitem.nome}}</td>
+                            <td class="v-align-middle semi-bold">{{telefoneitem.operadora}}</td>
+                            <td class="v-align-middle semi-bold">{{telefoneitem.whatsapp}}</td>
+                          </tr>
+                      </tbody>
+                    </table>
                     </div>
                   </div>
                 </div>

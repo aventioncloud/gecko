@@ -1128,10 +1128,17 @@ angular.module('geckoCliApp')
       });
     }
 
-    $scope.infogerais = function(itemId){
-       Lead.bi().then(function(data){
+    $scope.bi = {};
 
+    $scope.infogerais = function(contact_id){
+      //alert(contact_id);
+      if($scope.bi.credilink_webservice == undefined)
+      {
+       Lead.bi(contact_id).then(function(data){
+          console.log(data.data);
+          $scope.bi = data.data;
        });
+      }
     }
 
     $scope.showAuditoria = false;
