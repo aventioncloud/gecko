@@ -28,7 +28,7 @@ module V1
         ambiente = 'rio'
         if valid
           if params[:player_id] != nil and params[:player_id] != ''
-              User.find(resource.id).update({player_id: params[:player_id]})
+              User.find(resource.id).update({playerid: params[:player_id]})
           end
           if resource.accounts_id == 13
             app = Doorkeeper::Application.where(uid: '03dbaf9c6f099e449a3d8ad2b4903727be168a56c2e890145037154ce66225bd').first
