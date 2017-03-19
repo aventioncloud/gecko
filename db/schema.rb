@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170131183131) do
+ActiveRecord::Schema.define(version: 20170319112906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -389,6 +389,7 @@ ActiveRecord::Schema.define(version: 20170131183131) do
     t.string   "code"
     t.integer  "totalperda"
     t.integer  "totalperdapj"
+    t.string   "playerid"
   end
 
   add_index "users", ["accounts_id"], name: "index_users_on_accounts_id", using: :btree

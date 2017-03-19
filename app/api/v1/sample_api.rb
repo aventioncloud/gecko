@@ -140,5 +140,11 @@ module V1
         my_hash = parser.parse(response.body[:completo_whatsapp_response][:return])
         my_hash
       end
+
+      desc "Send Test"
+      get '/sendtest' do
+          User.send_pushapp('test', ["712eb1d5-f551-40a5-94c2-95f22ff5be0d"])
+      end
+
   end
 end

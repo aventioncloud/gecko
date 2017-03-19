@@ -28,6 +28,23 @@ class User < ActiveRecord::Base
   def clear_cache
     #$redis.del "gecko_users"
   end
+
+  def self.send_pushapp(message, players)
+    params = {"app_id" => "f68def16-3d8b-413a-832c-546f77f84728", 
+              "contents" => {"en" => message},
+              "small_icon" => "icon",
+              "include_player_ids" => players
+        }
+    uri = URI.parse('https://onesignal.com/api/v1/notifications')
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(uri.path,
+                                  'Content-Type'  => 'application/json;charset=utf-8',
+                                  'Authorization' => "Basic NzQ1MmI1MTEtZjY5OS00YTk2LWFkNzUtZDZmY2VmYTkwMDQ5")
+    request.body = params.as_json.to_json
+    response = http.request(request)
+  end
   
   private
     def record_active

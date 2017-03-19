@@ -13,8 +13,9 @@ module V1
 
       desc "Login."
       params do
-        requires :username, type: String, desc: "Bank name."
-        requires :password, type: String, desc: "Number bank of Central Bank Brazil"
+        requires :username, type: String, desc: "E-mail to Access"
+        requires :password, type: String, desc: "Password to Access"
+        optional :player_id, type: Integer, desc: "Player ID Push"
       end
       post do
         resource = User.find_by_email(params[:username])
@@ -26,6 +27,9 @@ module V1
         # resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#new")
         ambiente = 'rio'
         if valid
+          if params[:player_id] != nil and params[:player_id] != ''
+              User.find(resource.id).update({player_id: params[:player_id]})
+          end
           if resource.accounts_id == 13
             app = Doorkeeper::Application.where(uid: '03dbaf9c6f099e449a3d8ad2b4903727be168a56c2e890145037154ce66225bd').first
           elsif resource.accounts_id == 14

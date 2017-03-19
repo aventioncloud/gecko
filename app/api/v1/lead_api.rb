@@ -369,6 +369,7 @@ module V1
           email = leaditem[0].email
           isemail = leaditem[0].isemail
           groupid = leaditem[0].groups_id
+          playerid = leaditem[0].playerid
         end
         contact = Contact.create(name: CGI.unescapeHTML(params[:nome]), email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], typecontact: params[:tipo])
         if contact.save
@@ -406,6 +407,7 @@ module V1
 
               #Push
 
+              pusharry = Array.new
 
               Pusher.trigger('lead_channel', 'created', {
                 message: 'Novo Lead cadastrado para você',
@@ -416,6 +418,7 @@ module V1
 
               if isemail == 'true'
                 LeadMailer.created(email, lead.id).deliver
+                pusharry << playerid
               end
 
               #envia o e-mail para o supervisor.
@@ -424,6 +427,9 @@ module V1
                 usersuper = User.find(group.ownerid) rescue nil
                 if !usersuper.nil?
                     LeadMailer.created_super(usersuper.email, name, lead.id).deliver
+                    if usersuper.playerid != nil and usersuper.playerid != ""
+                      pusharry << usersuper.playerid
+                    end
                 end
               end
 
@@ -434,10 +440,15 @@ module V1
                 if !userdadlast.nil?
                   if userdadlast.isemail == 'true'
                     LeadMailer.created_super(userdadlast.email, name, lead.id).deliver
+                    if userdadlast.playerid != nil and userdadlast.playerid != ""
+                      pusharry << userdadlast.playerid
+                    end
                   end
                 end
               end
-
+              if pusharry.count > 0
+                User.send_pushapp(CGI.unescapeHTML(params[:titulo]), pusharry)
+              end
               lead
             else
               contact.errors.full_messages
