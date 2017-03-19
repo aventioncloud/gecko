@@ -15,7 +15,7 @@ module V1
       params do
         requires :username, type: String, desc: "E-mail to Access"
         requires :password, type: String, desc: "Password to Access"
-        optional :player_id, type: Integer, desc: "Player ID Push"
+        optional :player_id, type: String, desc: "Player ID Push"
       end
       post do
         resource = User.find_by_email(params[:username])
