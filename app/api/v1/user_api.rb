@@ -260,7 +260,7 @@ module V1
       params do
         optional :name, type: String
       end
-      get '/', authorize: ['read', 'User'] do
+      get '/', authorize: ['read', 'Lead'] do
         @user = current_user
         ary = Array.new
         ary = Array.new
