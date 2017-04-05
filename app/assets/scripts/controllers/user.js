@@ -562,7 +562,7 @@ angular.module('geckoCliApp')
           className: 'col-xs-7',
           type: 'checkbox',
           templateOptions: {
-            label: 'Permite mais de 20 produtos'
+            label: 'Permite mais de 10 produtos'
           }
         }
         ]},

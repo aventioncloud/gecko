@@ -15,7 +15,7 @@ module V1
           PaperTrail.whodunnit = 'job_fila'
           Lead.find(array[:id]).update(queue_at: date)
           islead = "(islead = 'false' or islead is null)"
-          if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 20
+          if array[:numberproduct] != nil and array[:numberproduct] != 0 and array[:numberproduct] >= 10
              islead = "islead = 'true'"
           #else
           #   usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?) and users.id not in (?)", array[:tipo], array[:tipo], array[:tipo], array[:numberproduct], array[:usuario_id])

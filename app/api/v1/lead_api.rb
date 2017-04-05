@@ -351,7 +351,7 @@ module V1
         isemail = "N"
         #binding.pry
         PaperTrail.whodunnit = 'job_cad'
-        if params[:numberproduct] != nil and params[:numberproduct] != 0 and params[:numberproduct] >= 20
+        if params[:numberproduct] != nil and params[:numberproduct] != 0 and params[:numberproduct] >= 10
            usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and islead = 'true' and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])
         else
            usersflags = User.joins(:atendimento).joins(:users_products).select("users.id").where("active = 'S' and (islead = 'false' or islead is null) and ((? = 'F' and atendimentos.ispf = 'S') or (? = 'J' and atendimentos.ispj = 'S') or (? = 'C' and atendimentos.ischat = 'S')) and (users_products.product_id = ?)", params[:tipo], params[:tipo], params[:tipo], params[:productcollection])
