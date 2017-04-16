@@ -38,15 +38,19 @@ angular.module('geckoCliApp')
     //var pusher = new Pusher('63230285f168f50e6200', {
     //  encrypted: true
     //});
+    $scope.usuario = $localStorage.user;
     var channel = pusher.subscribe('lead_channel');
     channel.bind('created', function(data) {
-      Lead.get(data.lead).then(function(item){
-        debugger;
-          beep();
-          $scope.item = item.data[0];
-          $scope.islead = true;
-          $('#imADiv').addClass('active');
-      });
+      if($scope.usuario.accounts == data.account_id)
+      {
+        Lead.get(data.lead).then(function(item){
+          //debugger;
+            beep();
+            $scope.item = item.data[0];
+            $scope.islead = true;
+            $('#imADiv').addClass('active');
+        });
+      }
       //if($scope.usuario.accounts == data.account_id && ($scope.notify && (data.user == $scope.usuario.id ||
       //  permissions.hasPermission('{"action": "changelead", "subject_class": "Lead"}'))) && $scope.leadnotify != data.lead)
       //{

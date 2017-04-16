@@ -35,6 +35,9 @@ module V1
           elsif resource.accounts_id == 14
             ambiente = 'manaus'
             app = Doorkeeper::Application.where(uid: '5290cf3ec63badd8e7b2bb2032cf170ceb3a65a5fd4be1f81fd8b89c11e8ff03').first
+          elsif resource.accounts_id == 15
+            ambiente = 'lagos'
+            app = Doorkeeper::Application.where(uid: '4e0a0070bdf88b18ca3ebec1210ffbaaf5a7da9bb1d5b4d6f2bd71f9db593bfa').first
           else 
             ambiente = 'dev'
             app = Doorkeeper::Application.where(uid: '6551a588a3e6842386539720e80c13e2cfc63bb69ab897f1f37aa88de20c1085').first       

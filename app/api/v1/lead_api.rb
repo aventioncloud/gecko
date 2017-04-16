@@ -413,7 +413,8 @@ module V1
                 message: 'Novo Lead cadastrado para você',
                 user: user,
                 lead: lead.id,
-                account_id: account.id
+                account_id: account.id,
+                appname: domain
               })
 
               if isemail == 'true'
