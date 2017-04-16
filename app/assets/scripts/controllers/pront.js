@@ -14,7 +14,7 @@ angular.module('geckoCliApp')
       templateUrl: 'assets/pront/index.html',
       controller: 'ProntCtrl'
     })
-  }).controller('ProntCtrl', function ($scope, Lead) {
+  }).controller('ProntCtrl', function ($scope, Lead, $localStorage) {
     //$rootScope.$broadcast('disablefilterChanged');
 
    $scope.islead = false;
