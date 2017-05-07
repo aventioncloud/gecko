@@ -30,6 +30,21 @@ module V1
         end
       end
 
+      desc "Remarked Leads"
+      params do
+        requires :user_id, type: String, desc: "User ID"
+        requires :leads_id, type: String, desc: "Leads ID.(Separation ;)"
+      end
+      post "remarked", authorize: ['create', 'Lead'] do
+        @user = current_user rescue nil
+        apartment!
+        PaperTrail.whodunnit = @user["email"]
+        ids = params[:leads_id]
+        ids.split(";").each do |item|
+          Lead.find(item).update(:leadstatus_id => 1, :user_id => params[:user_id], :remarked => 1)
+        end
+      end
+
       desc "Return all Time."
       get 'time', authorize: ['read', 'Lead'] do
         Time.zone.now
@@ -490,6 +505,8 @@ module V1
         optional :status_id, type: String, desc: "Filter from Status."
         optional :type_people, type: String, desc: "F - Fisica or J - Juridica."
         optional :export, type: String, desc: "Export to PDF"
+        optional :numberperpage, type: Integer, desc: "Number rows of Page."
+        optional :remarked, type: String, desc: "Remarked Leads."
       end
       get '/', authorize: ['read', 'Lead'] do
         @user = current_user
@@ -499,6 +516,10 @@ module V1
 
         per_page = 100.0
 
+        if params[:numberperpage] != nil and params[:numberperpage] != 0
+          per_page = params[:numberperpage]
+        end
+
         filter = 'true'
 
         if params[:orderby] == nil or params[:orderby] == ''
@@ -507,6 +528,12 @@ module V1
 
         if params[:users_id] != nil and params[:users_id] != 0
           filter += " and leads.user_id ="+params[:users_id].to_s
+        end
+
+        if params[:remarked] != nil and params[:remarked] == "true" 
+          filter += " and leads.remarked is not null"
+        elsif params[:remarked] != nil and params[:remarked] == "1"
+          filter += " and leads.remarked is null"
         end
 
         if params[:status_id] != nil and params[:status_id] != ''

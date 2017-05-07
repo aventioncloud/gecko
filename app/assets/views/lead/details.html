@@ -74,6 +74,7 @@
         <p class="datetime no-margin">{{item.data}}</p>
         <p class="datetime no-margin" ng-show="item.typecontact == 'F'">Pessoa Física</p>
         <p class="datetime no-margin" ng-show="item.typecontact == 'J'">Pessoa Juridica</p>
+        <div class="thumbnail-wrapper" ng-show="item.remarked == 1" style="background-color: red;color: white"><span class="label label-danger" style="background-color: red;color: white">Remarcado</span></div>
       </div>
       <div class="clearfix"></div>
       <!--<div class="subject m-t-20 m-b-20 semi-bold">Your site has some very imaginative animation /movement, especially the Sluggo! </div>-->

@@ -69,6 +69,15 @@ app.service('Lead', function($http, Rails) {
                     data    : $.param(_value),  // pass in data as strings
                     headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
              });
+    },
+    remarked: function(_user_id, _leads_id) {
+      _value = {user_id: _user_id, leads_id: _leads_id};
+      return $http({
+                    method  : 'POST',
+                    url     : base + '/remarked',
+                    data    : $.param(_value),  // pass in data as strings
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
+             });
     }
   };
 });

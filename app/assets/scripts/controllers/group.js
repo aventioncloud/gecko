@@ -42,9 +42,15 @@ angular.module('geckoCliApp')
     $scope.toolbar = {
       controller: "group",
       add: "group.add",
+      addbutton: true,
       list: "group.list",
       permissioncreate: "{'subject_class':'Group','action':'create'}"
     };
+
+    $scope.onvisiblesearch = function()
+    {
+        $scope.goSearch = !$scope.goSearch;
+    }
     
     //Super Admin
     $scope.issuper = false;

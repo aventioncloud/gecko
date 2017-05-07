@@ -44,6 +44,7 @@ angular.module('geckoCliApp')
       add: "user.add",
       list: "user.list",
       graph: true,
+      addbutton: true,
       permissioncreate: "{'subject_class':'User','action':'create'}"
     };
 

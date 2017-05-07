@@ -9,7 +9,7 @@ module V1
         #binding.pry
         leadary = Array.new
         apartment!
-        lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.id as usuario_id, users.groups_id, users.isemail, users.email as usermail, users.name as usuario, users.totalperda, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.leadstatus_id = 1 and leads.queue_at < ?', Time.zone.now)
+        lead = Lead.joins("INNER JOIN public.users ON leads.user_id = users.id").joins(:contact).select("users.id as usuario_id, users.groups_id, users.isemail, users.email as usermail, users.name as usuario, users.totalperda, leads.*, contacts.id as contact_id, contacts.name, contacts.typecontact as tipo").where('leads.remarked is null and leads.leadstatus_id = 1 and leads.queue_at < ?', Time.zone.now)
         lead.find_each do |array|
           leadary << array
           PaperTrail.whodunnit = 'job_fila'

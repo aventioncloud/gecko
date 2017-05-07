@@ -1,0 +1,95 @@
+<style>
+.formly-field-group {
+    width: 1025px !important;
+}
+.formly-field {
+    margin-bottom: 0px !important;
+}
+.check
+{
+    margin-top: 19px;
+    margin-left: 29px !important;
+}
+</style>
+<div ng-controller="TransferCtrl" class="marginprimeiro">
+    <div class="row">
+    <h2>
+            Transferência de Indicações
+          </h2></div>
+          <div>
+    <div class="row">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+                <div toolbar></div>
+            </div>
+            <div class="panel-body" ng-show="goSearch">
+                    <div class="list-view" class="cssSlideUp ng-scope">
+                    <div style="height:290px;">
+                        <form name="searchForm" id="groupForm" ng-submit="submitfilter()" novalidate>
+                            <formly-form model="modelsearch" fields="fieldsssearch" options="optionssearch" form="groupForm">
+                                <div class="row"style="margin-top: 79px;margin-left: 10px;">
+                                    <button class="btn btn-primary btn-sm pull-left bottomsmall col-xs-3" style="margin-left: 9px;" type="submit" ng-disabled="searchForm.$invalid" style="margin-right: 10px;" has-visible='!user'>Pesquisar</button>
+                                </div>
+                            </formly-form>
+                        </form>
+                    </div>
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-responsive">
+                <div id="basicTable_wrapper" class="dataTables_wrapper form-inline no-footer"><table class="table table-hover dataTable no-footer" id="basicTable" role="grid">
+                    <thead>
+                        <tr role="row">
+                            <th style="width:1%" class="sorting_disabled" rowspan="1" colspan="1" aria-label="">
+                                <button class="btn" ng-click="toggleAll()"><i class="fa fa-reply-all"></i>
+                                </button>
+                            </th>
+                            <th style="width: 197px;" class="sorting_desc" tabindex="0" aria-controls="basicTable" rowspan="1" colspan="1" aria-sort="descending" aria-label="Title: activate to sort column ascending">Indicação</th> 
+                            <th style="width: 199px;" class="sorting" tabindex="0" aria-controls="basicTable" rowspan="1" colspan="1" aria-label="Places: activate to sort column ascending">Corretor</th>
+                            <th style="width: 141px;" class="sorting" tabindex="0" aria-controls="basicTable" rowspan="1" colspan="1" aria-label="Activities: activate to sort column ascending">Status Indicação</th>
+                            <th style="width: 141px;" class="sorting" tabindex="0" aria-controls="basicTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Cliente</th>
+                            <th style="width: 141px;" class="sorting" tabindex="0" aria-controls="basicTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Tipo</th>
+                            <th style="width: 141px;" class="sorting" tabindex="0" aria-controls="basicTable" rowspan="1" colspan="1" aria-label="Last Update: activate to sort column ascending">Data de Cadastro</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr role="row" class="odd" ng-class="item.checked ? 'odd selected' : 'odd'" data-ng-repeat="item in list">
+                            <td class="v-align-middle">
+                                <div class="checkbox ">
+                                    <input type="checkbox" value="item.id" id="checkbox4" ng-model="item.checked" ng-click="item.checked = !item.checked" data-val="true">
+                                    <label for="checkbox4"></label>
+                                </div>
+                            </td>
+                            <td class="v-align-middle sorting_1">
+                                <p>{{item.title}}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <p>{{item.usuario}}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <p>{{item.status}}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <p>{{item.name}}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <p>{{item.tipo}}</p>
+                            </td>
+                            <td class="v-align-middle">
+                                <p>{{item.data}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+            </table>
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+  <modal title="Remarcar Indicação" visible="showModal">
+    <form name="changeconsultForm" id="gchangeForm" ng-submit="submitchange()" novalidate>
+      <formly-form model="modelchange" fields="fieldchange" options="optionschange" form="gchangeForm">
+          <button class="btn btn-default" style="margin-left: 9px;" type="submit" ng-disabled="changeconsultForm.$invalid" style="margin-right: 10px;">Remarcar</button>
+      </formly-form>
+    </form>
+  </modal>

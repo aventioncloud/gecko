@@ -2,8 +2,9 @@
     <button class="btn btn-primary btn-sm  pull-right" has-visible='{{toolbar.controller}}' type="button" ng-click="onvisiblesearch()">Pesquisa<span class="glyphicon glyphicon-chevron-right" style="margin-left: 10px;" ng-hide="goSearch"></span><span class="glyphicon glyphicon-chevron-down" style="margin-left: 10px;" ng-show="goSearch"></span></button>
     <button class="btn btn-primary btn-sm  pull-right" ng-show="toolbar.graph" type="button" ng-click="onvisiblegraph()" style="margin-right: 15px;">Pessoa Física<span class="glyphicon glyphicon-chevron-right" style="margin-left: 10px;" ng-hide="goGraph"></span><span class="glyphicon glyphicon-chevron-down" style="margin-left: 10px;" ng-show="goGraph"></span></button>
     <button class="btn btn-primary btn-sm  pull-right" ng-show="toolbar.graph" type="button" ng-click="onvisiblegraphpj()" style="margin-right: 15px;">Pessoa Juridica<span class="glyphicon glyphicon-chevron-right" style="margin-left: 10px;" ng-hide="goGraphpj"></span><span class="glyphicon glyphicon-chevron-down" style="margin-left: 10px;" ng-show="goGraphpj"></span></button>
-    <a ui-sref="{{toolbar.list}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='!{{toolbar.controller}}'>Voltar</a>
-    <a ui-sref="{{toolbar.add}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='{{toolbar.controller}}' has-permission='{{toolbar.permissioncreate}}'>Adicionar</a>
+    <a ui-sref="{{toolbar.list}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" ng-show='toolbar.addbutton' has-visible='!{{toolbar.controller}}'>Voltar</a>
+    <a ui-sref="{{toolbar.add}}" class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" ng-show='toolbar.addbutton' has-visible='{{toolbar.controller}}' has-permission='{{toolbar.permissioncreate}}'>Adicionar</a>
+    <button class="btn btn-primary btn-sm  pull-left" ng-show='toolbar.transferencia' type="button" ng-click="ontransfer()">Remarcar</button>
     <!--<a class="btn btn-primary btn-sm pull-left" style="margin-right: 10px;" has-visible='{{toolbar.controller}}' ng-click='csv.generate()' ng-href="{{ csv.link() }}"
          download="myTable.csv">Exportar</a>-->
 </div>
