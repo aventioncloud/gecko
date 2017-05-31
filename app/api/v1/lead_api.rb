@@ -826,9 +826,9 @@ module V1
       end
       delete ':id', authorize: ['delete', 'Lead'] do
         @user = current_user rescue nil
-        apartment!
-        PaperTrail.whodunnit = @user["email"]
-        Lead.find(params[:id]).destroy
+        #apartment!
+        #PaperTrail.whodunnit = @user["email"]
+        #Lead.find(params[:id]).destroy
       end
   end
 end
