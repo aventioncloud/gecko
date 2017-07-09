@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170507113340) do
+ActiveRecord::Schema.define(version: 20170709201129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,15 @@ ActiveRecord::Schema.define(version: 20170507113340) do
     t.text     "xmlpart"
   end
 
+  create_table "dashboards", force: true do |t|
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "name"
+    t.string   "code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "estados", force: true do |t|
     t.string   "sigla"
     t.string   "nome"
@@ -224,6 +233,17 @@ ActiveRecord::Schema.define(version: 20170507113340) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "lead_remarkeds", force: true do |t|
+    t.integer  "status_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "users_id"
+    t.integer  "leads_id"
+  end
+
+  add_index "lead_remarkeds", ["leads_id"], name: "index_lead_remarkeds_on_leads_id", using: :btree
+  add_index "lead_remarkeds", ["users_id"], name: "index_lead_remarkeds_on_users_id", using: :btree
 
   create_table "lead_statuses", force: true do |t|
     t.string   "name"

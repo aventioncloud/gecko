@@ -37,12 +37,16 @@ module V1
       end
       post "remarked", authorize: ['create', 'Lead'] do
         @user = current_user rescue nil
+        teste = []
         apartment!
         PaperTrail.whodunnit = @user["email"]
         ids = params[:leads_id]
         ids.split(";").each do |item|
+          teste = Lead.find(item)
+          LeadRemarked.create(users_id: teste.user_id, status_id: teste.leadstatus_id, leads_id: teste.id).save
           Lead.find(item).update(:leadstatus_id => 1, :user_id => params[:user_id], :remarked => 1)
         end
+        teste
       end
 
       desc "Return all Time."
