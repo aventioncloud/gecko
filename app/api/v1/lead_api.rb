@@ -392,7 +392,7 @@ module V1
         end
         contact = Contact.create(name: CGI.unescapeHTML(params[:nome]), email: params[:email], phone: params[:telefone], address: params[:bairro], city: params[:cidade], typecontact: params[:tipo])
         if contact.save
-            _queue_at = Time.zone.now + 15.minutes
+            _queue_at = Time.zone.now + 5.minutes
             lead = Lead.create(user_id: user, leadstatus_id: startstatus, contact_id: contact.id, title: CGI.unescapeHTML(params[:titulo]), description: CGI.unescapeHTML(params[:descricao]).html_safe, numberproduct: params[:numberproduct], queue_at: _queue_at)
             if lead.save
 
