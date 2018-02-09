@@ -426,15 +426,15 @@ module V1
 
               #Push
 
-              pusharry = Array.new
+              #pusharry = Array.new
 
-              Pusher.trigger('lead_channel', 'created', {
-                message: 'Novo Lead cadastrado para você',
-                user: user,
-                lead: lead.id,
-                account_id: account.id,
-                appname: domain
-              })
+              #Pusher.trigger('lead_channel', 'created', {
+              #  message: 'Novo Lead cadastrado para você',
+              #  user: user,
+              #  lead: lead.id,
+              #  account_id: account.id,
+              #  appname: domain
+              #})
 
               if isemail == 'true'
                 LeadMailer.created(email, lead.id).deliver
